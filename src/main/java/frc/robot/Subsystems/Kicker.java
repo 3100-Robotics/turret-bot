@@ -1,12 +1,11 @@
-package frc.robot.Subsystems;
+package frc.robot.subsystems;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
-
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.DyeRotorConstants;
-import frc.robot.Targets.DyeRotorTargets.KickerMotorTarget;
+import frc.robot.constants.DyeRotorConstants;
+import frc.robot.targets.DyeRotorTargets.KickerMotorTarget;
 import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.local.SparkWrapper;
 
@@ -18,7 +17,14 @@ public class Kicker extends SubsystemBase {
       new SparkWrapper(
           rawMotor,
           DyeRotorConstants.kickerMotorPhysical,
-          DyeRotorConstants.kickerMotorConfig.withSubsystem(this).withFollowers(Pair.of(new SparkMax(DyeRotorConstants.CANIDs.DyeRotor.kickerMotorCanID2, MotorType.kBrushless), false)));
+          DyeRotorConstants.kickerMotorConfig
+              .withSubsystem(this)
+              .withFollowers(
+                  Pair.of(
+                      new SparkMax(
+                          DyeRotorConstants.CANIDs.DyeRotor.kickerMotorCanID2,
+                          MotorType.kBrushless),
+                      false)));
 
   public void setState(KickerMotorTarget state) {
     switch (state) {

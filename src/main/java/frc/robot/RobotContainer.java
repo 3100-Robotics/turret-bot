@@ -7,11 +7,13 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.Hook;
+import frc.robot.subsystems.Kicker;
 
 public class RobotContainer {
   private Hook hook = new Hook();
+  private Kicker kicker = new Kicker();
 
-  public RobotContainer() { 
+  public RobotContainer() {
     configureBindings();
   }
 
