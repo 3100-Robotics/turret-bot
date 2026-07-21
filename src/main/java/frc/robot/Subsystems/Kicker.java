@@ -11,7 +11,7 @@ import yams.motorcontrollers.local.SparkWrapper;
 
 public class Kicker extends SubsystemBase {
   private final SparkMax rawMotor =
-      new SparkMax(DyeRotorConstants.CANIDs.DyeRotor.kickerMotorCanID1, MotorType.kBrushless);
+      new SparkMax(DyeRotorConstants.kickerMotorCanID1, MotorType.kBrushless);
 
   private final SmartMotorController motor =
       new SparkWrapper(
@@ -21,9 +21,7 @@ public class Kicker extends SubsystemBase {
               .withSubsystem(this)
               .withFollowers(
                   Pair.of(
-                      new SparkMax(
-                          DyeRotorConstants.CANIDs.DyeRotor.kickerMotorCanID2,
-                          MotorType.kBrushless),
+                      new SparkMax(DyeRotorConstants.kickerMotorCanID2, MotorType.kBrushless),
                       false)));
 
   public void setState(KickerMotorTarget state) {
