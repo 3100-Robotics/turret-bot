@@ -8,22 +8,24 @@ import edu.wpi.first.units.measure.AngularVelocity;
 
 public interface IntakeTargets {
     public enum IntakeRollerMotorTargets {
-        On(4000),
+        On(4000, 2000),
         Off;
 
-        public final Optional<AngularVelocity> speed;
+        public final Optional<AngularVelocity> topSpeed;
+        public final Optional<AngularVelocity> bottomSpeed;
 
-        private IntakeRollerMotorTargets(double speed) {
-        this.speed = Optional.of(RPM.of(speed));
+        private IntakeRollerMotorTargets(double topSpeed, double bottomSpeed) {
+        this.topSpeed = Optional.of(RPM.of(topSpeed));
+        this.bottomSpeed = Optional.of(RPM.of(bottomSpeed));
         }
 
         private IntakeRollerMotorTargets(
             AngularVelocity lowSpeed, AngularVelocity midSpeed, AngularVelocity highSpeed) {
-        this.speed = Optional.of(lowSpeed);
+        this.topSpeed = Optional.of(lowSpeed);
         }
 
         private IntakeRollerMotorTargets() {
-        this.speed = Optional.empty();
+        this.topSpeed = Optional.empty();
         }
   }
 }

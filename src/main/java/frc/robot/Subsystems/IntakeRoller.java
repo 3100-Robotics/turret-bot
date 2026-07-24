@@ -38,8 +38,8 @@ public class IntakeRoller extends SubsystemBase {
     public void setState(IntakeRollerMotorTargets state) {
         switch (state) {
             case On:
-                topMotor.setVelocity(state.speed.get());
-                bottomMotor.setVelocity(state.speed.get());
+                topMotor.setVelocity(state.topSpeed.get());
+                bottomMotor.setVelocity(state.topSpeed.get());
                 break;
             case Off:
                 topMotor.setDutyCycle(0);
