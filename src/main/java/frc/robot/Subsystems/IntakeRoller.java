@@ -5,9 +5,9 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.IntakeConstants;
-import frc.robot.targets.IntakeTargets.IntakeRollerMotorTargets;
 import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.remote.TalonFXWrapper;
+import frc.robot.targets.IntakeTargets.IntakeRollerMotorTarget;
 
 public class IntakeRoller extends SubsystemBase {
     private final TalonFX topRawMotor = 
@@ -35,7 +35,7 @@ public class IntakeRoller extends SubsystemBase {
                 .withSubsystem(this)
                 );
 
-    public void setState(IntakeRollerMotorTargets state) {
+    public void setState(IntakeRollerMotorTarget state) {
         switch (state) {
             case On:
                 topMotor.setVelocity(state.topSpeed.get());
@@ -53,11 +53,15 @@ public class IntakeRoller extends SubsystemBase {
     @Override
     public void periodic() {
         topMotor.updateTelemetry();
+        bottomMotor.updateTelemetry();
     }
 
     @Override
     public void simulationPeriodic() {
         topMotor.simIterate();
+        bottomMotor.simIterate();
     }
 }
 
+
+ 
