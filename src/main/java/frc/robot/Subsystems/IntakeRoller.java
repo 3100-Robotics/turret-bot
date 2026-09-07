@@ -1,67 +1,60 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.sbdc.loggerhead.util.LightSubsystem;
 
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.IntakeConstants;
+import frc.robot.targets.IntakeTargets.IntakeRollerTarget;
 import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.remote.TalonFXWrapper;
-import frc.robot.targets.IntakeTargets.IntakeRollerMotorTarget;
 
-public class IntakeRoller extends SubsystemBase {
-    private final TalonFX topRawMotor = 
-        new TalonFX(IntakeConstants.topIntakeRollerMotorCanID1);
+public class IntakeRoller extends LightSubsystem {
+  private final TalonFX topRawMotor1 = new TalonFX(IntakeConstants.topRollerMotorCanID1);
+  private final TalonFX topRawMotor2 = new TalonFX(IntakeConstants.topRollerMotorCanID2);
+  private final TalonFX bottomRawMotor = new TalonFX(IntakeConstants.bottomRollerMotorCanID);
 
-    private final SmartMotorController topMotor =
-        new TalonFXWrapper(
-            topRawMotor, 
-            IntakeConstants.intakeRollerMotorPhysical, 
-            IntakeConstants.topIntakeRollerMotorConfig
-                .withSubsystem(this)
-                .withFollowers(
-                    Pair.of(
-                        new TalonFX(IntakeConstants.topIntakeRollerMotorCanID2), false
-                    )));
-    
-    private final TalonFX bottomRawMotor =
-        new TalonFX(IntakeConstants.bottomIntakeRollerMotorCanID);
+  private final SmartMotorController topMotor =
+      new TalonFXWrapper(
+          topRawMotor1,
+          IntakeConstants.topRollerMotorPhysical,
+          IntakeConstants.topRollerMotorConfig
+              .withSubsystem(this)
+              .withFollowers(
+                  Pair.of(topRawMotor2, false)));
 
-    private final SmartMotorController bottomMotor =
-        new TalonFXWrapper(
-            bottomRawMotor,
-            IntakeConstants.bottomIntakeRollerMotorPhysical,
-            IntakeConstants.bottomIntakeRollerMotorConfig
-                .withSubsystem(this)
-                );
+  private final SmartMotorController bottomMotor =
+      new TalonFXWrapper(
+          bottomRawMotor,
+          IntakeConstants.bottomRollerMotorPhysical,
+          IntakeConstants.bottomRollerMotorConfig
+              .withSubsystem(this));
 
-    public void setState(IntakeRollerMotorTarget state) {
-        switch (state) {
-            case On:
-                topMotor.setVelocity(state.topSpeed.get());
-                bottomMotor.setVelocity(state.topSpeed.get());
-                break;
-            case Off:
-                topMotor.setDutyCycle(0);
-                bottomMotor.setDutyCycle(0);
-                break;
-            default:
-                break;
-        }
+  public void setState(IntakeRollerTarget state) {
+    switch (state) {
+      case On:
+        topMotor.setVelocity(state.topSpeed.get());
+        bottomMotor.setVelocity(state.bottomSpeed.get());
+        break;
+      case Off:
+        topMotor.setDutyCycle(0);
+        bottomMotor.setDutyCycle(0);
+        break;
+      default:
+        break;
     }
+  }
 
-    @Override
-    public void periodic() {
-        topMotor.updateTelemetry();
-        bottomMotor.updateTelemetry();
-    }
+  @Override
+  public void periodic() {
+    topMotor.updateTelemetry();
+    bottomMotor.updateTelemetry();
+  }
 
-    @Override
-    public void simulationPeriodic() {
-        topMotor.simIterate();
-        bottomMotor.simIterate();
-    }
+  @Override
+  public void simulationPeriodic() {
+    topMotor.simIterate();
+    bottomMotor.simIterate();
+  }
 }
-
-
- 

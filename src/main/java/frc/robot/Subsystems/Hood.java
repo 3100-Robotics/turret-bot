@@ -1,0 +1,50 @@
+package frc.robot.subsystems;
+
+import static edu.wpi.first.units.Units.Degrees;
+
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.sbdc.loggerhead.logging.LogMode;
+import com.sbdc.loggerhead.logging.Loggable;
+import com.sbdc.loggerhead.logging.Loggerhead;
+import com.sbdc.loggerhead.logging.Table;
+import com.sbdc.loggerhead.util.LightSubsystem;
+import edu.wpi.first.units.measure.Angle;
+import frc.robot.constants.ShooterConstants;
+import yams.motorcontrollers.SmartMotorController;
+import yams.motorcontrollers.remote.TalonFXWrapper;
+
+public class Hood extends LightSubsystem implements Loggable {
+  // Define vendor motors
+  private final TalonFX rawMotor = new TalonFX(ShooterConstants.hoodMotorCanID);
+
+  // Define SmartMotorControllers
+  private final SmartMotorController motor =
+      new TalonFXWrapper(
+          rawMotor,
+          ShooterConstants.hoodMotorPhysical,
+          ShooterConstants.hoodMotorConfig.withSubsystem(this));
+
+  public void setHoodAngle(Angle angle) {
+    motor.setPosition(angle);
+  }
+
+  public void stopHood() {
+    motor.setDutyCycle(0);
+  }
+
+  @Override
+  public void periodic() {
+    motor.updateTelemetry();
+  }
+
+  @Override
+  public void simulationPeriodic() {
+    motor.simIterate();
+  }
+
+  @Override
+  public void setupLogging(Table parentTable, LogMode logMode, Loggerhead loggerhead) {
+    parentTable.addDoubleLogger(
+        "hoodMechAngle", logMode, () -> motor.getMechanismPosition().in(Degrees));
+  }
+}

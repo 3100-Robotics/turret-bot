@@ -12,6 +12,10 @@ import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.telemetry.SmartMotorControllerTelemetryConfig;
 
 public interface DyeRotorConstants {
+  int kickerMotorCanID1 = 40;
+  int kickerMotorCanID2 = 41;
+  int hookMotorCanID = 42;
+  
   DCMotor hookMotorPhysical = DCMotor.getNEO(1);
 
   SmartMotorControllerConfig hookMotorConfig = new SmartMotorControllerConfig();
@@ -36,8 +40,4 @@ public interface DyeRotorConstants {
           .withTelemetry("kickerMotor", kickerMotorTelemetryConfig)
           // Sim props
           .withMomentOfInertia(Inches.of(14.724154), Pound.of(7.8858569));
-
-  int kickerMotorCanID1 = 40;
-  int kickerMotorCanID2 = 41;
-  int hookMotorCanID = 42;
 }
