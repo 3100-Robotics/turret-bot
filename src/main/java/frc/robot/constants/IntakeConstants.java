@@ -34,7 +34,7 @@ public interface IntakeConstants {
           .withMomentOfInertia(Meters.of(0.0508), Kilograms.of(0.18))
           .withStatorCurrentLimit(Amps.of(80))
           .withTelemetry("topIntakeRollerMotor", TelemetryVerbosity.HIGH);
-  
+
   SmartMotorControllerConfig bottomRollerMotorConfig =
       new SmartMotorControllerConfig()
           .withControlMode(ControlMode.CLOSED_LOOP)

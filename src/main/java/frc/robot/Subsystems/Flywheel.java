@@ -8,7 +8,6 @@ import com.sbdc.loggerhead.logging.Loggable;
 import com.sbdc.loggerhead.logging.Loggerhead;
 import com.sbdc.loggerhead.logging.Table;
 import com.sbdc.loggerhead.util.LightSubsystem;
-
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.units.measure.AngularVelocity;
 import frc.robot.constants.ShooterConstants;
@@ -17,8 +16,7 @@ import yams.motorcontrollers.remote.TalonFXWrapper;
 
 public class Flywheel extends LightSubsystem implements Loggable {
   // Define vendor motors
-  private final TalonFX rawMotorLeftFlywheel =
-      new TalonFX(ShooterConstants.leftFlywheelMotorCanID);
+  private final TalonFX rawMotorLeftFlywheel = new TalonFX(ShooterConstants.leftFlywheelMotorCanID);
   private final TalonFX rawMotorRightFlywheel =
       new TalonFX(ShooterConstants.rightFlywheelMotorCanID);
 
@@ -28,8 +26,8 @@ public class Flywheel extends LightSubsystem implements Loggable {
           rawMotorLeftFlywheel,
           ShooterConstants.flywheelMotorPhysical,
           ShooterConstants.flywheelMotorConfig
-          .withFollowers(Pair.of(rawMotorRightFlywheel, true))
-          .withSubsystem(this));
+              .withFollowers(Pair.of(rawMotorRightFlywheel, true))
+              .withSubsystem(this));
 
   public void setSpeed(AngularVelocity speed) {
     motor.setVelocity(speed);
@@ -51,9 +49,7 @@ public class Flywheel extends LightSubsystem implements Loggable {
 
   @Override
   public void setupLogging(Table parentTable, LogMode logMode, Loggerhead loggerhead) {
-    parentTable
-        .addDoubleLogger(
-            "leftMechVelocity", logMode, () -> motor.getMechanismVelocity().in(RPM))
-        ;
+    parentTable.addDoubleLogger(
+        "leftMechVelocity", logMode, () -> motor.getMechanismVelocity().in(RPM));
   }
 }

@@ -15,7 +15,7 @@ public interface DyeRotorConstants {
   int kickerMotorCanID1 = 40;
   int kickerMotorCanID2 = 41;
   int hookMotorCanID = 42;
-  
+
   DCMotor hookMotorPhysical = DCMotor.getNEO(1);
 
   SmartMotorControllerConfig hookMotorConfig = new SmartMotorControllerConfig();

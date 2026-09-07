@@ -3,9 +3,7 @@ package frc.robot.subsystems;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.sbdc.loggerhead.util.LightSubsystem;
-
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.DyeRotorConstants;
 import frc.robot.targets.DyeRotorTargets.HookTargets;
 import yams.motorcontrollers.SmartMotorController;

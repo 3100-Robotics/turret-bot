@@ -8,7 +8,6 @@ import com.sbdc.loggerhead.logging.Loggable;
 import com.sbdc.loggerhead.logging.Loggerhead;
 import com.sbdc.loggerhead.logging.Table;
 import com.sbdc.loggerhead.util.LightSubsystem;
-
 import edu.wpi.first.units.measure.Angle;
 import frc.robot.constants.ShooterConstants;
 import yams.mechanisms.positional.Pivot;

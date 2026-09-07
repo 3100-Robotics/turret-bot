@@ -31,7 +31,7 @@ public interface ShooterConstants {
   Angle maxHoodAngle = Degrees.of(46.0);
   Angle minHoodAngle = Degrees.of(7.721437);
 
-  Angle maxTurretAngle = Degrees.of(360+21.76);
+  Angle maxTurretAngle = Degrees.of(360 + 21.76);
   Angle minTurretAngle = Degrees.of(0);
   Angle safeMaxTurretAngle = maxTurretAngle.minus(Degrees.of(2));
 
@@ -73,7 +73,6 @@ public interface ShooterConstants {
           .withControlMode(ControlMode.CLOSED_LOOP)
           .withGearing(1)
           .withMomentOfInertia(Inches.of(1.9825395), Pound.of(0.9))
-
           .withMotorInverted(true)
           // PID / FF
           .withClosedLoopController(new PIDController(0.003, 0, 0))
@@ -114,7 +113,8 @@ public interface ShooterConstants {
           .withMomentOfInertia(KilogramSquareMeters.of(0.0190245794))
           .withSoftLimits(minTurretAngle, safeMaxTurretAngle);
 
-  PivotConfig turretConfig = new PivotConfig()
-    .withHardLimits(minTurretAngle, maxTurretAngle)
-    .withTelemetry("turretMech", TelemetryVerbosity.HIGH);
+  PivotConfig turretConfig =
+      new PivotConfig()
+          .withHardLimits(minTurretAngle, maxTurretAngle)
+          .withTelemetry("turretMech", TelemetryVerbosity.HIGH);
 }

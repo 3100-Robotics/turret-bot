@@ -2,9 +2,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.sbdc.loggerhead.util.LightSubsystem;
-
 import edu.wpi.first.math.Pair;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.targets.IntakeTargets.IntakeRollerTarget;
 import yams.motorcontrollers.SmartMotorController;
@@ -21,15 +19,13 @@ public class IntakeRoller extends LightSubsystem {
           IntakeConstants.topRollerMotorPhysical,
           IntakeConstants.topRollerMotorConfig
               .withSubsystem(this)
-              .withFollowers(
-                  Pair.of(topRawMotor2, false)));
+              .withFollowers(Pair.of(topRawMotor2, false)));
 
   private final SmartMotorController bottomMotor =
       new TalonFXWrapper(
           bottomRawMotor,
           IntakeConstants.bottomRollerMotorPhysical,
-          IntakeConstants.bottomRollerMotorConfig
-              .withSubsystem(this));
+          IntakeConstants.bottomRollerMotorConfig.withSubsystem(this));
 
   public void setState(IntakeRollerTarget state) {
     switch (state) {

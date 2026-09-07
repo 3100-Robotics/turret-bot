@@ -5,7 +5,6 @@ import static edu.wpi.first.units.Units.RPM;
 
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
-
 import java.util.Optional;
 
 public interface IntakeTargets {
@@ -21,8 +20,7 @@ public interface IntakeTargets {
       this.bottomSpeed = Optional.of(RPM.of(bottomSpeed));
     }
 
-    private IntakeRollerTarget(
-        AngularVelocity topSpeed, AngularVelocity bottomSpeed) {
+    private IntakeRollerTarget(AngularVelocity topSpeed, AngularVelocity bottomSpeed) {
       this.topSpeed = Optional.of(topSpeed);
       this.bottomSpeed = Optional.of(bottomSpeed);
     }
@@ -44,8 +42,7 @@ public interface IntakeTargets {
       this.extensionDistance = Meters.of(distance);
     }
 
-    private IntakeExtensionTarget(
-        Distance distance) {
+    private IntakeExtensionTarget(Distance distance) {
       this.extensionDistance = distance;
     }
   }
