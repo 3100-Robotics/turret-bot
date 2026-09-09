@@ -28,6 +28,10 @@ public class Hood extends LightSubsystem implements Loggable {
     motor.setPosition(angle);
   }
 
+  public void setHoodMinimum() {
+    motor.setPosition(ShooterConstants.minHoodAngle);
+  }
+
   public void stopHood() {
     motor.setDutyCycle(0);
   }

@@ -2,6 +2,10 @@ package frc.robot.subsystems;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
+import com.sbdc.loggerhead.logging.LogMode;
+import com.sbdc.loggerhead.logging.Loggable;
+import com.sbdc.loggerhead.logging.Loggerhead;
+import com.sbdc.loggerhead.logging.Table;
 import com.sbdc.loggerhead.util.LightSubsystem;
 import edu.wpi.first.math.system.plant.DCMotor;
 import frc.robot.constants.DyeRotorConstants;
@@ -9,7 +13,7 @@ import frc.robot.targets.DyeRotorTargets.HookTargets;
 import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.local.SparkWrapper;
 
-public class Hook extends LightSubsystem {
+public class Hook extends LightSubsystem implements Loggable {
   private SparkMax rawMotor = new SparkMax(DyeRotorConstants.hookMotorCanID, MotorType.kBrushless);
   private SmartMotorController motor =
       new SparkWrapper(rawMotor, DCMotor.getNEO(1), DyeRotorConstants.hookMotorConfig);
@@ -34,4 +38,7 @@ public class Hook extends LightSubsystem {
   public void simulationPeriodic() {
     motor.simIterate();
   }
+
+  @Override
+  public void setupLogging(Table parentTable, LogMode logMode, Loggerhead loggerhead) {}
 }

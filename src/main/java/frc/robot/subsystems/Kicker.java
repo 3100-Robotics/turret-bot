@@ -2,6 +2,10 @@ package frc.robot.subsystems;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
+import com.sbdc.loggerhead.logging.LogMode;
+import com.sbdc.loggerhead.logging.Loggable;
+import com.sbdc.loggerhead.logging.Loggerhead;
+import com.sbdc.loggerhead.logging.Table;
 import com.sbdc.loggerhead.util.LightSubsystem;
 import edu.wpi.first.math.Pair;
 import frc.robot.constants.DyeRotorConstants;
@@ -9,7 +13,7 @@ import frc.robot.targets.DyeRotorTargets.KickerTarget;
 import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.local.SparkWrapper;
 
-public class Kicker extends LightSubsystem {
+public class Kicker extends LightSubsystem implements Loggable {
   private final SparkMax rawMotor =
       new SparkMax(DyeRotorConstants.kickerMotorCanID1, MotorType.kBrushless);
 
@@ -46,4 +50,7 @@ public class Kicker extends LightSubsystem {
   public void simulationPeriodic() {
     motor.simIterate();
   }
+
+  @Override
+  public void setupLogging(Table parentTable, LogMode logMode, Loggerhead loggerhead) {}
 }

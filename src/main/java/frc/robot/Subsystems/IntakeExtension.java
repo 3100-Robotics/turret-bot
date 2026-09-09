@@ -11,6 +11,7 @@ import com.sbdc.loggerhead.util.LightSubsystem;
 import edu.wpi.first.math.Pair;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.targets.IntakeTargets.IntakeExtensionTarget;
+import yams.mechanisms.positional.Elevator;
 import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.remote.TalonFXWrapper;
 
@@ -22,7 +23,12 @@ public class IntakeExtension extends LightSubsystem implements Loggable {
       new TalonFXWrapper(
           extensionMotorLeft,
           IntakeConstants.extensionMotorPhysical,
-          IntakeConstants.extensionMotorConfig.withFollowers(Pair.of(extensionMotorRight, true)));
+          IntakeConstants.extensionMotorConfig
+              .withFollowers(Pair.of(extensionMotorRight, true))
+              .withSubsystem(this));
+
+  private final Elevator linearMechanism =
+      new Elevator(IntakeConstants.extensionMechanismConfig, motor);
 
   public void setIntakeExtensionTarget(IntakeExtensionTarget target) {
     motor.setPosition(target.extensionDistance);
@@ -30,6 +36,16 @@ public class IntakeExtension extends LightSubsystem implements Loggable {
 
   public void stopIntakeExtension() {
     motor.setDutyCycle(0);
+  }
+
+  @Override
+  public void periodic() {
+    linearMechanism.updateTelemetry();
+  }
+
+  @Override
+  public void simulationPeriodic() {
+    linearMechanism.simIterate();
   }
 
   @Override

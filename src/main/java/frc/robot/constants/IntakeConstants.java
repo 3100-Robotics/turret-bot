@@ -1,12 +1,15 @@
 package frc.robot.constants;
 
 import static edu.wpi.first.units.Units.Amps;
+import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Kilograms;
 import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.Pounds;
 
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
+import yams.mechanisms.config.ElevatorConfig;
 import yams.motorcontrollers.SmartMotorControllerConfig;
 import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
@@ -49,9 +52,11 @@ public interface IntakeConstants {
 
   SmartMotorControllerConfig extensionMotorConfig =
       new SmartMotorControllerConfig()
+          .withMechanismCircumference(Inches.of(1))
           .withControlMode(ControlMode.CLOSED_LOOP)
           .withMotorInverted(false)
           .withIdleMode(MotorMode.BRAKE)
+          .withStartingPosition(Meters.of(0))
           .withGearing(1)
           .withClosedLoopController(50, 0.0, 0.0)
           .withSimClosedLoopController(50, 0.0, 0.0)
@@ -60,4 +65,10 @@ public interface IntakeConstants {
           .withMomentOfInertia(Meters.of(0.0508), Kilograms.of(0.18))
           .withStatorCurrentLimit(Amps.of(80))
           .withTelemetry("intakeExtensionMotor", TelemetryVerbosity.HIGH);
+
+  ElevatorConfig extensionMechanismConfig =
+      new ElevatorConfig()
+          .withHardLimits(Meters.of(0), Meters.of(1))
+          .withTelemetry("intakeExtensionMechanism", TelemetryVerbosity.HIGH)
+          .withCarriageWeight(Pounds.of(10));
 }

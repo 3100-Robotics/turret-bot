@@ -92,6 +92,7 @@ public interface ShooterConstants {
           .withClosedLoopController(50, 0, 0)
           .withSimClosedLoopController(50, 0, 0)
           .withTrapezoidalProfile(DegreesPerSecond.of(90), DegreesPerSecondPerSecond.of(45))
+          // .withContinuousWrapping(minTurretAngle, Degrees.of(360))
           .withStartingPosition(minHoodAngle)
           // Feedforward Constants
           .withFeedforward(new ArmFeedforward(0, 0, 0))
@@ -111,7 +112,7 @@ public interface ShooterConstants {
           .withOpenLoopRampRate(Seconds.of(0.25))
           // MOI
           .withMomentOfInertia(KilogramSquareMeters.of(0.0190245794))
-          .withSoftLimits(minTurretAngle, safeMaxTurretAngle);
+          .withSoftLimits(minTurretAngle, Degrees.of(360));
 
   PivotConfig turretConfig =
       new PivotConfig()

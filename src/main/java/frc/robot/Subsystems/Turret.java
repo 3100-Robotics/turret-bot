@@ -28,8 +28,12 @@ public class Turret extends LightSubsystem implements Loggable {
 
   private final Pivot pivotMech = new Pivot(ShooterConstants.turretConfig, motor);
 
-  public void setTurretAngle(Angle angle) {
+  public void setTurretAngleRaw(Angle angle) {
     motor.setPosition(angle);
+  }
+
+  public void setTurretAngleMod360(Angle angle) {
+    motor.setPosition(Degrees.of(angle.in(Degrees) % 360));
   }
 
   public void stopTurret() {
