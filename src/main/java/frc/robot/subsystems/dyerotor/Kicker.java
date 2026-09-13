@@ -1,4 +1,6 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.dyerotor;
+
+import static edu.wpi.first.units.Units.RPM;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
@@ -8,8 +10,10 @@ import com.sbdc.loggerhead.logging.Loggerhead;
 import com.sbdc.loggerhead.logging.Table;
 import com.sbdc.loggerhead.util.LightSubsystem;
 import edu.wpi.first.math.Pair;
+import edu.wpi.first.units.measure.AngularVelocity;
 import frc.robot.constants.DyeRotorConstants;
 import frc.robot.targets.DyeRotorTargets.KickerTarget;
+import frc.robot.utils.Utils;
 import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.local.SparkWrapper;
 
@@ -39,6 +43,20 @@ public class Kicker extends LightSubsystem implements Loggable {
       default:
         break;
     }
+  }
+
+  public void setSpeed(AngularVelocity speed) {
+    Utils.warnIfDriverStationOutOfTest();
+
+    if (speed.in(RPM) == 0) {
+      stopKicker();
+    } else {
+      motor.setVelocity(speed);
+    }
+  }
+
+  public void stopKicker() {
+    motor.setDutyCycle(0);
   }
 
   @Override

@@ -2,18 +2,18 @@ package frc.robot.commands.testcommands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.IntakeExtension;
+import frc.robot.subsystems.intake.IntakeExtension;
 import frc.robot.targets.IntakeTargets.IntakeExtensionTarget;
 
-public class TestIntakeExtension extends Command {
+class TestIntakeExtensionNamed extends Command {
   private final IntakeExtension intakeExtension;
 
   private IntakeExtensionTarget currentTarget = IntakeExtensionTarget.Half;
 
-  public TestIntakeExtension(IntakeExtension intakeExtension) {
+  public TestIntakeExtensionNamed(IntakeExtension intakeExtension) {
     this.intakeExtension = intakeExtension;
 
-    SmartDashboard.putString("testIntakeExtensionTarget", "Half");
+    SmartDashboard.putString("testIntakeExtensionNamedTarget", "Half");
     addRequirements(intakeExtension);
   }
 
@@ -25,10 +25,10 @@ public class TestIntakeExtension extends Command {
     try {
       currentTarget =
           IntakeExtensionTarget.valueOf(
-              SmartDashboard.getString("testIntakeExtensionTarget", "Half"));
-      SmartDashboard.putBoolean("testIntakeExtensionError", false);
+              SmartDashboard.getString("testIntakeExtensionNamedTarget", "Half"));
+      SmartDashboard.putBoolean("testIntakeExtensionNamedError", false);
     } catch (Exception e) {
-      SmartDashboard.putBoolean("testIntakeExtensionError", true);
+      SmartDashboard.putBoolean("testIntakeExtensionNamedError", true);
     }
 
     intakeExtension.setIntakeExtensionTarget(currentTarget);

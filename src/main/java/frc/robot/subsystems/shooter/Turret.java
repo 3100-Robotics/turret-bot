@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.shooter;
 
 import static edu.wpi.first.units.Units.Degrees;
 
@@ -10,45 +10,51 @@ import com.sbdc.loggerhead.logging.Table;
 import com.sbdc.loggerhead.util.LightSubsystem;
 import edu.wpi.first.units.measure.Angle;
 import frc.robot.constants.ShooterConstants;
+import yams.mechanisms.positional.Pivot;
 import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.remote.TalonFXWrapper;
 
-public class Hood extends LightSubsystem implements Loggable {
+public class Turret extends LightSubsystem implements Loggable {
+
   // Define vendor motors
-  private final TalonFX rawMotor = new TalonFX(ShooterConstants.hoodMotorCanID);
+  private final TalonFX rawMotor = new TalonFX(ShooterConstants.turretMotorCanID);
 
   // Define SmartMotorControllers
   private final SmartMotorController motor =
       new TalonFXWrapper(
           rawMotor,
-          ShooterConstants.hoodMotorPhysical,
-          ShooterConstants.hoodMotorConfig.withSubsystem(this));
+          ShooterConstants.turretMotorPhysical,
+          ShooterConstants.turretMotorConfig.withSubsystem(this));
 
-  public void setHoodAngle(Angle angle) {
+  private final Pivot pivotMech = new Pivot(ShooterConstants.turretConfig, motor);
+
+  public void setTurretAngleRaw(Angle angle) {
     motor.setPosition(angle);
   }
 
-  public void setHoodMinimum() {
-    motor.setPosition(ShooterConstants.minHoodAngle);
+  public void setTurretAngleMod360(Angle angle) {
+    motor.setPosition(Degrees.of(angle.in(Degrees) % 360));
   }
 
-  public void stopHood() {
+  public void stopTurret() {
     motor.setDutyCycle(0);
   }
 
   @Override
   public void periodic() {
-    motor.updateTelemetry();
+    // motor.updateTelemetry();
+    pivotMech.updateTelemetry();
   }
 
   @Override
   public void simulationPeriodic() {
-    motor.simIterate();
+    // motor.simIterate();
+    pivotMech.simIterate();
   }
 
   @Override
   public void setupLogging(Table parentTable, LogMode logMode, Loggerhead loggerhead) {
     parentTable.addDoubleLogger(
-        "hoodMechAngle", logMode, () -> motor.getMechanismPosition().in(Degrees));
+        "turretMechAngle", logMode, () -> motor.getMechanismPosition().in(Degrees));
   }
 }

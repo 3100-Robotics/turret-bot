@@ -1,4 +1,6 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.dyerotor;
+
+import static edu.wpi.first.units.Units.RPM;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
@@ -8,8 +10,10 @@ import com.sbdc.loggerhead.logging.Loggerhead;
 import com.sbdc.loggerhead.logging.Table;
 import com.sbdc.loggerhead.util.LightSubsystem;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.units.measure.AngularVelocity;
 import frc.robot.constants.DyeRotorConstants;
 import frc.robot.targets.DyeRotorTargets.HookTargets;
+import frc.robot.utils.Utils;
 import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.local.SparkWrapper;
 
@@ -21,12 +25,26 @@ public class Hook extends LightSubsystem implements Loggable {
   public void setTarget(HookTargets targetVelocity) {
     switch (targetVelocity) {
       case Off:
-        motor.setDutyCycle(0);
+        stopHook();
         break;
       default:
         motor.setVelocity(targetVelocity.speed.get());
         break;
     }
+  }
+
+  public void setSpeed(AngularVelocity speed) {
+    Utils.warnIfDriverStationOutOfTest();
+    
+    if (speed.in(RPM) == 0) {
+      stopHook();
+    } else {
+      motor.setVelocity(speed);
+    }
+  }
+
+  public void stopHook() {
+    motor.setDutyCycle(0);
   }
 
   @Override

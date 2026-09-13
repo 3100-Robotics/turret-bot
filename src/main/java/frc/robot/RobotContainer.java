@@ -9,15 +9,14 @@ import com.sbdc.loggerhead.logging.Loggerhead;
 import com.sbdc.loggerhead.logging.compoundlogger.LogSubsystemCommands;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.commands.testcommands.TestIntakeExtension;
-import frc.robot.commands.testcommands.TestTurret;
-import frc.robot.subsystems.Flywheel;
-import frc.robot.subsystems.Hood;
-import frc.robot.subsystems.Hook;
-import frc.robot.subsystems.IntakeExtension;
-import frc.robot.subsystems.IntakeRoller;
-import frc.robot.subsystems.Kicker;
-import frc.robot.subsystems.Turret;
+import frc.robot.commands.testcommands.TestCommands;
+import frc.robot.subsystems.shooter.Flywheel;
+import frc.robot.subsystems.shooter.Hood;
+import frc.robot.subsystems.dyerotor.Hook;
+import frc.robot.subsystems.intake.IntakeExtension;
+import frc.robot.subsystems.intake.IntakeRollers;
+import frc.robot.subsystems.dyerotor.Kicker;
+import frc.robot.subsystems.shooter.Turret;
 
 public class RobotContainer {
 
@@ -32,7 +31,7 @@ public class RobotContainer {
 
   // Intake
   private final IntakeExtension intakeExtension = new IntakeExtension();
-  private final IntakeRoller intakeRoller = new IntakeRoller();
+  private final IntakeRollers intakeRoller = new IntakeRollers();
 
   public RobotContainer() {
     configureTeleopBindings();
@@ -47,8 +46,8 @@ public class RobotContainer {
   public void configureTeleopDefaultCommands() {}
 
   public void configureTestDefaultCommands() {
-    turret.setDefaultCommand(new TestTurret(turret));
-    intakeExtension.setDefaultCommand(new TestIntakeExtension(intakeExtension));
+    turret.setDefaultCommand(TestCommands.testTurret(turret));
+    intakeExtension.setDefaultCommand(TestCommands.testIntakeExtensionNamed(intakeExtension));
   }
 
   private void configureLogging() {

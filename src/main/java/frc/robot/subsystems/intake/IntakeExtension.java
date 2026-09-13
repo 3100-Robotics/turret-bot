@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.intake;
 
 import static edu.wpi.first.units.Units.Meters;
 
@@ -9,8 +9,11 @@ import com.sbdc.loggerhead.logging.Loggerhead;
 import com.sbdc.loggerhead.logging.Table;
 import com.sbdc.loggerhead.util.LightSubsystem;
 import edu.wpi.first.math.Pair;
+import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Distance;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.targets.IntakeTargets.IntakeExtensionTarget;
+import frc.robot.utils.Utils;
 import yams.mechanisms.positional.Elevator;
 import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.remote.TalonFXWrapper;
@@ -32,6 +35,12 @@ public class IntakeExtension extends LightSubsystem implements Loggable {
 
   public void setIntakeExtensionTarget(IntakeExtensionTarget target) {
     motor.setPosition(target.extensionDistance);
+  }
+
+  public void setPositionRaw(Distance distance) {
+    Utils.warnIfDriverStationOutOfTest();
+
+    motor.setPosition(distance);
   }
 
   public void stopIntakeExtension() {

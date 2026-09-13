@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.shooter;
 
 import static edu.wpi.first.units.Units.RPM;
 
@@ -30,10 +30,14 @@ public class Flywheel extends LightSubsystem implements Loggable {
               .withSubsystem(this));
 
   public void setSpeed(AngularVelocity speed) {
-    motor.setVelocity(speed);
+    if (speed.in(RPM) == 0) {
+      stopFlywheel();
+    } else {
+      motor.setVelocity(speed);
+    }
   }
 
-  public void stop() {
+  public void stopFlywheel() {
     motor.setDutyCycle(0);
   }
 

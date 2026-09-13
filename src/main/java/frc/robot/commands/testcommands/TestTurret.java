@@ -4,9 +4,9 @@ import static edu.wpi.first.units.Units.Degrees;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Turret;
+import frc.robot.subsystems.shooter.Turret;
 
-public class TestTurret extends Command {
+class TestTurret extends Command {
   private final Turret turret;
 
   public TestTurret(Turret turret) {
