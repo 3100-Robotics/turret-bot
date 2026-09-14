@@ -35,7 +35,7 @@ public class Hook extends LightSubsystem implements Loggable {
 
   public void setSpeed(AngularVelocity speed) {
     Utils.warnIfDriverStationOutOfTest();
-    
+
     if (speed.in(RPM) == 0) {
       stopHook();
     } else {

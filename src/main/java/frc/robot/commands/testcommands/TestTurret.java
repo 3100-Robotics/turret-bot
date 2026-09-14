@@ -4,6 +4,7 @@ import static edu.wpi.first.units.Units.Degrees;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.commands.testcommands.TestCommands.SmartDashboardKeys;
 import frc.robot.subsystems.shooter.Turret;
 
 class TestTurret extends Command {
@@ -12,8 +13,8 @@ class TestTurret extends Command {
   public TestTurret(Turret turret) {
     this.turret = turret;
 
-    SmartDashboard.putNumber("testTurretDegreesTarget", 0);
-    SmartDashboard.putBoolean("testTurretWrappingOn", true);
+    SmartDashboard.putNumber(SmartDashboardKeys.Turret.getKeyTarget(), 0);
+    SmartDashboard.putBoolean(SmartDashboardKeys.Turret.getKeyOther("WrappingOn"), true);
     addRequirements(turret);
   }
 
@@ -22,11 +23,12 @@ class TestTurret extends Command {
 
   @Override
   public void execute() {
-    if (SmartDashboard.getBoolean("testTurretWrappingOn", true)) {
+    if (SmartDashboard.getBoolean(SmartDashboardKeys.Turret.getKeyOther("WrappingOn"), true)) {
       turret.setTurretAngleMod360(
-          Degrees.of(SmartDashboard.getNumber("testTurretDegreesTarget", 0)));
+          Degrees.of(SmartDashboard.getNumber(SmartDashboardKeys.Turret.getKeyTarget(), 0)));
     } else {
-      turret.setTurretAngleRaw(Degrees.of(SmartDashboard.getNumber("testTurretDegreesTarget", 0)));
+      turret.setTurretAngleRaw(
+          Degrees.of(SmartDashboard.getNumber(SmartDashboardKeys.Turret.getKeyTarget(), 0)));
     }
   }
 

@@ -10,12 +10,12 @@ import com.sbdc.loggerhead.logging.compoundlogger.LogSubsystemCommands;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.commands.testcommands.TestCommands;
-import frc.robot.subsystems.shooter.Flywheel;
-import frc.robot.subsystems.shooter.Hood;
 import frc.robot.subsystems.dyerotor.Hook;
+import frc.robot.subsystems.dyerotor.Kicker;
 import frc.robot.subsystems.intake.IntakeExtension;
 import frc.robot.subsystems.intake.IntakeRollers;
-import frc.robot.subsystems.dyerotor.Kicker;
+import frc.robot.subsystems.shooter.Flywheel;
+import frc.robot.subsystems.shooter.Hood;
 import frc.robot.subsystems.shooter.Turret;
 
 public class RobotContainer {
@@ -31,7 +31,7 @@ public class RobotContainer {
 
   // Intake
   private final IntakeExtension intakeExtension = new IntakeExtension();
-  private final IntakeRollers intakeRoller = new IntakeRollers();
+  private final IntakeRollers intakeRollers = new IntakeRollers();
 
   public RobotContainer() {
     configureTeleopBindings();
@@ -46,8 +46,15 @@ public class RobotContainer {
   public void configureTeleopDefaultCommands() {}
 
   public void configureTestDefaultCommands() {
+    flywheel.setDefaultCommand(TestCommands.testFlywheel(flywheel));
+    hood.setDefaultCommand(TestCommands.testHood(hood));
     turret.setDefaultCommand(TestCommands.testTurret(turret));
+
+    hook.setDefaultCommand(TestCommands.testHook(hook));
+    kicker.setDefaultCommand(TestCommands.testKicker(kicker));
+
     intakeExtension.setDefaultCommand(TestCommands.testIntakeExtensionNamed(intakeExtension));
+    intakeRollers.setDefaultCommand(TestCommands.testIntakeRollers(intakeRollers));
   }
 
   private void configureLogging() {
@@ -84,8 +91,8 @@ public class RobotContainer {
         .addLoggable(intakeExtension, loggableSubsystemLogMode);
     subsystemsTable
         .getSubTable("intakeRoller")
-        .addCompoundLogger(new LogSubsystemCommands("Commands", commandsLogMode, intakeRoller))
-        .addLoggable(intakeRoller, loggableSubsystemLogMode);
+        .addCompoundLogger(new LogSubsystemCommands("Commands", commandsLogMode, intakeRollers))
+        .addLoggable(intakeRollers, loggableSubsystemLogMode);
     // .addCompoundLogger(new LogSubsystemCommands("Commands", commandsLogMode, hood))
     // .getParent()
     // .getSubTable("flywheel")
