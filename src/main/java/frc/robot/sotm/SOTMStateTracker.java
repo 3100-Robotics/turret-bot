@@ -10,14 +10,15 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import frc.robot.MatchContext;
 import frc.robot.subsystems.Drivetrain;
 
-public class SOTMState extends LightSubsystem {
+/** Based on blog.eeshwark.com/blog/shooting-on-the-fly-pt2 */
+public class SOTMStateTracker extends LightSubsystem {
   private final Drivetrain drivetrain;
 
   private double flywheelRPM = 0;
   private double hoodAngleDegrees = 0;
   private Rotation2d heading = Rotation2d.kZero;
 
-  public SOTMState(Drivetrain drivetrain) {
+  public SOTMStateTracker(Drivetrain drivetrain) {
     this.drivetrain = drivetrain;
   }
 

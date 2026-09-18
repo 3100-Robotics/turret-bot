@@ -9,6 +9,8 @@ import static edu.wpi.first.units.Units.Pounds;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
+import yams.gearing.GearBox;
+import yams.gearing.MechanismGearing;
 import yams.mechanisms.config.ElevatorConfig;
 import yams.motorcontrollers.SmartMotorControllerConfig;
 import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
@@ -31,9 +33,11 @@ public interface IntakeConstants {
           .withControlMode(ControlMode.CLOSED_LOOP)
           .withMotorInverted(false)
           .withIdleMode(MotorMode.BRAKE)
-          .withGearing(1)
-          .withClosedLoopController(0.0003, 0.0, 0.0)
-          .withFeedforward(new SimpleMotorFeedforward(0.1, 0.002, 0.0))
+          .withGearing(new MechanismGearing(GearBox.fromReductionStages(36 / 11)))
+          .withClosedLoopController(1, 0.0, 0.0)
+          .withFeedforward(new SimpleMotorFeedforward(0.0, 0.00, 0.0))
+          .withSimClosedLoopController(0.0, 0.0, 0.0)
+          .withSimFeedforward(new SimpleMotorFeedforward(0.0, 0.10, 0.0))
           .withMomentOfInertia(Meters.of(0.0508), Kilograms.of(0.18))
           .withStatorCurrentLimit(Amps.of(80))
           .withTelemetry("topIntakeRollerMotor", TelemetryVerbosity.HIGH);
@@ -43,9 +47,11 @@ public interface IntakeConstants {
           .withControlMode(ControlMode.CLOSED_LOOP)
           .withMotorInverted(false)
           .withIdleMode(MotorMode.BRAKE)
-          .withGearing(1)
-          .withClosedLoopController(0.0003, 0.0, 0.0)
-          .withFeedforward(new SimpleMotorFeedforward(0.1, 0.002, 0.0))
+          .withGearing(new MechanismGearing(GearBox.fromReductionStages(18 / 11)))
+          .withClosedLoopController(1, 0.0, 0.0)
+          .withFeedforward(new SimpleMotorFeedforward(0.0, 0.00, 0.0))
+          .withSimClosedLoopController(0.0, 0.0, 0.0)
+          .withSimFeedforward(new SimpleMotorFeedforward(0.0, 0.10, 0.0))
           .withMomentOfInertia(Meters.of(0.0508), Kilograms.of(0.18))
           .withStatorCurrentLimit(Amps.of(80))
           .withTelemetry("bottomIntakeRollerMotor", TelemetryVerbosity.HIGH);
@@ -58,11 +64,11 @@ public interface IntakeConstants {
           .withIdleMode(MotorMode.BRAKE)
           .withStartingPosition(Meters.of(0))
           .withGearing(1)
-          .withClosedLoopController(50, 0.0, 0.0)
-          .withSimClosedLoopController(50, 0.0, 0.0)
+          .withClosedLoopController(10, 0.0, 0.0)
+          .withSimClosedLoopController(1, 0.0, 0.0)
           .withFeedforward(new ElevatorFeedforward(0.0, 0.0, 0.0))
           .withSimFeedforward(new ElevatorFeedforward(0.0, 0.0, 0.0))
-          .withMomentOfInertia(Meters.of(0.0508), Kilograms.of(0.18))
+          .withMomentOfInertia(Meters.of(0.04), Kilograms.of(0.09))
           .withStatorCurrentLimit(Amps.of(80))
           .withTelemetry("intakeExtensionMotor", TelemetryVerbosity.HIGH);
 

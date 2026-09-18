@@ -10,6 +10,8 @@ import com.sbdc.loggerhead.logging.compoundlogger.LogSubsystemCommands;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.commands.testcommands.TestCommands;
+import frc.robot.generated.TunerConstantsFake0621;
+import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.dyerotor.Hook;
 import frc.robot.subsystems.dyerotor.Kicker;
 import frc.robot.subsystems.intake.IntakeExtension;
@@ -20,10 +22,12 @@ import frc.robot.subsystems.shooter.Turret;
 
 public class RobotContainer {
 
+  private final Drivetrain drivetrain = TunerConstantsFake0621.createDrivetrain();
+
   // Shooter
   private final Hood hood = new Hood();
   private final Flywheel flywheel = new Flywheel();
-  private final Turret turret = new Turret();
+  private final Turret turret = new Turret(drivetrain.getPigeon2().getYaw()::getValue);
 
   // Dye Rotor
   private final Hook hook = new Hook();
@@ -62,7 +66,7 @@ public class RobotContainer {
 
     LogMode commandsLogMode = LogMode.NetworkOnly;
     LogMode loggableSubsystemLogMode = LogMode.NetworkOnly;
-    var subsystemsTable = rootTable.getSubTable("Subsystems1");
+    var subsystemsTable = rootTable.getSubTable("Subsystems");
 
     // spotless:off
     subsystemsTable
@@ -93,26 +97,6 @@ public class RobotContainer {
         .getSubTable("intakeRoller")
         .addCompoundLogger(new LogSubsystemCommands("Commands", commandsLogMode, intakeRollers))
         .addLoggable(intakeRollers, loggableSubsystemLogMode);
-    // .addCompoundLogger(new LogSubsystemCommands("Commands", commandsLogMode, hood))
-    // .getParent()
-    // .getSubTable("flywheel")
-    // .addCompoundLogger(new LogSubsystemCommands("Commands", commandsLogMode, flywheel))
-    // .getParent()
-    // .getSubTable("turret")
-    // .addCompoundLogger(new LogSubsystemCommands("Commands", commandsLogMode, turret))
-    // .getParent()
-    // .getSubTable("hook")
-    // .addCompoundLogger(new LogSubsystemCommands("Commands", commandsLogMode, hook))
-    // .getParent()
-    // .getSubTable("kicker")
-    // .addCompoundLogger(new LogSubsystemCommands("Commands", commandsLogMode, kicker))
-    // .getParent()
-    // .getSubTable("intakeExtension")
-    // .addCompoundLogger(new LogSubsystemCommands("Commands", commandsLogMode, intakeExtension))
-    // .getParent()
-    // .getSubTable("intakeRoller")
-    // .addCompoundLogger(new LogSubsystemCommands("Commands", commandsLogMode, intakeRoller))
-
     // spotless:on
   }
 

@@ -5,9 +5,9 @@ import edu.wpi.first.units.measure.AngularVelocity;
 
 public class DynamicShotMap implements ShotMap {
 
-  private final SOTMState sotmstate;
+  private final SOTMStateTracker sotmstate;
 
-  public DynamicShotMap(SOTMState sotmstate) {
+  public DynamicShotMap(SOTMStateTracker sotmstate) {
     this.sotmstate = sotmstate;
   }
 

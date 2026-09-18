@@ -70,5 +70,8 @@ public class Kicker extends LightSubsystem implements Loggable {
   }
 
   @Override
-  public void setupLogging(Table parentTable, LogMode logMode, Loggerhead loggerhead) {}
+  public void setupLogging(Table parentTable, LogMode logMode, Loggerhead loggerhead) {
+    parentTable.addDoubleLogger(
+        "kickerSpeedRPM", logMode, () -> motor.getMechanismVelocity().in(RPM));
+  }
 }

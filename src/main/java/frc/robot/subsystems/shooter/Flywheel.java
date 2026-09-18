@@ -54,6 +54,6 @@ public class Flywheel extends LightSubsystem implements Loggable {
   @Override
   public void setupLogging(Table parentTable, LogMode logMode, Loggerhead loggerhead) {
     parentTable.addDoubleLogger(
-        "leftMechVelocity", logMode, () -> motor.getMechanismVelocity().in(RPM));
+        "flywheelMechVelocity", logMode, () -> motor.getMechanismVelocity().in(RPM));
   }
 }

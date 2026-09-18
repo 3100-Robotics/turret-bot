@@ -4,9 +4,11 @@ import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Pound;
 
-import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
+import yams.gearing.GearBox;
+import yams.gearing.MechanismGearing;
 import yams.motorcontrollers.SmartMotorControllerConfig;
 import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.telemetry.SmartMotorControllerTelemetryConfig;
@@ -24,13 +26,13 @@ public interface DyeRotorConstants {
           .withMotorInverted(false)
           .withStatorCurrentLimit(Amps.of(80))
           // Gearing
-          .withGearing(1)
+          .withGearing(new MechanismGearing(GearBox.fromReductionStages(80 / 16, 80 / 10)))
           // PID / FF
-          .withClosedLoopController(new PIDController(5, 0, 0.1))
-          .withFeedforward(new ArmFeedforward(0, 0, 0))
+          .withClosedLoopController(new PIDController(5, 0, 0))
+          .withFeedforward(new SimpleMotorFeedforward(0, 0, 0))
           // Sim PID / FF
-          .withSimClosedLoopController(new PIDController(5, 0, 0.1))
-          .withSimFeedforward(new ArmFeedforward(0, 0, 0))
+          .withSimClosedLoopController(new PIDController(5, 0, 0))
+          .withSimFeedforward(new SimpleMotorFeedforward(0, 0, 0))
           .withTelemetry("hookMotor", TelemetryVerbosity.LOW)
           // Sim props
           .withMomentOfInertia(Inches.of(14.724154), Pound.of(7.8858569));
@@ -46,14 +48,14 @@ public interface DyeRotorConstants {
           .withMotorInverted(false)
           .withStatorCurrentLimit(Amps.of(80))
           // Gearing
-          .withGearing(1)
+          .withGearing(new MechanismGearing(GearBox.fromReductionStages(36 / 18, 32 / 16)))
           // PID / FF
-          .withClosedLoopController(new PIDController(5, 0, 0.1))
-          .withFeedforward(new ArmFeedforward(0, 0, 0))
+          .withClosedLoopController(new PIDController(5, 0, 0))
+          .withFeedforward(new SimpleMotorFeedforward(0, 0, 0))
           // Sim PID / FF
-          .withSimClosedLoopController(new PIDController(5, 0, 0.1))
-          .withSimFeedforward(new ArmFeedforward(0, 0, 0))
+          .withSimClosedLoopController(new PIDController(5, 0, 0))
+          .withSimFeedforward(new SimpleMotorFeedforward(0, 0, 0))
           .withTelemetry("kickerMotor", kickerMotorTelemetryConfig)
           // Sim props
-          .withMomentOfInertia(Inches.of(14.724154), Pound.of(7.8858569));
+          .withMomentOfInertia(Inches.of(1.724154), Pound.of(0.9));
 }

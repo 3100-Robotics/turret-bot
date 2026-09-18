@@ -2,8 +2,6 @@ package frc.robot.constants;
 
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.DegreesPerSecond;
-import static edu.wpi.first.units.Units.DegreesPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.KilogramSquareMeters;
 import static edu.wpi.first.units.Units.Pound;
@@ -42,8 +40,8 @@ public interface ShooterConstants {
           .withControlMode(ControlMode.CLOSED_LOOP)
           // Feedback Constants (PID Constants)
           .withClosedLoopController(50, 0, 0)
-          .withSimClosedLoopController(50, 0, 0)
-          .withTrapezoidalProfile(DegreesPerSecond.of(90), DegreesPerSecondPerSecond.of(45))
+          .withSimClosedLoopController(10, 0, 0)
+          // .withTrapezoidalProfile(DegreesPerSecond.of(90), DegreesPerSecondPerSecond.of(45))
           .withStartingPosition(minHoodAngle)
           // Feedforward Constants
           .withFeedforward(new ArmFeedforward(0, 0, 0))
@@ -51,10 +49,7 @@ public interface ShooterConstants {
           // Telemetry name and verbosity level
           .withTelemetry("hoodMotor", TelemetryVerbosity.LOW)
           // Gearing from the motor rotor to final shaft.
-          // In this example GearBox.fromReductionStages(3,4) is the same as
-          // GearBox.fromStages("3:1","4:1") which corresponds to the gearbox attached to your
-          // motor.
-          .withGearing(1)
+          .withGearing(new MechanismGearing(GearBox.fromReductionStages(50 / 14, 155 / 10)))
           // Motor properties to prevent over currenting.
           .withMotorInverted(false)
           .withIdleMode(MotorMode.BRAKE)
@@ -90,13 +85,13 @@ public interface ShooterConstants {
           .withControlMode(ControlMode.CLOSED_LOOP)
           // Feedback Constants (PID Constants)
           .withClosedLoopController(50, 0, 0)
-          .withSimClosedLoopController(50, 0, 0)
-          .withTrapezoidalProfile(DegreesPerSecond.of(90), DegreesPerSecondPerSecond.of(45))
+          .withSimClosedLoopController(15, 0, 0)
+          // .withTrapezoidalProfile(DegreesPerSecond.of(90), DegreesPerSecondPerSecond.of(45))
           // .withContinuousWrapping(minTurretAngle, Degrees.of(360))
           .withStartingPosition(minHoodAngle)
           // Feedforward Constants
           .withFeedforward(new ArmFeedforward(0, 0, 0))
-          .withSimFeedforward(new ArmFeedforward(0, 0, 0))
+          .withSimFeedforward(new ArmFeedforward(0, 0, 6))
           // Telemetry name and verbosity level
           .withTelemetry("turretMotor", TelemetryVerbosity.HIGH)
           // Gearing from the motor rotor to final shaft.

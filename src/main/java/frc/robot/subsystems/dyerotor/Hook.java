@@ -58,5 +58,8 @@ public class Hook extends LightSubsystem implements Loggable {
   }
 
   @Override
-  public void setupLogging(Table parentTable, LogMode logMode, Loggerhead loggerhead) {}
+  public void setupLogging(Table parentTable, LogMode logMode, Loggerhead loggerhead) {
+    parentTable.addDoubleLogger(
+        "hookSpeedRPM", logMode, () -> motor.getMechanismVelocity().in(RPM));
+  }
 }

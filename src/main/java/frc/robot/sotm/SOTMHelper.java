@@ -1,9 +1,12 @@
 package frc.robot.sotm;
 
+import static edu.wpi.first.units.Units.Degrees;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.MatchContext;
+import frc.robot.constants.ShooterConstants;
 import frc.robot.constants.ShotTable;
 
 /** Based on blog.eeshwark.com/blog/shooting-on-the-fly-pt2 */
@@ -32,7 +35,10 @@ public class SOTMHelper {
 
     return new Solution(
         shotVel.getAngle(),
-        MathUtil.clamp(ShotTable.ANGLE_MAP.get(effectiveDistance), 12.667292, 40.0),
+        MathUtil.clamp(
+            ShotTable.ANGLE_MAP.get(effectiveDistance),
+            ShooterConstants.minHoodAngle.in(Degrees),
+            ShooterConstants.maxHoodAngle.in(Degrees)),
         ShotTable.SPEED_MAP.get(effectiveDistance));
   }
 }
