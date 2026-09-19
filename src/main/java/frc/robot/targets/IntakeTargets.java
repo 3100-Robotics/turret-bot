@@ -32,8 +32,8 @@ public interface IntakeTargets {
   }
 
   public enum IntakeExtensionTarget {
-    Full(0.1),
-    Half(0.05),
+    Full(1),
+    Half(0.5),
     Stowed(0);
 
     public final Distance extensionDistance;

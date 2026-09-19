@@ -74,7 +74,7 @@ public interface IntakeConstants {
 
   ElevatorConfig extensionMechanismConfig =
       new ElevatorConfig()
-          .withHardLimits(Meters.of(0), Meters.of(1))
+          .withHardLimits(Meters.of(0), Meters.of(2))
           .withTelemetry("intakeExtensionMechanism", TelemetryVerbosity.HIGH)
           .withCarriageWeight(Pounds.of(10));
 }
