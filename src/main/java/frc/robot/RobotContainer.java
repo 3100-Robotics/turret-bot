@@ -4,31 +4,29 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Degrees;
+
 import com.sbdc.loggerhead.logging.LogMode;
 import com.sbdc.loggerhead.logging.Loggerhead;
 import com.sbdc.loggerhead.logging.compoundlogger.LogSubsystemCommands;
-
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Filesystem;
-
-import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.net.WebServer;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ProxyCommand;
-import frc.robot.commands.BlastoiseCommands;
-import frc.robot.commands.ShootCommand;
 import frc.robot.commands.testcommands.TestCommands;
 import frc.robot.generated.TunerConstantsFake0621;
 import frc.robot.sotm.DashboardStaticShotMap;
 import frc.robot.sotm.DynamicShotMap;
 import frc.robot.sotm.SOTMStateTracker;
+import frc.robot.sotm.ShotMap;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.dyerotor.Hook;
 import frc.robot.subsystems.dyerotor.Kicker;
@@ -39,10 +37,6 @@ import frc.robot.subsystems.shooter.Hood;
 import frc.robot.subsystems.shooter.Turret;
 import frc.robot.vision.HPoseEstimator;
 import frc.robot.vision.MainVision;
-import frc.robot.sotm.ShotMap;
-
-import static edu.wpi.first.units.Units.Degrees;
-
 import java.util.EnumSet;
 import java.util.HashMap;
 
@@ -116,7 +110,7 @@ public class RobotContainer {
     // DO replace these function calls with the new ones you currently want to use then redeploy
     // code
     configureTeleopCoDriverBindings();
-    
+
     configureTeleopDriverBindings();
     configureTeleopDefaultCommands();
 
@@ -132,53 +126,57 @@ public class RobotContainer {
   }
 
   private void createActionMap() {
-    Command shootCommand = BlastoiseCommands.shootCommand();
+    // Command shootCommand = BlastoiseCommands.shootCommand();
 
-    Command autoAlignCommand =
-        new ProxyCommand(
-            new DrivePointAtAngle(
-                drivetrain,
-                driverController::getLeftY,
-                driverController::getLeftX,
-                driverController::getRightTriggerAxis,
-                sotmstate::getHeading));
+    // Command autoAlignCommand =
+    //     new ProxyCommand(
+    //         new DrivePointAtAngle(
+    //             drivetrain,
+    //             driverController::getLeftY,
+    //             driverController::getLeftX,
+    //             driverController::getRightTriggerAxis,
+    //             sotmstate::getHeading));
 
-    Command intakeHighCommand = IntakeCommands.pivotHigh(intakePivot);
-    Command intakeMidLowToggleCommand = IntakeCommands.pivotMidLowToggle(intakePivot);
-    Command intakeRunCommand = IntakeCommands.rollerForward(intakeRoller);
+    // Command intakeHighCommand = IntakeCommands.pivotHigh(intakePivot);
+    // Command intakeMidLowToggleCommand = IntakeCommands.pivotMidLowToggle(intakePivot);
+    // Command intakeRunCommand = IntakeCommands.rollerForward(intakeRoller);
 
-    Command resetHeadingAllCommand =
-        Commands.runOnce(() -> resetPoseAndHeadings(EnumSet.allOf(PoseHeadingResetParams.class)));
+    // Command resetHeadingAllCommand =
+    //     Commands.runOnce(() ->
+    // resetPoseAndHeadings(EnumSet.allOf(PoseHeadingResetParams.class)));
 
-    Command resetHeadingSimCommand =
-        Commands.runOnce(
-            () -> resetPoseAndHeadings(EnumSet.of(PoseHeadingResetParams.simPoseReset)));
+    // Command resetHeadingSimCommand =
+    //     Commands.runOnce(
+    //         () -> resetPoseAndHeadings(EnumSet.of(PoseHeadingResetParams.simPoseReset)));
 
-    Command resetHeadingCTRECommand =
-        Commands.runOnce(() -> resetPoseAndHeadings(EnumSet.of(PoseHeadingResetParams.CTREReset)));
+    // Command resetHeadingCTRECommand =
+    //     Commands.runOnce(() ->
+    // resetPoseAndHeadings(EnumSet.of(PoseHeadingResetParams.CTREReset)));
 
-    Command resetHeadingGyroCommand =
-        Commands.runOnce(() -> resetPoseAndHeadings(EnumSet.of(PoseHeadingResetParams.gyroReset)));
+    // Command resetHeadingGyroCommand =
+    //     Commands.runOnce(() ->
+    // resetPoseAndHeadings(EnumSet.of(PoseHeadingResetParams.gyroReset)));
 
-    Command resetHeadingGyroWrapperCommand =
-        Commands.runOnce(
-            () -> resetPoseAndHeadings(EnumSet.of(PoseHeadingResetParams.gyroWrapperReset)));
+    // Command resetHeadingGyroWrapperCommand =
+    //     Commands.runOnce(
+    //         () -> resetPoseAndHeadings(EnumSet.of(PoseHeadingResetParams.gyroWrapperReset)));
 
-    Command resetHeadingHPoseCommand =
-        Commands.runOnce(() -> resetPoseAndHeadings(EnumSet.of(PoseHeadingResetParams.hPoseReset)));
+    // Command resetHeadingHPoseCommand =
+    //     Commands.runOnce(() ->
+    // resetPoseAndHeadings(EnumSet.of(PoseHeadingResetParams.hPoseReset)));
 
-    blastoiseCommandMap.put("shootCommand", shootCommand);
-    blastoiseCommandMap.put("autoAlignCommand", autoAlignCommand);
-    blastoiseCommandMap.put("intakeHighCommand", intakeHighCommand);
-    blastoiseCommandMap.put("intakeMidLowToggleCommand", intakeMidLowToggleCommand);
-    blastoiseCommandMap.put("intakeRunCommand", intakeRunCommand);
+    // blastoiseCommandMap.put("shootCommand", shootCommand);
+    // blastoiseCommandMap.put("autoAlignCommand", autoAlignCommand);
+    // blastoiseCommandMap.put("intakeHighCommand", intakeHighCommand);
+    // blastoiseCommandMap.put("intakeMidLowToggleCommand", intakeMidLowToggleCommand);
+    // blastoiseCommandMap.put("intakeRunCommand", intakeRunCommand);
 
-    blastoiseCommandMap.put("resetHeadingAllCommand", resetHeadingAllCommand);
-    blastoiseCommandMap.put("resetHeadingSimCommand", resetHeadingSimCommand);
-    blastoiseCommandMap.put("resetHeadingCTRECommand", resetHeadingCTRECommand);
-    blastoiseCommandMap.put("resetHeadingGyroCommand", resetHeadingGyroCommand);
-    blastoiseCommandMap.put("resetHeadingGyroWrapperCommand", resetHeadingGyroWrapperCommand);
-    blastoiseCommandMap.put("resetHeadingHPoseCommand", resetHeadingHPoseCommand);
+    // blastoiseCommandMap.put("resetHeadingAllCommand", resetHeadingAllCommand);
+    // blastoiseCommandMap.put("resetHeadingSimCommand", resetHeadingSimCommand);
+    // blastoiseCommandMap.put("resetHeadingCTRECommand", resetHeadingCTRECommand);
+    // blastoiseCommandMap.put("resetHeadingGyroCommand", resetHeadingGyroCommand);
+    // blastoiseCommandMap.put("resetHeadingGyroWrapperCommand", resetHeadingGyroWrapperCommand);
+    // blastoiseCommandMap.put("resetHeadingHPoseCommand", resetHeadingHPoseCommand);
   }
 
   private void resetPoseAndHeadings(EnumSet<PoseHeadingResetParams> resetParams) {

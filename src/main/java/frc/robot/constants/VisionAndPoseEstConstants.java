@@ -19,7 +19,7 @@ public class VisionAndPoseEstConstants {
 
   public static final AprilTagFieldLayout kTagLayout = FieldConstants.fieldAprilTags;
 
-    // TODO: May need to flip YAW signs
+  // TODO: May need to flip YAW signs
 
   public static final Camera CAM_FRONT_RIGHT =
       new Camera(
@@ -30,8 +30,7 @@ public class VisionAndPoseEstConstants {
                   Inches.of(-10.446815).in(Meters),
                   Inches.of(28.002807).in(Meters)),
               new Rotation3d(0, Math.toRadians(-15), 0)
-                .rotateBy(new Rotation3d(0, 0, Math.toRadians(49)))    
-          ),
+                  .rotateBy(new Rotation3d(0, 0, Math.toRadians(49)))),
           "right",
           (!Robot.isReal()) && simulateCoproc,
           new SimCameraProperties()

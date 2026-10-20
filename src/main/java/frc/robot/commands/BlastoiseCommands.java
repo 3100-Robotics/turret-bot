@@ -1,9 +1,17 @@
 package frc.robot.commands;
 
+import com.sbdc.loggerhead.logging.configuration.Hook;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.constants.DrivetrainConstants;
+import frc.robot.sotm.ShotMap;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.dyerotor.Kicker;
+import frc.robot.subsystems.intake.IntakeExtension;
+import frc.robot.subsystems.intake.IntakeRollers;
+import frc.robot.subsystems.shooter.Flywheel;
+import frc.robot.subsystems.shooter.Hood;
+import frc.robot.subsystems.shooter.Turret;
 import java.util.function.DoubleSupplier;
 
 public class BlastoiseCommands {
@@ -23,7 +31,15 @@ public class BlastoiseCommands {
         drivetrain);
   }
 
-  public static Command shootCommand() {
+  public static Command shootCommand(
+      Flywheel flywheel,
+      Hood hood,
+      Turret turret,
+      Hook hook,
+      Kicker kicker,
+      IntakeExtension intakeExtension,
+      IntakeRollers intakeRoller,
+      ShotMap shotMap) {
     return Commands.parallel(
         // Dye rotor
         Commands.waitSeconds(1)
@@ -32,7 +48,7 @@ public class BlastoiseCommands {
                     .until(() -> false)
                     .repeatedly()),
         // Shooter
-        Commands.none() // Activate flywheel / hood
+        ShooterCommands.shooterDynamic(hood, flywheel, shotMap)
         );
   }
 }

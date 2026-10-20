@@ -74,6 +74,7 @@ public class Camera implements Loggable {
       boolean processedStream,
       boolean rawStream,
       double distanceCutoffMeters) {
+
     this.distanceCutoffMeters = distanceCutoffMeters;
 
     tagLayout = atagfieldlayout;

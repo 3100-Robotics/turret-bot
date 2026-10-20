@@ -8,6 +8,8 @@ import com.sbdc.loggerhead.logging.Loggable;
 import com.sbdc.loggerhead.logging.Loggerhead;
 import com.sbdc.loggerhead.logging.Table;
 import com.sbdc.loggerhead.util.LightSubsystem;
+
+import edu.wpi.first.math.Pair;
 import edu.wpi.first.units.measure.Angle;
 import frc.robot.constants.ShooterConstants;
 import java.util.function.Supplier;
@@ -49,6 +51,10 @@ public class Turret extends LightSubsystem implements Loggable {
 
   public void stopTurret() {
     motor.setDutyCycle(0);
+  }
+
+  public Pair<Angle, Angle> getSetpointAndPosition() {
+    return Pair.of(motor.getMechanismPositionSetpoint().orElse(Degrees.of(4000)), motor.getMechanismPosition());
   }
 
   @Override
