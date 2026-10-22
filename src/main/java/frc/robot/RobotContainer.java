@@ -14,13 +14,15 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.net.WebServer;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ProxyCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.commands.BlastoiseCommands;
+import frc.robot.commands.drivecommands.DrivePointAtAngle;
+import frc.robot.commands.drivecommands.DriveTeleop;
 import frc.robot.commands.testcommands.TestCommands;
 import frc.robot.generated.TunerConstantsFake0621;
 import frc.robot.sotm.DashboardStaticShotMap;
@@ -103,80 +105,81 @@ public class RobotContainer {
 
   private final PowerDistribution pdh = new PowerDistribution(14, ModuleType.kRev);
 
+  private final CommandXboxController driverController = new CommandXboxController(0);
+  private final CommandXboxController coDriverController = new CommandXboxController(1);
+
   public RobotContainer() {
-    WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
-    createActionMap();
+    // WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
+    // createActionMap();
 
     // DO replace these function calls with the new ones you currently want to use then redeploy
     // code
-    configureTeleopCoDriverBindings();
+    // configureTeleopCoDriverBindings();
 
-    configureTeleopDriverBindings();
-    configureTeleopDefaultCommands();
+    // configureTeleopDriverBindings();
+    // configureTeleopDefaultCommands();
 
     // Loggerhead.getInstance().setConfigureCallback(this::configureLogging);
     // Loggerhead.getInstance().initializeLogging();
-    Loggerhead.getInstance()
-        .applyToConfigurator(
-            configurator ->
-                configurator
-                    .setConfigureCallback(this::configureLogging)
-                    .addHook(DriverStation::isFMSAttached))
-        .initializeLogging(); // Must be the final call in the configuration chain
+    // Loggerhead.getInstance()
+    //     .applyToConfigurator(
+    //         configurator ->
+    //             configurator
+    //                 .setConfigureCallback(this::configureLogging)
+    //                 .addHook(DriverStation::isFMSAttached))
+    //     .initializeLogging(); // Must be the final call in the configuration chain
   }
 
   private void createActionMap() {
-    // Command shootCommand = BlastoiseCommands.shootCommand();
+    Command shootCommand =
+        BlastoiseCommands.shootCommand(
+            flywheel, hood, turret, hook, kicker, intakeExtension, intakeRollers, dashShotMap);
 
-    // Command autoAlignCommand =
-    //     new ProxyCommand(
-    //         new DrivePointAtAngle(
-    //             drivetrain,
-    //             driverController::getLeftY,
-    //             driverController::getLeftX,
-    //             driverController::getRightTriggerAxis,
-    //             sotmstate::getHeading));
+    Command autoAlignCommand =
+        new ProxyCommand(
+            new DrivePointAtAngle(
+                drivetrain,
+                driverController::getLeftY,
+                driverController::getLeftX,
+                driverController::getRightTriggerAxis,
+                sotmstate::getHeading));
 
     // Command intakeHighCommand = IntakeCommands.pivotHigh(intakePivot);
     // Command intakeMidLowToggleCommand = IntakeCommands.pivotMidLowToggle(intakePivot);
     // Command intakeRunCommand = IntakeCommands.rollerForward(intakeRoller);
 
-    // Command resetHeadingAllCommand =
-    //     Commands.runOnce(() ->
-    // resetPoseAndHeadings(EnumSet.allOf(PoseHeadingResetParams.class)));
+    Command resetHeadingAllCommand =
+        Commands.runOnce(() -> resetPoseAndHeadings(EnumSet.allOf(PoseHeadingResetParams.class)));
 
-    // Command resetHeadingSimCommand =
-    //     Commands.runOnce(
-    //         () -> resetPoseAndHeadings(EnumSet.of(PoseHeadingResetParams.simPoseReset)));
+    Command resetHeadingSimCommand =
+        Commands.runOnce(
+            () -> resetPoseAndHeadings(EnumSet.of(PoseHeadingResetParams.simPoseReset)));
 
-    // Command resetHeadingCTRECommand =
-    //     Commands.runOnce(() ->
-    // resetPoseAndHeadings(EnumSet.of(PoseHeadingResetParams.CTREReset)));
+    Command resetHeadingCTRECommand =
+        Commands.runOnce(() -> resetPoseAndHeadings(EnumSet.of(PoseHeadingResetParams.CTREReset)));
 
-    // Command resetHeadingGyroCommand =
-    //     Commands.runOnce(() ->
-    // resetPoseAndHeadings(EnumSet.of(PoseHeadingResetParams.gyroReset)));
+    Command resetHeadingGyroCommand =
+        Commands.runOnce(() -> resetPoseAndHeadings(EnumSet.of(PoseHeadingResetParams.gyroReset)));
 
-    // Command resetHeadingGyroWrapperCommand =
-    //     Commands.runOnce(
-    //         () -> resetPoseAndHeadings(EnumSet.of(PoseHeadingResetParams.gyroWrapperReset)));
+    Command resetHeadingGyroWrapperCommand =
+        Commands.runOnce(
+            () -> resetPoseAndHeadings(EnumSet.of(PoseHeadingResetParams.gyroWrapperReset)));
 
-    // Command resetHeadingHPoseCommand =
-    //     Commands.runOnce(() ->
-    // resetPoseAndHeadings(EnumSet.of(PoseHeadingResetParams.hPoseReset)));
+    Command resetHeadingHPoseCommand =
+        Commands.runOnce(() -> resetPoseAndHeadings(EnumSet.of(PoseHeadingResetParams.hPoseReset)));
 
-    // blastoiseCommandMap.put("shootCommand", shootCommand);
-    // blastoiseCommandMap.put("autoAlignCommand", autoAlignCommand);
+    blastoiseCommandMap.put("shootCommand", shootCommand);
+    blastoiseCommandMap.put("autoAlignCommand", autoAlignCommand);
     // blastoiseCommandMap.put("intakeHighCommand", intakeHighCommand);
     // blastoiseCommandMap.put("intakeMidLowToggleCommand", intakeMidLowToggleCommand);
     // blastoiseCommandMap.put("intakeRunCommand", intakeRunCommand);
 
-    // blastoiseCommandMap.put("resetHeadingAllCommand", resetHeadingAllCommand);
-    // blastoiseCommandMap.put("resetHeadingSimCommand", resetHeadingSimCommand);
-    // blastoiseCommandMap.put("resetHeadingCTRECommand", resetHeadingCTRECommand);
-    // blastoiseCommandMap.put("resetHeadingGyroCommand", resetHeadingGyroCommand);
-    // blastoiseCommandMap.put("resetHeadingGyroWrapperCommand", resetHeadingGyroWrapperCommand);
-    // blastoiseCommandMap.put("resetHeadingHPoseCommand", resetHeadingHPoseCommand);
+    blastoiseCommandMap.put("resetHeadingAllCommand", resetHeadingAllCommand);
+    blastoiseCommandMap.put("resetHeadingSimCommand", resetHeadingSimCommand);
+    blastoiseCommandMap.put("resetHeadingCTRECommand", resetHeadingCTRECommand);
+    blastoiseCommandMap.put("resetHeadingGyroCommand", resetHeadingGyroCommand);
+    blastoiseCommandMap.put("resetHeadingGyroWrapperCommand", resetHeadingGyroWrapperCommand);
+    blastoiseCommandMap.put("resetHeadingHPoseCommand", resetHeadingHPoseCommand);
   }
 
   private void resetPoseAndHeadings(EnumSet<PoseHeadingResetParams> resetParams) {
@@ -207,7 +210,15 @@ public class RobotContainer {
 
   private void configureTeleopCoDriverBindings() {}
 
-  public void configureTeleopDefaultCommands() {}
+  public void configureTeleopDefaultCommands() {
+    drivetrain.setDefaultCommand(
+        new DriveTeleop(
+            drivetrain,
+            driverController::getLeftY,
+            driverController::getLeftX,
+            () -> -driverController.getRightX(),
+            driverController::getRightTriggerAxis));
+  }
 
   public void configureTestDefaultCommands() {
     flywheel.setDefaultCommand(TestCommands.testFlywheel(flywheel));

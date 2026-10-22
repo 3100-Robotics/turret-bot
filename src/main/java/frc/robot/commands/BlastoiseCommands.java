@@ -1,11 +1,11 @@
 package frc.robot.commands;
 
-import com.sbdc.loggerhead.logging.configuration.Hook;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.constants.DrivetrainConstants;
 import frc.robot.sotm.ShotMap;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.dyerotor.Hook;
 import frc.robot.subsystems.dyerotor.Kicker;
 import frc.robot.subsystems.intake.IntakeExtension;
 import frc.robot.subsystems.intake.IntakeRollers;
@@ -44,11 +44,12 @@ public class BlastoiseCommands {
         // Dye rotor
         Commands.waitSeconds(1)
             .andThen(
-                Commands.run(() -> {}) // Run dye rotor
-                    .until(() -> false)
-                    .repeatedly()),
+                DyeRotorCommands.runDyeRotor(hook, kicker) // Run dye rotor ...
+                    .until(turret.isNearSetpoint.negate()), // ... until the turret hasto flip
+                Commands.waitUntil(turret.isNearSetpoint) // Hold until its back
+                    .repeatedly() // back to top
+                ),
         // Shooter
-        ShooterCommands.shooterDynamic(hood, flywheel, shotMap)
-        );
+        ShooterCommands.shooterDynamic(hood, flywheel, shotMap));
   }
 }

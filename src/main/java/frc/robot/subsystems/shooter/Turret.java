@@ -8,9 +8,9 @@ import com.sbdc.loggerhead.logging.Loggable;
 import com.sbdc.loggerhead.logging.Loggerhead;
 import com.sbdc.loggerhead.logging.Table;
 import com.sbdc.loggerhead.util.LightSubsystem;
-
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.constants.ShooterConstants;
 import java.util.function.Supplier;
 import yams.mechanisms.positional.Pivot;
@@ -33,6 +33,8 @@ public class Turret extends LightSubsystem implements Loggable {
 
   private final Supplier<Angle> robotAngleSupplier;
 
+  public final Trigger isNearSetpoint = new Trigger(this::isPositionNearSetpoint);
+
   public Turret(Supplier<Angle> robotAngleSupplier) {
     this.robotAngleSupplier = robotAngleSupplier;
   }
@@ -54,7 +56,14 @@ public class Turret extends LightSubsystem implements Loggable {
   }
 
   public Pair<Angle, Angle> getSetpointAndPosition() {
-    return Pair.of(motor.getMechanismPositionSetpoint().orElse(Degrees.of(4000)), motor.getMechanismPosition());
+    return Pair.of(
+        motor.getMechanismPositionSetpoint().orElse(Degrees.of(4000)),
+        motor.getMechanismPosition());
+  }
+
+  private boolean isPositionNearSetpoint() {
+    var setAndPos = getSetpointAndPosition();
+    return setAndPos.getSecond().isNear(setAndPos.getFirst(), Degrees.of(4));
   }
 
   @Override
