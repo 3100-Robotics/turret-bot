@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 public class Robot extends TimedRobot {
+  public boolean subsystemListLock = false;
   private Command m_autonomousCommand;
 
   private final RobotContainer m_robotContainer;
@@ -21,7 +22,9 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
-    CommandScheduler.getInstance().run();
+    if (!subsystemListLock) {
+      CommandScheduler.getInstance().run();
+    }
   }
 
   @Override
@@ -63,10 +66,12 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testInit() {
+    subsystemListLock = true;
     CommandScheduler.getInstance().cancelAll();
     LightSubsystem.getAllLightSubsystems()
         .forEach(subsystem -> CommandScheduler.getInstance().removeDefaultCommand(subsystem));
     m_robotContainer.configureTestDefaultCommands();
+    subsystemListLock = false;
   }
 
   @Override
@@ -74,9 +79,11 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testExit() {
+    subsystemListLock = true;
     CommandScheduler.getInstance().cancelAll();
     LightSubsystem.getAllLightSubsystems()
         .forEach(subsystem -> CommandScheduler.getInstance().removeDefaultCommand(subsystem));
     m_robotContainer.configureTeleopDefaultCommands();
+    subsystemListLock = false;
   }
 }

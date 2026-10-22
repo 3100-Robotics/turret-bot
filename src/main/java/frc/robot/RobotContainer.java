@@ -22,7 +22,6 @@ import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.BlastoiseCommands;
 import frc.robot.commands.drivecommands.DrivePointAtAngle;
-import frc.robot.commands.drivecommands.DriveTeleop;
 import frc.robot.commands.testcommands.TestCommands;
 import frc.robot.generated.TunerConstantsFake0621;
 import frc.robot.sotm.DashboardStaticShotMap;
@@ -211,13 +210,13 @@ public class RobotContainer {
   private void configureTeleopCoDriverBindings() {}
 
   public void configureTeleopDefaultCommands() {
-    drivetrain.setDefaultCommand(
-        new DriveTeleop(
-            drivetrain,
-            driverController::getLeftY,
-            driverController::getLeftX,
-            () -> -driverController.getRightX(),
-            driverController::getRightTriggerAxis));
+    // drivetrain.setDefaultCommand(
+    //     new DriveTeleop(
+    //         drivetrain,
+    //         driverController::getLeftY,
+    //         driverController::getLeftX,
+    //         () -> -driverController.getRightX(),
+    //         driverController::getRightTriggerAxis));
   }
 
   public void configureTestDefaultCommands() {
