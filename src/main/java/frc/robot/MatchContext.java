@@ -1,0 +1,38 @@
+package frc.robot;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import frc.robot.constants.FieldConstants;
+
+public class MatchContext {
+  private static MatchContext INSTANCE = new MatchContext();
+
+  public static MatchContext getInstance() {
+    return INSTANCE;
+  }
+
+  public boolean isRedAlliance = false;
+  public boolean allianceSet = false;
+
+  public Pose2d getHubPose() {
+    return FieldConstants.getHubPoseForAlliance(isRedAlliance);
+  }
+
+  public Translation2d getHubTranslation() {
+    return FieldConstants.getHubPoseForAlliance(isRedAlliance).getTranslation();
+  }
+
+  public void update() {
+    if (DriverStation.isDisabled() || !allianceSet) {
+      DriverStation.getAlliance()
+          .ifPresentOrElse(
+              color -> {
+                isRedAlliance = color == Alliance.Red;
+                allianceSet = true;
+              },
+              () -> allianceSet = false);
+    }
+  }
+}

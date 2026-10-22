@@ -8,35 +8,39 @@ import java.util.Optional;
 public interface DyeRotorTargets {
   public enum HookTargets {
     On(6000),
-    Off(0);
+    Off;
 
-    public AngularVelocity speed;
+    public Optional<AngularVelocity> speed;
 
     private HookTargets(AngularVelocity speed) {
-      this.speed = speed;
+      this.speed = Optional.of(speed);
     }
 
     private HookTargets(double speed) {
-      this.speed = RPM.of(speed);
+      this.speed = Optional.of(RPM.of(speed));
+    }
+
+    private HookTargets() {
+      this.speed = Optional.empty();
     }
   }
 
-  public enum KickerMotorTarget {
+  public enum KickerTarget {
     On(4000),
     Off;
 
     public final Optional<AngularVelocity> speed;
 
-    private KickerMotorTarget(double speed) {
+    private KickerTarget(double speed) {
       this.speed = Optional.of(RPM.of(speed));
     }
 
-    private KickerMotorTarget(
+    private KickerTarget(
         AngularVelocity lowSpeed, AngularVelocity midSpeed, AngularVelocity highSpeed) {
       this.speed = Optional.of(lowSpeed);
     }
 
-    private KickerMotorTarget() {
+    private KickerTarget() {
       this.speed = Optional.empty();
     }
   }
