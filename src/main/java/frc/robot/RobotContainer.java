@@ -14,6 +14,9 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.net.WebServer;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -22,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.BlastoiseCommands;
 import frc.robot.commands.drivecommands.DrivePointAtAngle;
+import frc.robot.commands.drivecommands.DriveTeleop;
 import frc.robot.commands.testcommands.TestCommands;
 import frc.robot.generated.TunerConstantsFake0621;
 import frc.robot.sotm.DashboardStaticShotMap;
@@ -108,25 +112,25 @@ public class RobotContainer {
   private final CommandXboxController coDriverController = new CommandXboxController(1);
 
   public RobotContainer() {
-    // WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
-    // createActionMap();
+    WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
+    createActionMap();
 
     // DO replace these function calls with the new ones you currently want to use then redeploy
     // code
-    // configureTeleopCoDriverBindings();
+    configureTeleopCoDriverBindings();
+    configureTeleopDriverBindings();
 
-    // configureTeleopDriverBindings();
-    // configureTeleopDefaultCommands();
+    configureTeleopDefaultCommands();
 
     // Loggerhead.getInstance().setConfigureCallback(this::configureLogging);
     // Loggerhead.getInstance().initializeLogging();
-    // Loggerhead.getInstance()
-    //     .applyToConfigurator(
-    //         configurator ->
-    //             configurator
-    //                 .setConfigureCallback(this::configureLogging)
-    //                 .addHook(DriverStation::isFMSAttached))
-    //     .initializeLogging(); // Must be the final call in the configuration chain
+    Loggerhead.getInstance()
+        .applyToConfigurator(
+            configurator ->
+                configurator
+                    .setConfigureCallback(this::configureLogging)
+                    .addHook(DriverStation::isFMSAttached))
+        .initializeLogging(); // Must be the final call in the configuration chain
   }
 
   private void createActionMap() {
@@ -210,13 +214,13 @@ public class RobotContainer {
   private void configureTeleopCoDriverBindings() {}
 
   public void configureTeleopDefaultCommands() {
-    // drivetrain.setDefaultCommand(
-    //     new DriveTeleop(
-    //         drivetrain,
-    //         driverController::getLeftY,
-    //         driverController::getLeftX,
-    //         () -> -driverController.getRightX(),
-    //         driverController::getRightTriggerAxis));
+    drivetrain.setDefaultCommand(
+        new DriveTeleop(
+            drivetrain,
+            driverController::getLeftY,
+            driverController::getLeftX,
+            () -> -driverController.getRightX(),
+            driverController::getRightTriggerAxis));
   }
 
   public void configureTestDefaultCommands() {
@@ -272,6 +276,7 @@ public class RobotContainer {
 
   public void registerPeriodics(Robot robot) {
     robot.addPeriodic(Loggerhead.getInstance()::update, 0.02);
+    robot.addPeriodic(MatchContext.getInstance()::update, 0.02);
   }
 
   public Command getAutonomousCommand() {

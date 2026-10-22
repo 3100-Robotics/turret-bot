@@ -1,13 +1,12 @@
 package frc.robot;
 
-import com.sbdc.loggerhead.util.LightSubsystem;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.constants.FieldConstants;
 
-public class MatchContext extends LightSubsystem {
+public class MatchContext {
   private static MatchContext INSTANCE = new MatchContext();
 
   public static MatchContext getInstance() {
@@ -25,8 +24,7 @@ public class MatchContext extends LightSubsystem {
     return FieldConstants.getHubPoseForAlliance(isRedAlliance).getTranslation();
   }
 
-  @Override
-  public void periodic() {
+  public void update() {
     if (DriverStation.isDisabled() || !allianceSet) {
       DriverStation.getAlliance()
           .ifPresentOrElse(
