@@ -24,8 +24,8 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Subsystem;
-import frc.robot.generated.TunerConstantsFake0621;
-import frc.robot.generated.TunerConstantsFake0621.TunerSwerveDrivetrain;
+import frc.robot.generated.TunerConstantsBlastoise1022;
+import frc.robot.generated.TunerConstantsBlastoise1022.TunerSwerveDrivetrain;
 import frc.robot.utils.simulation.MapleSimSwerveDrivetrain;
 import java.util.Arrays;
 import java.util.Optional;
@@ -173,10 +173,10 @@ public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem, Logg
             getModuleLocations(),
             getPigeon2(),
             getModules(),
-            TunerConstantsFake0621.FrontLeft,
-            TunerConstantsFake0621.FrontRight,
-            TunerConstantsFake0621.BackLeft,
-            TunerConstantsFake0621.BackRight);
+            TunerConstantsBlastoise1022.FrontLeft,
+            TunerConstantsBlastoise1022.FrontRight,
+            TunerConstantsBlastoise1022.BackLeft,
+            TunerConstantsBlastoise1022.BackRight);
     /* Run simulation at a faster rate so PID gains behave more reasonably */
     m_simNotifier = new Notifier(mapleSimSwerveDrivetrain::update);
     m_simNotifier.startPeriodic(kSimLoopPeriod);

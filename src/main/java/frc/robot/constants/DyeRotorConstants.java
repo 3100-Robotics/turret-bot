@@ -15,8 +15,8 @@ import yams.telemetry.SmartMotorControllerTelemetryConfig;
 
 public interface DyeRotorConstants {
   int kickerMotorCanID1 = 40;
-  int kickerMotorCanID2 = 41;
-  int hookMotorCanID = 42;
+  int kickerMotorCanID2 = 42;
+  int hookMotorCanID = 41;
 
   DCMotor hookMotorPhysical = DCMotor.getNEO(1);
 
@@ -28,8 +28,8 @@ public interface DyeRotorConstants {
           // Gearing
           .withGearing(new MechanismGearing(GearBox.fromReductionStages(80 / 16, 80 / 10)))
           // PID / FF
-          .withClosedLoopController(new PIDController(5, 0, 0))
-          .withFeedforward(new SimpleMotorFeedforward(0, 0, 0))
+          .withClosedLoopController(new PIDController(0, 0, 0))
+          .withFeedforward(new SimpleMotorFeedforward(0, 6, 0))
           // Sim PID / FF
           .withSimClosedLoopController(new PIDController(5, 0, 0))
           .withSimFeedforward(new SimpleMotorFeedforward(0, 0, 0))
@@ -50,10 +50,10 @@ public interface DyeRotorConstants {
           // Gearing
           .withGearing(new MechanismGearing(GearBox.fromReductionStages(36 / 18, 32 / 16)))
           // PID / FF
-          .withClosedLoopController(new PIDController(5, 0, 0))
-          .withFeedforward(new SimpleMotorFeedforward(0, 0, 0))
+          .withClosedLoopController(new PIDController(0, 0, 0))
+          .withFeedforward(new SimpleMotorFeedforward(0, 0.14, 0))
           // Sim PID / FF
-          .withSimClosedLoopController(new PIDController(5, 0, 0))
+          .withSimClosedLoopController(new PIDController(0, 0, 0))
           .withSimFeedforward(new SimpleMotorFeedforward(0, 0, 0))
           .withTelemetry("kickerMotor", kickerMotorTelemetryConfig)
           // Sim props

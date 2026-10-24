@@ -79,8 +79,11 @@ public class TestCommands {
     }
   }
 
-  public static Command testFlywheel(Flywheel flywheel) {
+  static {
     SmartDashboard.putNumber(SmartDashboardKeys.Flywheel.getKeyTarget(), 0);
+  }
+
+  public static Command testFlywheel(Flywheel flywheel) {
     return Commands.runEnd(
         () ->
             flywheel.setSpeed(
@@ -89,18 +92,24 @@ public class TestCommands {
         flywheel);
   }
 
-  public static Command testHood(Hood hood) {
+  static {
     SmartDashboard.putNumber(SmartDashboardKeys.Hood.getKeyTarget(), 0);
+  }
+
+  public static Command testHood(Hood hood) {
     return Commands.runEnd(
         () ->
             hood.setHoodAngle(
-                Degrees.of(SmartDashboard.getNumber(SmartDashboardKeys.Hood.getKeyTarget(), 0))),
+                Degrees.of(SmartDashboard.getNumber(SmartDashboardKeys.Hood.getKeyTarget(), 9))),
         hood::stopHood,
         hood);
   }
 
-  public static Command testHook(Hook hook) {
+  static {
     SmartDashboard.putNumber(SmartDashboardKeys.Hook.getKeyTarget(), 0);
+  }
+
+  public static Command testHook(Hook hook) {
     return Commands.runEnd(
         () ->
             hook.setSpeed(
@@ -141,8 +150,11 @@ public class TestCommands {
         intakeRoller);
   }
 
-  public static Command testKicker(Kicker kicker) {
+  static {
     SmartDashboard.putNumber(SmartDashboardKeys.Kicker.getKeyTarget(), 0);
+  }
+
+  public static Command testKicker(Kicker kicker) {
     return Commands.runEnd(
         () ->
             kicker.setSpeed(

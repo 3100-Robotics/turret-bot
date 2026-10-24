@@ -5,7 +5,6 @@ import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.KilogramSquareMeters;
 import static edu.wpi.first.units.Units.Pound;
-import static edu.wpi.first.units.Units.Seconds;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
@@ -21,16 +20,18 @@ import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 
 public interface ShooterConstants {
-  int hoodMotorCanID = 50;
-  int leftFlywheelMotorCanID = 51;
-  int rightFlywheelMotorCanID = 52;
-  int turretMotorCanID = 53;
+  int hoodMotorCanID = 52;
+  int leftFlywheelMotorCanID = 53;
+  int rightFlywheelMotorCanID = 51;
+  int turretMotorCanID = 50;
 
   Angle maxHoodAngle = Degrees.of(46.0);
   Angle minHoodAngle = Degrees.of(7.721437);
 
-  Angle maxTurretAngle = Degrees.of(360 + 21.76);
-  Angle minTurretAngle = Degrees.of(0);
+  //   Angle maxTurretAngle = Degrees.of(360 + 21.76);
+  //   Angle minTurretAngle = Degrees.of(0);
+  Angle maxTurretAngle = Degrees.of(270);
+  Angle minTurretAngle = Degrees.of(-45);
   Angle safeMaxTurretAngle = maxTurretAngle.minus(Degrees.of(2));
 
   DCMotor hoodMotorPhysical = DCMotor.getKrakenX60(1);
@@ -39,7 +40,7 @@ public interface ShooterConstants {
       new SmartMotorControllerConfig()
           .withControlMode(ControlMode.CLOSED_LOOP)
           // Feedback Constants (PID Constants)
-          .withClosedLoopController(50, 0, 0)
+          .withClosedLoopController(70, 0, 0)
           .withSimClosedLoopController(10, 0, 0)
           // .withTrapezoidalProfile(DegreesPerSecond.of(90), DegreesPerSecondPerSecond.of(45))
           .withStartingPosition(minHoodAngle)
@@ -51,11 +52,12 @@ public interface ShooterConstants {
           // Gearing from the motor rotor to final shaft.
           .withGearing(new MechanismGearing(GearBox.fromReductionStages(50 / 14, 155 / 10)))
           // Motor properties to prevent over currenting.
-          .withMotorInverted(false)
-          .withIdleMode(MotorMode.BRAKE)
-          .withStatorCurrentLimit(Amps.of(40))
-          .withClosedLoopRampRate(Seconds.of(0.25))
-          .withOpenLoopRampRate(Seconds.of(0.25))
+          .withMotorInverted(true)
+          .withIdleMode(MotorMode.COAST)
+          .withStatorCurrentLimit(Amps.of(80))
+          .withSupplyCurrentLimit(Amps.of(40))
+          //   .withClosedLoopRampRate(Seconds.of(0.25))
+          //   .withOpenLoopRampRate(Seconds.of(0.25))
           // MOI
           .withMomentOfInertia(KilogramSquareMeters.of(0.0190245794));
 
@@ -84,14 +86,14 @@ public interface ShooterConstants {
       new SmartMotorControllerConfig()
           .withControlMode(ControlMode.CLOSED_LOOP)
           // Feedback Constants (PID Constants)
-          .withClosedLoopController(50, 0, 0)
-          .withSimClosedLoopController(15, 0, 0)
+          .withClosedLoopController(30, 0, 0)
+          .withSimClosedLoopController(0, 0, 0)
           // .withTrapezoidalProfile(DegreesPerSecond.of(90), DegreesPerSecondPerSecond.of(45))
           // .withContinuousWrapping(minTurretAngle, Degrees.of(360))
-          .withStartingPosition(minHoodAngle)
+          .withStartingPosition(Degrees.of(0))
           // Feedforward Constants
           .withFeedforward(new ArmFeedforward(0, 0, 0))
-          .withSimFeedforward(new ArmFeedforward(0, 0, 6))
+          .withSimFeedforward(new ArmFeedforward(0, 0, 0))
           // Telemetry name and verbosity level
           .withTelemetry("turretMotor", TelemetryVerbosity.HIGH)
           // Gearing from the motor rotor to final shaft.
@@ -103,11 +105,13 @@ public interface ShooterConstants {
           .withMotorInverted(false)
           .withIdleMode(MotorMode.COAST)
           .withStatorCurrentLimit(Amps.of(40))
-          .withClosedLoopRampRate(Seconds.of(0.25))
-          .withOpenLoopRampRate(Seconds.of(0.25))
+          .withSupplyCurrentLimit(Amps.of(40))
+          //   .withClosedLoopRampRate(Seconds.of(0.25))
+          //   .withOpenLoopRampRate(Seconds.of(0.25))
           // MOI
+
           .withMomentOfInertia(KilogramSquareMeters.of(0.0190245794))
-          .withSoftLimits(minTurretAngle, Degrees.of(360));
+          .withSoftLimits(minTurretAngle, maxTurretAngle);
 
   PivotConfig turretConfig =
       new PivotConfig()
