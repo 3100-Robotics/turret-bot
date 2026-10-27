@@ -18,11 +18,11 @@ import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 
 public interface IntakeConstants {
-  int topRollerMotorCanID1 = 30;
-  int topRollerMotorCanID2 = 31;
-  int bottomRollerMotorCanID = 32;
-  int extensionMotorLeftCanID = 33;
-  int extensionMotorRightCanID = 34;
+  int topRollerMotorLeftCanID1 = 32;
+  int topRollerMotorRightCanID2 = 34;
+  int bottomRollerMotorCanID = 33;
+  int extensionMotorLeftCanID = 31;
+  int extensionMotorRightCanID = 30;
 
   DCMotor topRollerMotorPhysical = DCMotor.getKrakenX60(2);
   DCMotor bottomRollerMotorPhysical = DCMotor.getKrakenX60(1);

@@ -30,7 +30,7 @@ public class Kicker extends LightSubsystem implements Loggable {
               .withFollowers(
                   Pair.of(
                       new SparkMax(DyeRotorConstants.kickerMotorCanID2, MotorType.kBrushless),
-                      false)));
+                      true)));
 
   public void setState(KickerTarget state) {
     switch (state) {

@@ -1,0 +1,54 @@
+{
+  "NetworkTables": {
+    "transitory": {
+      "SmartDashboard": {
+        "manualSubsystemControlPanel": {
+          "Hood": {
+            "open": true
+          },
+          "open": true
+        },
+        "open": true
+      },
+      "Subsystems": {
+        "hood": {
+          "open": true
+        },
+        "open": true
+      }
+    },
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/Mechanisms/Commands/IntakeExtension/Live Tuning": "Command",
+      "/SmartDashboard/Mechanisms/Commands/IntakeRollers/Live Tuning": "Command",
+      "/SmartDashboard/Mechanisms/Commands/Turret/Live Tuning": "Command",
+      "/SmartDashboard/Mechanisms/Commands/bottomIntakeRollerMotor/Down": "Command",
+      "/SmartDashboard/Mechanisms/Commands/bottomIntakeRollerMotor/Up": "Command",
+      "/SmartDashboard/Mechanisms/Commands/bottomIntakeRollerMotor/ZeroEncoder": "Command",
+      "/SmartDashboard/Mechanisms/Commands/intakeExtensionMotor/Down": "Command",
+      "/SmartDashboard/Mechanisms/Commands/intakeExtensionMotor/Up": "Command",
+      "/SmartDashboard/Mechanisms/Commands/intakeExtensionMotor/ZeroEncoder": "Command",
+      "/SmartDashboard/Mechanisms/Commands/topIntakeRollerMotor/Down": "Command",
+      "/SmartDashboard/Mechanisms/Commands/topIntakeRollerMotor/Up": "Command",
+      "/SmartDashboard/Mechanisms/Commands/topIntakeRollerMotor/ZeroEncoder": "Command",
+      "/SmartDashboard/Mechanisms/Commands/turretMotor/Down": "Command",
+      "/SmartDashboard/Mechanisms/Commands/turretMotor/Up": "Command",
+      "/SmartDashboard/Mechanisms/Commands/turretMotor/ZeroEncoder": "Command",
+      "/SmartDashboard/PhotonAlerts": "Alerts",
+      "Subsystems/flywheel/Commands": "Subsystem",
+      "Subsystems/hood/Commands": "Subsystem",
+      "Subsystems/hook/Commands": "Subsystem",
+      "Subsystems/intakeExtension/Commands": "Subsystem",
+      "Subsystems/intakeRoller/Commands": "Subsystem",
+      "Subsystems/kicker/Commands": "Subsystem",
+      "Subsystems/turret/Commands": "Subsystem"
+    }
+  },
+  "NetworkTables Info": {
+    "visible": true
+  },
+  "NetworkTables Settings": {
+    "mode": "Client (NT4)",
+    "serverTeam": "3100"
+  }
+}

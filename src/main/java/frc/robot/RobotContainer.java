@@ -27,7 +27,7 @@ import frc.robot.commands.BlastoiseCommands;
 import frc.robot.commands.drivecommands.DrivePointAtAngle;
 import frc.robot.commands.drivecommands.DriveTeleop;
 import frc.robot.commands.testcommands.TestCommands;
-import frc.robot.generated.TunerConstantsFake0621;
+import frc.robot.generated.TunerConstantsBlastoise1022;
 import frc.robot.sotm.DashboardStaticShotMap;
 import frc.robot.sotm.DynamicShotMap;
 import frc.robot.sotm.SOTMStateTracker;
@@ -72,7 +72,7 @@ public class RobotContainer {
 
   private final HashMap<String, Command> blastoiseCommandMap = new HashMap<>();
 
-  private final Drivetrain drivetrain = TunerConstantsFake0621.createDrivetrain();
+  private final Drivetrain drivetrain = TunerConstantsBlastoise1022.createDrivetrain();
   private final ShotMap dashShotMap = new DashboardStaticShotMap();
   private final SOTMStateTracker sotmstate = new SOTMStateTracker(drivetrain);
   private final DynamicShotMap dynamicShotMap = new DynamicShotMap(sotmstate);
@@ -106,7 +106,7 @@ public class RobotContainer {
   private final IntakeExtension intakeExtension = new IntakeExtension();
   private final IntakeRollers intakeRollers = new IntakeRollers();
 
-  private final PowerDistribution pdh = new PowerDistribution(14, ModuleType.kRev);
+  private final PowerDistribution pdh = new PowerDistribution(63, ModuleType.kRev);
 
   private final CommandXboxController driverController = new CommandXboxController(0);
   private final CommandXboxController coDriverController = new CommandXboxController(1);
@@ -225,14 +225,14 @@ public class RobotContainer {
 
   public void configureTestDefaultCommands() {
     flywheel.setDefaultCommand(TestCommands.testFlywheel(flywheel));
-    hood.setDefaultCommand(TestCommands.testHood(hood));
-    turret.setDefaultCommand(TestCommands.testTurret(turret));
+    // hood.setDefaultCommand(TestCommands.testHood(hood));
+    // turret.setDefaultCommand(TestCommands.testTurret(turret));
 
     hook.setDefaultCommand(TestCommands.testHook(hook));
     kicker.setDefaultCommand(TestCommands.testKicker(kicker));
 
-    intakeExtension.setDefaultCommand(TestCommands.testIntakeExtensionNamed(intakeExtension));
-    intakeRollers.setDefaultCommand(TestCommands.testIntakeRollers(intakeRollers));
+    // intakeExtension.setDefaultCommand(TestCommands.testIntakeExtensionNamed(intakeExtension));
+    // intakeRollers.setDefaultCommand(TestCommands.testIntakeRollers(intakeRollers));
   }
 
   private void configureLogging() {

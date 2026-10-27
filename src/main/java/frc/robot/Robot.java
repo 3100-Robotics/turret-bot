@@ -66,12 +66,10 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testInit() {
-    subsystemListLock = true;
     CommandScheduler.getInstance().cancelAll();
     LightSubsystem.getAllLightSubsystems()
         .forEach(subsystem -> CommandScheduler.getInstance().removeDefaultCommand(subsystem));
     m_robotContainer.configureTestDefaultCommands();
-    subsystemListLock = false;
   }
 
   @Override
@@ -79,11 +77,9 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testExit() {
-    subsystemListLock = true;
     CommandScheduler.getInstance().cancelAll();
     LightSubsystem.getAllLightSubsystems()
         .forEach(subsystem -> CommandScheduler.getInstance().removeDefaultCommand(subsystem));
     m_robotContainer.configureTeleopDefaultCommands();
-    subsystemListLock = false;
   }
 }

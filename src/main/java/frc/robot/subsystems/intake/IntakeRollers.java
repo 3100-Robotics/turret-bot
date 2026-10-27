@@ -17,8 +17,8 @@ import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.remote.TalonFXWrapper;
 
 public class IntakeRollers extends LightSubsystem implements Loggable {
-  private final TalonFX topRawMotor1 = new TalonFX(IntakeConstants.topRollerMotorCanID1);
-  private final TalonFX topRawMotor2 = new TalonFX(IntakeConstants.topRollerMotorCanID2);
+  private final TalonFX topRawMotor1 = new TalonFX(IntakeConstants.topRollerMotorLeftCanID1);
+  private final TalonFX topRawMotor2 = new TalonFX(IntakeConstants.topRollerMotorRightCanID2);
   private final TalonFX bottomRawMotor = new TalonFX(IntakeConstants.bottomRollerMotorCanID);
 
   private final SmartMotorController topMotor =

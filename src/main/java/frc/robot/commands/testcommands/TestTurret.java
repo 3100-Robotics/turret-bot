@@ -10,11 +10,14 @@ import frc.robot.subsystems.shooter.Turret;
 class TestTurret extends Command {
   private final Turret turret;
 
+  static {
+    SmartDashboard.putNumber(SmartDashboardKeys.Turret.getKeyTarget(), 0);
+    SmartDashboard.putBoolean(SmartDashboardKeys.Turret.getKeyOther("WrappingOn"), true);
+  }
+
   public TestTurret(Turret turret) {
     this.turret = turret;
 
-    SmartDashboard.putNumber(SmartDashboardKeys.Turret.getKeyTarget(), 0);
-    SmartDashboard.putBoolean(SmartDashboardKeys.Turret.getKeyOther("WrappingOn"), true);
     addRequirements(turret);
   }
 

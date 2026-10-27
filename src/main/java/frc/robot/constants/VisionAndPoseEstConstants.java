@@ -31,7 +31,7 @@ public class VisionAndPoseEstConstants {
                   Inches.of(28.002807).in(Meters)),
               new Rotation3d(0, Math.toRadians(-15), 0)
                   .rotateBy(new Rotation3d(0, 0, Math.toRadians(49)))),
-          "right",
+          "frontright",
           (!Robot.isReal()) && simulateCoproc,
           new SimCameraProperties()
               .setCalibration(960, 720, Rotation2d.fromDegrees(70))
@@ -56,7 +56,7 @@ public class VisionAndPoseEstConstants {
               //     .rotateBy(new Rotation3d(0, 0, -20))
               new Rotation3d(0, Math.toRadians(-15), Math.toRadians(0))
                   .rotateBy(new Rotation3d(0, 0, Math.toRadians(225)))),
-          "left",
+          "backleft",
           (!Robot.isReal()) && simulateCoproc,
           new SimCameraProperties()
               .setCalibration(960, 720, Rotation2d.fromDegrees(70))
