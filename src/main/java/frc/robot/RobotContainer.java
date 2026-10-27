@@ -9,6 +9,8 @@ import static edu.wpi.first.units.Units.Degrees;
 import com.sbdc.loggerhead.logging.LogMode;
 import com.sbdc.loggerhead.logging.Loggerhead;
 import com.sbdc.loggerhead.logging.compoundlogger.LogSubsystemCommands;
+import com.sbdc.loggerhead.util.LightSubsystem;
+
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -22,6 +24,7 @@ import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ProxyCommand;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.BlastoiseCommands;
 import frc.robot.commands.drivecommands.DrivePointAtAngle;
@@ -40,6 +43,7 @@ import frc.robot.subsystems.intake.IntakeRollers;
 import frc.robot.subsystems.shooter.Flywheel;
 import frc.robot.subsystems.shooter.Hood;
 import frc.robot.subsystems.shooter.Turret;
+import frc.robot.utils.Utils;
 import frc.robot.vision.HPoseEstimator;
 import frc.robot.vision.MainVision;
 import java.util.EnumSet;
@@ -70,7 +74,7 @@ public class RobotContainer {
     hPoseReset;
   }
 
-  private final HashMap<String, Command> blastoiseCommandMap = new HashMap<>();
+  private final HashMap<BlastoiseActions, Command> blastoiseCommandMap = new HashMap<>();
 
   private final Drivetrain drivetrain = TunerConstantsBlastoise1022.createDrivetrain();
   private final ShotMap dashShotMap = new DashboardStaticShotMap();
@@ -115,7 +119,7 @@ public class RobotContainer {
     WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
     createActionMap();
 
-    // DO replace these function calls with the new ones you currently want to use then redeploy
+    // Do replace these function calls with the new ones you currently want to use then redeploy
     // code
     configureTeleopCoDriverBindings();
     configureTeleopDriverBindings();
@@ -171,18 +175,23 @@ public class RobotContainer {
     Command resetHeadingHPoseCommand =
         Commands.runOnce(() -> resetPoseAndHeadings(EnumSet.of(PoseHeadingResetParams.hPoseReset)));
 
-    blastoiseCommandMap.put("shootCommand", shootCommand);
-    blastoiseCommandMap.put("autoAlignCommand", autoAlignCommand);
+    blastoiseCommandMap.put(BlastoiseActions.shootCommand, shootCommand);
+    blastoiseCommandMap.put(BlastoiseActions.autoAlignCommand, autoAlignCommand);
     // blastoiseCommandMap.put("intakeHighCommand", intakeHighCommand);
     // blastoiseCommandMap.put("intakeMidLowToggleCommand", intakeMidLowToggleCommand);
     // blastoiseCommandMap.put("intakeRunCommand", intakeRunCommand);
 
-    blastoiseCommandMap.put("resetHeadingAllCommand", resetHeadingAllCommand);
-    blastoiseCommandMap.put("resetHeadingSimCommand", resetHeadingSimCommand);
-    blastoiseCommandMap.put("resetHeadingCTRECommand", resetHeadingCTRECommand);
-    blastoiseCommandMap.put("resetHeadingGyroCommand", resetHeadingGyroCommand);
-    blastoiseCommandMap.put("resetHeadingGyroWrapperCommand", resetHeadingGyroWrapperCommand);
-    blastoiseCommandMap.put("resetHeadingHPoseCommand", resetHeadingHPoseCommand);
+    blastoiseCommandMap.put(BlastoiseActions.resetHeadingAllCommand, resetHeadingAllCommand);
+    blastoiseCommandMap.put(BlastoiseActions.resetHeadingSimCommand, resetHeadingSimCommand);
+    blastoiseCommandMap.put(BlastoiseActions.resetHeadingCTRECommand, resetHeadingCTRECommand);
+    blastoiseCommandMap.put(BlastoiseActions.resetHeadingGyroCommand, resetHeadingGyroCommand);
+    blastoiseCommandMap.put(BlastoiseActions.resetHeadingGyroWrapperCommand, resetHeadingGyroWrapperCommand);
+    blastoiseCommandMap.put(BlastoiseActions.resetHeadingHPoseCommand, resetHeadingHPoseCommand);
+  }
+
+  @SuppressWarnings("unused")
+  private Command getAction(BlastoiseActions action) {
+    return blastoiseCommandMap.get(action);
   }
 
   private void resetPoseAndHeadings(EnumSet<PoseHeadingResetParams> resetParams) {
@@ -223,16 +232,28 @@ public class RobotContainer {
             driverController::getRightTriggerAxis));
   }
 
-  public void configureTestDefaultCommands() {
-    flywheel.setDefaultCommand(TestCommands.testFlywheel(flywheel));
-    // hood.setDefaultCommand(TestCommands.testHood(hood));
-    // turret.setDefaultCommand(TestCommands.testTurret(turret));
+  public void configureTestDefaultCommands(HashMap<LightSubsystem, Command> testCommandsMap, boolean createCommands) {
+    if (createCommands) {
+      testCommandsMap.put(flywheel, TestCommands.testFlywheel(flywheel));
+      testCommandsMap.put(hood, TestCommands.testHood(hood));
+      testCommandsMap.put(turret, TestCommands.testTurret(turret));
 
-    hook.setDefaultCommand(TestCommands.testHook(hook));
-    kicker.setDefaultCommand(TestCommands.testKicker(kicker));
+      testCommandsMap.put(hook, TestCommands.testHook(hook));
+      testCommandsMap.put(kicker, TestCommands.testKicker(kicker));
 
-    // intakeExtension.setDefaultCommand(TestCommands.testIntakeExtensionNamed(intakeExtension));
-    // intakeRollers.setDefaultCommand(TestCommands.testIntakeRollers(intakeRollers));
+      testCommandsMap.put(intakeExtension, TestCommands.testIntakeExtensionNamed(intakeExtension));
+      testCommandsMap.put(intakeRollers, TestCommands.testIntakeRollers(intakeRollers));
+    }
+    
+    Utils.setLightSusbsytemDefaultCommandFromMap(flywheel, testCommandsMap);
+    Utils.setLightSusbsytemDefaultCommandFromMap(hood, testCommandsMap);
+    Utils.setLightSusbsytemDefaultCommandFromMap(turret, testCommandsMap);
+
+    Utils.setLightSusbsytemDefaultCommandFromMap(hook, testCommandsMap);
+    Utils.setLightSusbsytemDefaultCommandFromMap(kicker, testCommandsMap);
+
+    Utils.setLightSusbsytemDefaultCommandFromMap(intakeExtension, testCommandsMap);
+    Utils.setLightSusbsytemDefaultCommandFromMap(intakeRollers, testCommandsMap);
   }
 
   private void configureLogging() {

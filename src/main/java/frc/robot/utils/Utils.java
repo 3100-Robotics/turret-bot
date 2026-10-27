@@ -1,6 +1,11 @@
 package frc.robot.utils;
 
+import java.util.HashMap;
+
+import com.sbdc.loggerhead.util.LightSubsystem;
+
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj2.command.Command;
 
 public class Utils {
   public static void warnIfDriverStationOutOfTest(String message) {
@@ -36,5 +41,9 @@ public class Utils {
       DriverStation.reportWarning(
           "Test method called out of test mode! Method: " + callerMethod, false);
     }
+  }
+
+  public static void setLightSusbsytemDefaultCommandFromMap(LightSubsystem subsystem, HashMap<LightSubsystem, Command> map) {
+    subsystem.setDefaultCommand(map.get(subsystem));
   }
 }
