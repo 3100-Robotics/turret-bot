@@ -58,7 +58,7 @@ public interface IntakeConstants {
 
   SmartMotorControllerConfig extensionMotorConfig =
       new SmartMotorControllerConfig()
-          .withMechanismCircumference(Inches.of(1))
+          .withMechanismCircumference(Inches.of(Math.PI))
           .withControlMode(ControlMode.CLOSED_LOOP)
           .withMotorInverted(false)
           .withIdleMode(MotorMode.BRAKE)

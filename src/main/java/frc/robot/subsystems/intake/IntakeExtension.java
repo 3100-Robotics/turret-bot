@@ -19,7 +19,7 @@ import yams.motorcontrollers.remote.TalonFXWrapper;
 
 public class IntakeExtension extends LightSubsystem implements Loggable {
   private final TalonFX extensionMotorLeft = new TalonFX(IntakeConstants.extensionMotorLeftCanID);
-  private final TalonFX extensionMotorRight = new TalonFX(IntakeConstants.extensionMotorLeftCanID);
+  private final TalonFX extensionMotorRight = new TalonFX(IntakeConstants.extensionMotorRightCanID);
 
   private final SmartMotorController motor =
       new TalonFXWrapper(

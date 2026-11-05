@@ -246,15 +246,15 @@ public class RobotContainer {
       testCommandsMap.put(intakeRollers, TestCommands.testIntakeRollers(intakeRollers));
     }
 
-    Utils.setLightSusbsytemDefaultCommandFromMap(flywheel, testCommandsMap);
-    Utils.setLightSusbsytemDefaultCommandFromMap(hood, testCommandsMap);
-    Utils.setLightSusbsytemDefaultCommandFromMap(turret, testCommandsMap);
+    // Utils.setLightSusbsytemDefaultCommandFromMap(flywheel, testCommandsMap);
+    // Utils.setLightSusbsytemDefaultCommandFromMap(hood, testCommandsMap);
+    // Utils.setLightSusbsytemDefaultCommandFromMap(turret, testCommandsMap);
 
-    Utils.setLightSusbsytemDefaultCommandFromMap(hook, testCommandsMap);
-    Utils.setLightSusbsytemDefaultCommandFromMap(kicker, testCommandsMap);
+    // Utils.setLightSusbsytemDefaultCommandFromMap(hook, testCommandsMap);
+    // Utils.setLightSusbsytemDefaultCommandFromMap(kicker, testCommandsMap);
 
     Utils.setLightSusbsytemDefaultCommandFromMap(intakeExtension, testCommandsMap);
-    Utils.setLightSusbsytemDefaultCommandFromMap(intakeRollers, testCommandsMap);
+    // Utils.setLightSusbsytemDefaultCommandFromMap(intakeRollers, testCommandsMap);
   }
 
   private void configureLogging() {
