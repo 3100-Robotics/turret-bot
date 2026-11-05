@@ -1,11 +1,9 @@
 package frc.robot.utils;
 
-import java.util.HashMap;
-
 import com.sbdc.loggerhead.util.LightSubsystem;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
+import java.util.HashMap;
 
 public class Utils {
   public static void warnIfDriverStationOutOfTest(String message) {
@@ -43,7 +41,8 @@ public class Utils {
     }
   }
 
-  public static void setLightSusbsytemDefaultCommandFromMap(LightSubsystem subsystem, HashMap<LightSubsystem, Command> map) {
+  public static void setLightSusbsytemDefaultCommandFromMap(
+      LightSubsystem subsystem, HashMap<LightSubsystem, Command> map) {
     subsystem.setDefaultCommand(map.get(subsystem));
   }
 }

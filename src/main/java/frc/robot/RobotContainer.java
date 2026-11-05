@@ -10,7 +10,6 @@ import com.sbdc.loggerhead.logging.LogMode;
 import com.sbdc.loggerhead.logging.Loggerhead;
 import com.sbdc.loggerhead.logging.compoundlogger.LogSubsystemCommands;
 import com.sbdc.loggerhead.util.LightSubsystem;
-
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -24,7 +23,6 @@ import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ProxyCommand;
-import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.BlastoiseCommands;
 import frc.robot.commands.drivecommands.DrivePointAtAngle;
@@ -185,7 +183,8 @@ public class RobotContainer {
     blastoiseCommandMap.put(BlastoiseActions.resetHeadingSimCommand, resetHeadingSimCommand);
     blastoiseCommandMap.put(BlastoiseActions.resetHeadingCTRECommand, resetHeadingCTRECommand);
     blastoiseCommandMap.put(BlastoiseActions.resetHeadingGyroCommand, resetHeadingGyroCommand);
-    blastoiseCommandMap.put(BlastoiseActions.resetHeadingGyroWrapperCommand, resetHeadingGyroWrapperCommand);
+    blastoiseCommandMap.put(
+        BlastoiseActions.resetHeadingGyroWrapperCommand, resetHeadingGyroWrapperCommand);
     blastoiseCommandMap.put(BlastoiseActions.resetHeadingHPoseCommand, resetHeadingHPoseCommand);
   }
 
@@ -232,9 +231,11 @@ public class RobotContainer {
             driverController::getRightTriggerAxis));
   }
 
-  public void configureTestDefaultCommands(HashMap<LightSubsystem, Command> testCommandsMap, boolean createCommands) {
+  public void configureTestDefaultCommands(
+      HashMap<LightSubsystem, Command> testCommandsMap, boolean createCommands) {
     if (createCommands) {
-      testCommandsMap.put(flywheel, TestCommands.testFlywheel(flywheel));
+      // testCommandsMap.put(flywheel, TestCommands.testFlywheel(flywheel));
+      testCommandsMap.put(flywheel, TestCommands.testMultiFlywheelSpeeds(flywheel));
       testCommandsMap.put(hood, TestCommands.testHood(hood));
       testCommandsMap.put(turret, TestCommands.testTurret(turret));
 
@@ -244,7 +245,7 @@ public class RobotContainer {
       testCommandsMap.put(intakeExtension, TestCommands.testIntakeExtensionNamed(intakeExtension));
       testCommandsMap.put(intakeRollers, TestCommands.testIntakeRollers(intakeRollers));
     }
-    
+
     Utils.setLightSusbsytemDefaultCommandFromMap(flywheel, testCommandsMap);
     Utils.setLightSusbsytemDefaultCommandFromMap(hood, testCommandsMap);
     Utils.setLightSusbsytemDefaultCommandFromMap(turret, testCommandsMap);

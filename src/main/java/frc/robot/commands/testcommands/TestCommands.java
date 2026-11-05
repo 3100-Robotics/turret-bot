@@ -92,6 +92,10 @@ public class TestCommands {
         flywheel);
   }
 
+  public static Command testMultiFlywheelSpeeds(Flywheel flywheel) {
+    return new TestMultiFlywheelSpeeds(flywheel);
+  }
+
   static {
     SmartDashboard.putNumber(SmartDashboardKeys.Hood.getKeyTarget(), 0);
   }
