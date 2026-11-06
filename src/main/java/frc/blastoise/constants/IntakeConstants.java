@@ -1,4 +1,4 @@
-package frc.robot.constants;
+package frc.blastoise.constants;
 
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Inches;
@@ -26,7 +26,7 @@ public interface IntakeConstants {
 
   DCMotor topRollerMotorPhysical = DCMotor.getKrakenX60(2);
   DCMotor bottomRollerMotorPhysical = DCMotor.getKrakenX60(1);
-  DCMotor extensionMotorPhysical = DCMotor.getKrakenX60(2);
+  DCMotor extensionMotorPhysical = DCMotor.getKrakenX60(1);
 
   SmartMotorControllerConfig topRollerMotorConfig =
       new SmartMotorControllerConfig()

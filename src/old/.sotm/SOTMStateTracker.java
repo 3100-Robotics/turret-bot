@@ -1,4 +1,4 @@
-package frc.robot.sotm;
+package frc.blastoise.sotm;
 
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.RPM;
@@ -7,8 +7,8 @@ import com.sbdc.loggerhead.util.LightSubsystem;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
-import frc.robot.MatchContext;
-import frc.robot.subsystems.drive.Drivetrain;
+import frc.blastoise.MatchContext;
+import frc.blastoise.subsystems.drive.Drivetrain;
 
 /** Based on blog.eeshwark.com/blog/shooting-on-the-fly-pt2 */
 public class SOTMStateTracker extends LightSubsystem {

@@ -1,4 +1,4 @@
-package frc.robot.vision;
+package frc.blastoise.vision;
 
 import com.sbdc.loggerhead.logging.LogMode;
 import com.sbdc.loggerhead.logging.Loggable;
@@ -11,7 +11,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-import frc.robot.subsystems.drive.Drivetrain;
+import frc.blastoise.subsystems.drive.Drivetrain;
 
 public class HPoseEstimator extends LightSubsystem implements Loggable {
   private final SwerveDrivePoseEstimator estWithVision;

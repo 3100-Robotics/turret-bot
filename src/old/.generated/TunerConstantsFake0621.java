@@ -1,4 +1,4 @@
-package frc.robot.generated;
+package frc.blastoise.generated;
 
 import static edu.wpi.first.units.Units.*;
 
@@ -12,7 +12,7 @@ import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.units.measure.*;
-import frc.robot.subsystems.drive.Drivetrain;
+import frc.blastoise.subsystems.drive.Drivetrain;
 
 // TODO LTPM standard for the naming of the tuner constants file
 

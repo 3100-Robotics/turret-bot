@@ -1,4 +1,4 @@
-package frc.robot.commands.testcommands;
+package frc.blastoise.commands.testcommands;
 
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Meters;
@@ -8,13 +8,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.Subsystem;
-import frc.robot.subsystems.dyerotor.Hook;
-import frc.robot.subsystems.dyerotor.Kicker;
-import frc.robot.subsystems.intake.IntakeExtension;
-import frc.robot.subsystems.intake.IntakeRollers;
-import frc.robot.subsystems.shooter.Flywheel;
-import frc.robot.subsystems.shooter.Hood;
-import frc.robot.subsystems.shooter.Turret;
+import frc.blastoise.subsystems.dyerotor.Hook;
+import frc.blastoise.subsystems.dyerotor.Kicker;
+import frc.blastoise.subsystems.intake.IntakeExtension;
+import frc.blastoise.subsystems.intake.IntakeRollers;
+import frc.blastoise.subsystems.shooter.Flywheel;
+import frc.blastoise.subsystems.shooter.Hood;
+import frc.blastoise.subsystems.shooter.Turret;
 
 public class TestCommands {
   public enum SmartDashboardKeys {

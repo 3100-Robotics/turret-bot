@@ -1,4 +1,4 @@
-package frc.robot.util;
+package frc.blastoise.util;
 
 import com.ctre.phoenix6.StatusCode;
 import java.util.function.Supplier;

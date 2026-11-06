@@ -1,13 +1,13 @@
-package frc.robot.sotm;
+package frc.blastoise.sotm;
 
 import static edu.wpi.first.units.Units.Degrees;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import frc.robot.MatchContext;
-import frc.robot.constants.ShooterConstants;
-import frc.robot.constants.ShotTable;
+import frc.blastoise.MatchContext;
+import frc.blastoise.constants.ShooterConstants;
+import frc.blastoise.constants.ShotTable;
 
 /** Based on blog.eeshwark.com/blog/shooting-on-the-fly-pt2 */
 public class SOTMHelper {

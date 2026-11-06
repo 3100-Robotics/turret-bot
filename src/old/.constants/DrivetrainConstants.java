@@ -1,7 +1,7 @@
-package frc.robot.constants;
+package frc.blastoise.constants;
 
 import com.ctre.phoenix6.swerve.SwerveRequest;
-import frc.robot.Robot;
+import frc.blastoise.Robot;
 
 public class DrivetrainConstants {
   public static final SwerveRequest.Idle IDLE = new SwerveRequest.Idle();

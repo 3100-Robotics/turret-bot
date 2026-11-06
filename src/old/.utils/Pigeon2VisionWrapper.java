@@ -1,4 +1,4 @@
-package frc.robot.utils;
+package frc.blastoise.utils;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
 import edu.wpi.first.math.geometry.Rotation3d;

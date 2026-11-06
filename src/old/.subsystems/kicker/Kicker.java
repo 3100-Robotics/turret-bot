@@ -1,4 +1,4 @@
-package frc.robot.subsystems.kicker;
+package frc.blastoise.subsystems.kicker;
 
 import static edu.wpi.first.units.Units.RPM;
 
@@ -11,9 +11,9 @@ import com.sbdc.loggerhead.logging.Table;
 import com.sbdc.loggerhead.util.LightSubsystem;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.units.measure.AngularVelocity;
-import frc.robot.constants.DyeRotorConstants;
-import frc.robot.targets.DyeRotorTargets.KickerTarget;
-import frc.robot.utils.Utils;
+import frc.blastoise.constants.DyeRotorConstants;
+import frc.blastoise.targets.DyeRotorTargets.KickerTarget;
+import frc.blastoise.utils.Utils;
 import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.local.SparkWrapper;
 

@@ -1,10 +1,10 @@
-package frc.robot.commands;
+package frc.blastoise.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.sotm.ShotMap;
-import frc.robot.subsystems.shooter.Flywheel;
-import frc.robot.subsystems.shooter.Hood;
+import frc.blastoise.sotm.ShotMap;
+import frc.blastoise.subsystems.shooter.Flywheel;
+import frc.blastoise.subsystems.shooter.Hood;
 
 public class ShooterCommands {
   public static Command flywheelsDynamic(Flywheel flywheel, ShotMap shotMap) {

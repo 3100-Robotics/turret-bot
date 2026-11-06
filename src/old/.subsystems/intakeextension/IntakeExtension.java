@@ -1,4 +1,4 @@
-package frc.robot.subsystems.intakeextension;
+package frc.blastoise.subsystems.intakeextension;
 
 import static edu.wpi.first.units.Units.Meters;
 
@@ -10,9 +10,9 @@ import com.sbdc.loggerhead.logging.Table;
 import com.sbdc.loggerhead.util.LightSubsystem;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.units.measure.Distance;
-import frc.robot.constants.IntakeConstants;
-import frc.robot.targets.IntakeTargets.IntakeExtensionTarget;
-import frc.robot.utils.Utils;
+import frc.blastoise.constants.IntakeConstants;
+import frc.blastoise.targets.IntakeTargets.IntakeExtensionTarget;
+import frc.blastoise.utils.Utils;
 import yams.mechanisms.positional.Elevator;
 import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.remote.TalonFXWrapper;

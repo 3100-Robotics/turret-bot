@@ -1,4 +1,4 @@
-package frc.robot.subsystems.drive;
+package frc.blastoise.subsystems.drive;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusCode;
@@ -9,7 +9,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
-import frc.robot.generated.TunerConstantsBlastoise1022;
+import frc.blastoise.generated.TunerConstantsBlastoise1022;
 import java.util.Queue;
 
 /** IO implementation for Pigeon 2. */

@@ -1,4 +1,4 @@
-package frc.robot.sotm;
+package frc.blastoise.sotm;
 
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.RPM;

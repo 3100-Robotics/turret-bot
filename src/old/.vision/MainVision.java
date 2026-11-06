@@ -1,4 +1,4 @@
-package frc.robot.vision;
+package frc.blastoise.vision;
 
 import com.sbdc.loggerhead.logging.LogMode;
 import com.sbdc.loggerhead.logging.Loggable;
@@ -14,10 +14,10 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import frc.robot.Robot;
-import frc.robot.constants.VisionAndPoseEstConstants;
-import frc.robot.subsystems.drive.Drivetrain;
-import frc.robot.utils.Pigeon2VisionWrapper;
+import frc.blastoise.Robot;
+import frc.blastoise.constants.VisionAndPoseEstConstants;
+import frc.blastoise.subsystems.drive.Drivetrain;
+import frc.blastoise.utils.Pigeon2VisionWrapper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;

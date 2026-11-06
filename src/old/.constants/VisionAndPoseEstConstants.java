@@ -1,4 +1,4 @@
-package frc.robot.constants;
+package frc.blastoise.constants;
 
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
@@ -8,8 +8,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
-import frc.robot.Robot;
-import frc.robot.vision.Camera;
+import frc.blastoise.Robot;
+import frc.blastoise.vision.Camera;
 import org.photonvision.simulation.SimCameraProperties;
 
 public class VisionAndPoseEstConstants {

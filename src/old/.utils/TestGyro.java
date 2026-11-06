@@ -1,4 +1,4 @@
-package frc.robot.utils;
+package frc.blastoise.utils;
 
 import com.sbdc.loggerhead.logging.LogMode;
 import com.sbdc.loggerhead.logging.OneShot;

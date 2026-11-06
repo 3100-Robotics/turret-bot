@@ -1,4 +1,4 @@
-package frc.robot.targets;
+package frc.blastoise.targets;
 
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.RPM;

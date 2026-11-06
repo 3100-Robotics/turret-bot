@@ -1,4 +1,4 @@
-package frc.robot.subsystems.turret;
+package frc.blastoise.subsystems.turret;
 
 import static edu.wpi.first.units.Units.Degrees;
 
@@ -11,7 +11,7 @@ import com.sbdc.loggerhead.util.LightSubsystem;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.constants.ShooterConstants;
+import frc.blastoise.constants.ShooterConstants;
 import java.util.function.Supplier;
 import yams.mechanisms.positional.Pivot;
 import yams.motorcontrollers.SmartMotorController;

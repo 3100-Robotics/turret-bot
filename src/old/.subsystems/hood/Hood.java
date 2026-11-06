@@ -1,4 +1,4 @@
-package frc.robot.subsystems.hood;
+package frc.blastoise.subsystems.hood;
 
 import static edu.wpi.first.units.Units.Degrees;
 
@@ -9,7 +9,7 @@ import com.sbdc.loggerhead.logging.Loggerhead;
 import com.sbdc.loggerhead.logging.Table;
 import com.sbdc.loggerhead.util.LightSubsystem;
 import edu.wpi.first.units.measure.Angle;
-import frc.robot.constants.ShooterConstants;
+import frc.blastoise.constants.ShooterConstants;
 import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.remote.TalonFXWrapper;
 

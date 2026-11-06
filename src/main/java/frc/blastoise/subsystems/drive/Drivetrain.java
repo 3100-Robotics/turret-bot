@@ -1,4 +1,4 @@
-package frc.robot.subsystems.drive;
+package frc.blastoise.subsystems.drive;
 
 import static edu.wpi.first.units.Units.*;
 
@@ -20,13 +20,12 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.Constants;
-import frc.robot.Constants.Mode;
-import frc.robot.generated.TunerConstantsBlastoise1022;
+import frc.blastoise.constants.AKitConstants;
+import frc.blastoise.constants.AKitConstants.Mode;
+import frc.blastoise.generated.TunerConstantsBlastoise1022;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import org.littletonrobotics.junction.AutoLogOutput;
@@ -198,7 +197,7 @@ public class Drivetrain extends SubsystemBase {
     }
 
     // Update gyro alert
-    gyroDisconnectedAlert.set(!gyroInputs.connected && Constants.currentMode != Mode.SIM);
+    gyroDisconnectedAlert.set(!gyroInputs.connected && AKitConstants.currentMode != Mode.SIM);
   }
 
   /**

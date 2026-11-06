@@ -1,4 +1,4 @@
-package frc.robot.subsystems.flywheel;
+package frc.blastoise.subsystems.flywheel;
 
 import static edu.wpi.first.units.Units.RPM;
 
@@ -10,7 +10,7 @@ import com.sbdc.loggerhead.logging.Table;
 import com.sbdc.loggerhead.util.LightSubsystem;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.units.measure.AngularVelocity;
-import frc.robot.constants.ShooterConstants;
+import frc.blastoise.constants.ShooterConstants;
 import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.remote.TalonFXWrapper;
 

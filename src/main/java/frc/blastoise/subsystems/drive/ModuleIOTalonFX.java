@@ -1,6 +1,6 @@
-package frc.robot.subsystems.drive;
+package frc.blastoise.subsystems.drive;
 
-import static frc.robot.util.PhoenixUtil.*;
+import static frc.blastoise.util.PhoenixUtil.*;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
@@ -27,14 +27,15 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
-import frc.robot.generated.TunerConstantsBlastoise1022;
+import frc.blastoise.generated.TunerConstantsBlastoise1022;
 import java.util.Queue;
 
 /**
  * Module IO implementation for Talon FX drive motor controller, Talon FX turn motor controller, and
  * CANcoder. Configured using a set of module constants from Phoenix.
  *
- * <p>Device configuration and other behaviors not exposed by TunerConstantsBlastoise1022 can be customized here.
+ * <p>Device configuration and other behaviors not exposed by TunerConstantsBlastoise1022 can be
+ * customized here.
  */
 public class ModuleIOTalonFX implements ModuleIO {
   private final SwerveModuleConstants<

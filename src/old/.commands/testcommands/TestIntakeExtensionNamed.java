@@ -1,10 +1,10 @@
-package frc.robot.commands.testcommands;
+package frc.blastoise.commands.testcommands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.commands.testcommands.TestCommands.SmartDashboardKeys;
-import frc.robot.subsystems.intake.IntakeExtension;
-import frc.robot.targets.IntakeTargets.IntakeExtensionTarget;
+import frc.blastoise.commands.testcommands.TestCommands.SmartDashboardKeys;
+import frc.blastoise.subsystems.intake.IntakeExtension;
+import frc.blastoise.targets.IntakeTargets.IntakeExtensionTarget;
 
 class TestIntakeExtensionNamed extends Command {
   private final IntakeExtension intakeExtension;

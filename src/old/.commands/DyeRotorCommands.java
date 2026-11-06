@@ -1,11 +1,11 @@
-package frc.robot.commands;
+package frc.blastoise.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.subsystems.dyerotor.Hook;
-import frc.robot.subsystems.dyerotor.Kicker;
-import frc.robot.targets.DyeRotorTargets.HookTargets;
-import frc.robot.targets.DyeRotorTargets.KickerTarget;
+import frc.blastoise.subsystems.dyerotor.Hook;
+import frc.blastoise.subsystems.dyerotor.Kicker;
+import frc.blastoise.targets.DyeRotorTargets.HookTargets;
+import frc.blastoise.targets.DyeRotorTargets.KickerTarget;
 
 public class DyeRotorCommands {
   public static Command runDyeRotor(Hook hook, Kicker kicker) {
