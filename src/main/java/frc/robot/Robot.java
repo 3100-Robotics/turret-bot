@@ -4,24 +4,56 @@
 
 package frc.robot;
 
-import java.util.HashMap;
-
-import com.sbdc.loggerhead.util.LightSubsystem;
-import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.generated.BuildConstants;
+import org.littletonrobotics.junction.LogFileUtil;
+import org.littletonrobotics.junction.LoggedRobot;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.NT4Publisher;
+import org.littletonrobotics.junction.wpilog.WPILOGReader;
+import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
-public class Robot extends TimedRobot {
-  private boolean testModeIsWarm = false;
-  private HashMap<LightSubsystem, Command> testModeCommands = new HashMap<>();
-
-  private Command m_autonomousCommand;
-
-  private final RobotContainer m_robotContainer;
+public class Robot extends LoggedRobot {
+  private Command autonomousCommand;
+  private final RobotContainer robotContainer;
 
   public Robot() {
-    m_robotContainer = new RobotContainer();
-    m_robotContainer.registerPeriodics(this);
+    Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
+    Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
+    Logger.recordMetadata("GitSHA", BuildConstants.GIT_SHA);
+    Logger.recordMetadata("GitDate", BuildConstants.GIT_DATE);
+    Logger.recordMetadata("GitBranch", BuildConstants.GIT_BRANCH);
+    Logger.recordMetadata(
+        "GitDirty",
+        switch (BuildConstants.DIRTY) {
+          case 0 -> "All changes committed";
+          case 1 -> "Uncommitted changes";
+          default -> "Unknown";
+        });
+
+    switch (Constants.currentMode) {
+      case REAL:
+        Logger.addDataReceiver(new WPILOGWriter());
+        Logger.addDataReceiver(new NT4Publisher());
+        break;
+      case SIM:
+        Logger.addDataReceiver(new NT4Publisher());
+        break;
+      case REPLAY:
+        // Replaying a log: read it, and write the replayed values to a new log next to it.
+        setUseTiming(false); // Run as fast as possible
+        String logPath = LogFileUtil.findReplayLog();
+        Logger.setReplaySource(new WPILOGReader(logPath));
+        Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim")));
+        break;
+    }
+
+    // Start the AdvantageKit logger before creating the subsystems.
+    Logger.start();
+
+    robotContainer = new RobotContainer();
+    // robotContainer.registerPeriodics(this);
   }
 
   @Override
@@ -40,10 +72,9 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
-    if (m_autonomousCommand != null) {
-      CommandScheduler.getInstance().schedule(m_autonomousCommand);
+    autonomousCommand = robotContainer.getAutonomousCommand();
+    if (autonomousCommand != null) {
+      CommandScheduler.getInstance().schedule(autonomousCommand);
     }
   }
 
@@ -55,8 +86,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.cancel();
+    if (autonomousCommand != null) {
+      autonomousCommand.cancel();
     }
   }
 
@@ -69,12 +100,6 @@ public class Robot extends TimedRobot {
   @Override
   public void testInit() {
     CommandScheduler.getInstance().cancelAll();
-    LightSubsystem.getAllLightSubsystems()
-        .forEach(subsystem -> CommandScheduler.getInstance().removeDefaultCommand(subsystem));
-    m_robotContainer.configureTestDefaultCommands(testModeCommands, !testModeIsWarm);
-    if (!testModeIsWarm) {
-      testModeIsWarm = true;
-    }
   }
 
   @Override
@@ -83,8 +108,5 @@ public class Robot extends TimedRobot {
   @Override
   public void testExit() {
     CommandScheduler.getInstance().cancelAll();
-    LightSubsystem.getAllLightSubsystems()
-        .forEach(subsystem -> CommandScheduler.getInstance().removeDefaultCommand(subsystem));
-    m_robotContainer.configureTeleopDefaultCommands();
   }
 }
