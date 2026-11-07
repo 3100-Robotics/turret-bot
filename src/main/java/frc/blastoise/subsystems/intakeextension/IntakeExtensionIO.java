@@ -4,6 +4,7 @@ import edu.wpi.first.units.measure.Distance;
 import org.littletonrobotics.junction.AutoLog;
 
 public interface IntakeExtensionIO {
+  public static class IntakeExtensionIOReplay implements IntakeExtensionIO {}
 
   @AutoLog
   public static class IntakeExtensionIOInputs {
@@ -26,7 +27,7 @@ public interface IntakeExtensionIO {
 
   default void updateInputs(IntakeExtensionIOInputs inputs) {}
 
-  default void setTargetHeight(Distance height) {}
+  default void setDistance(Distance height) {}
 
   default void stop() {}
 

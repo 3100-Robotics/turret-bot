@@ -4,11 +4,13 @@
 
 package frc.blastoise;
 
+import static edu.wpi.first.units.Units.Meters;
+
 import edu.wpi.first.net.WebServer;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.blastoise.constants.AKitConstants;
+import frc.blastoise.constants.OperatorConstants.OperatorsControllerType;
 import frc.blastoise.generated.TunerConstantsBlastoise1022;
 import frc.blastoise.subsystems.drive.Drivetrain;
 import frc.blastoise.subsystems.drive.GyroIO;
@@ -17,11 +19,17 @@ import frc.blastoise.subsystems.drive.ModuleIO;
 import frc.blastoise.subsystems.drive.ModuleIOSim;
 import frc.blastoise.subsystems.drive.ModuleIOTalonFX;
 import frc.blastoise.subsystems.intakeextension.IntakeExtension;
+import frc.blastoise.subsystems.intakeextension.IntakeExtensionIO.IntakeExtensionIOReplay;
+import frc.blastoise.subsystems.intakeextension.IntakeExtensionIOTalonFX;
+import frc.blastoise.util.CommandXboxStyleController;
 
 public class RobotContainer {
   // Subsystems
   private final Drivetrain drivetrain;
   private final IntakeExtension intakeExtension;
+
+  private final CommandXboxStyleController driverController =
+      new CommandXboxStyleController(0, OperatorsControllerType.PlayStation);
 
   public RobotContainer() {
     WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
@@ -58,10 +66,19 @@ public class RobotContainer {
 
     switch (AKitConstants.currentMode) {
       case REPLAY:
+        intakeExtension = new IntakeExtension(new IntakeExtensionIOReplay());
         break;
-      case default:
+      default:
+        intakeExtension = new IntakeExtension(IntakeExtensionIOTalonFX::new);
         break;
     }
+
+    configureBindings();
+  }
+
+  public void configureBindings() {
+    driverController.north().whileTrue(intakeExtension.setDistance(Meters.of(1)));
+    driverController.south().whileTrue(intakeExtension.setDistance(Meters.of(0)));
   }
 
   public Command getAutonomousCommand() {

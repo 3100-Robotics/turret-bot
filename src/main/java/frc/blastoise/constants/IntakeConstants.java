@@ -56,11 +56,10 @@ public interface IntakeConstants {
           .withStatorCurrentLimit(Amps.of(80))
           .withTelemetry("bottomIntakeRollerMotor", TelemetryVerbosity.HIGH);
 
-  SmartMotorControllerConfig extensionMotorConfig =
+  SmartMotorControllerConfig baseExtensionMotorConfig =
       new SmartMotorControllerConfig()
-          .withMechanismCircumference(Inches.of(1))
+          .withMechanismCircumference(Inches.of(1).times(Math.PI))
           .withControlMode(ControlMode.CLOSED_LOOP)
-          .withMotorInverted(false)
           .withIdleMode(MotorMode.BRAKE)
           .withStartingPosition(Meters.of(0))
           .withGearing(1)
@@ -69,12 +68,33 @@ public interface IntakeConstants {
           .withFeedforward(new ElevatorFeedforward(0.0, 0.0, 0.0))
           .withSimFeedforward(new ElevatorFeedforward(0.0, 0.0, 0.0))
           .withMomentOfInertia(Meters.of(0.04), Kilograms.of(0.09))
-          .withStatorCurrentLimit(Amps.of(80))
-          .withTelemetry("intakeExtensionMotor", TelemetryVerbosity.HIGH);
+          .withStatorCurrentLimit(Amps.of(80));
 
-  ElevatorConfig extensionMechanismConfig =
+  SmartMotorControllerConfig rightExtensionMotorConfig =
+      baseExtensionMotorConfig
+          .clone()
+          .withMotorInverted(false)
+          .withTelemetry("rightIntakeExtensionMotor", TelemetryVerbosity.HIGH);
+
+  SmartMotorControllerConfig leftExtensionMotorConfig =
+      baseExtensionMotorConfig
+          .clone()
+          .withMotorInverted(!rightExtensionMotorConfig.getMotorInverted().get())
+          .withTelemetry("leftIntakeExtensionMotor", TelemetryVerbosity.HIGH);
+
+  // Extension mechanism configs
+  ElevatorConfig baseExtensionMechanismConfig =
       new ElevatorConfig()
           .withHardLimits(Meters.of(0), Meters.of(2))
-          .withTelemetry("intakeExtensionMechanism", TelemetryVerbosity.HIGH)
           .withCarriageWeight(Pounds.of(10));
+
+  ElevatorConfig rightExtensionMechanismConfig =
+      baseExtensionMechanismConfig
+          .clone()
+          .withTelemetry("rightIntakeExtensionMechanism", TelemetryVerbosity.HIGH);
+
+  ElevatorConfig leftExtensionMechanismConfig =
+      baseExtensionMechanismConfig
+          .clone()
+          .withTelemetry("leftIntakeExtensionMechanism", TelemetryVerbosity.HIGH);
 }

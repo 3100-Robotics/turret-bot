@@ -16,8 +16,8 @@ import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.remote.TalonFXWrapper;
 
 public class IntakeExtensionIOTalonFX implements IntakeExtensionIO {
-  private final TalonFX rightRawMotor = new TalonFX(0);
-  private final TalonFX leftRawMotor = new TalonFX(0);
+  private final TalonFX rightRawMotor = new TalonFX(IntakeConstants.extensionMotorRightCanID);
+  private final TalonFX leftRawMotor = new TalonFX(IntakeConstants.extensionMotorLeftCanID);
 
   private final SmartMotorController rightMotor;
   private final SmartMotorController leftMotor;
@@ -26,21 +26,22 @@ public class IntakeExtensionIOTalonFX implements IntakeExtensionIO {
   private final Elevator leftLinearMechansim;
 
   public IntakeExtensionIOTalonFX(SubsystemBase subsystem) {
-    // Step 2: Create SmartMotorController (TalonFXWrapper)
     this.rightMotor =
         new TalonFXWrapper(
             rightRawMotor,
             IntakeConstants.extensionMotorPhysical,
-            IntakeConstants.extensionMotorConfig.clone().withSubsystem(subsystem));
+            IntakeConstants.rightExtensionMotorConfig.withSubsystem(subsystem));
     this.leftMotor =
         new TalonFXWrapper(
             leftRawMotor,
             IntakeConstants.extensionMotorPhysical,
-            IntakeConstants.extensionMotorConfig.clone().withSubsystem(subsystem));
+            IntakeConstants.leftExtensionMotorConfig.withSubsystem(subsystem));
 
     // Step 4: Create Elevator mechanism, simulation is handled automatically
-    this.rightLinearMechansim = new Elevator(IntakeConstants.extensionMechanismConfig, rightMotor);
-    this.leftLinearMechansim = new Elevator(IntakeConstants.extensionMechanismConfig, leftMotor);
+    this.rightLinearMechansim =
+        new Elevator(IntakeConstants.rightExtensionMechanismConfig, rightMotor);
+    this.leftLinearMechansim =
+        new Elevator(IntakeConstants.leftExtensionMechanismConfig, leftMotor);
   }
 
   @Override
@@ -75,7 +76,7 @@ public class IntakeExtensionIOTalonFX implements IntakeExtensionIO {
   }
 
   @Override
-  public void setTargetHeight(Distance height) {
+  public void setDistance(Distance height) {
     // Use SmartMotorController's setPosition method with Distance
     leftMotor.setPosition(height);
     rightMotor.setPosition(height);
@@ -103,7 +104,10 @@ public class IntakeExtensionIOTalonFX implements IntakeExtensionIO {
 
   @Override
   public void updateTelemetry() {
-    rightLinearMechansim.updateTelemetry();
-    leftLinearMechansim.updateTelemetry();
+    rightMotor.updateTelemetry();
+    leftMotor.updateTelemetry();
+
+    // rightLinearMechansim.updateTelemetry();
+    // leftLinearMechansim.updateTelemetry();
   }
 }
