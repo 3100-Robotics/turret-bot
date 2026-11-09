@@ -137,7 +137,7 @@ public class RobotContainer {
   private void createActionMap() {
     Command shootCommand =
         BlastoiseCommands.shootCommand(
-            flywheel, hood, turret, hook, kicker, intakeExtension, intakeRollers, dashShotMap);
+            flywheel, hood, turret, hook, kicker, intakeExtension, intakeRollers, dashShotMap, driverController.leftTrigger());
 
     Command autoAlignCommand =
         new ProxyCommand(
