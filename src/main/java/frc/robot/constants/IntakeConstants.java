@@ -26,7 +26,7 @@ public interface IntakeConstants {
 
   DCMotor topRollerMotorPhysical = DCMotor.getKrakenX60(2);
   DCMotor bottomRollerMotorPhysical = DCMotor.getKrakenX60(1);
-  DCMotor extensionMotorPhysical = DCMotor.getKrakenX60(2);
+  DCMotor extensionMotorPhysical = DCMotor.getKrakenX60(1);
 
   SmartMotorControllerConfig topRollerMotorConfig =
       new SmartMotorControllerConfig()
@@ -56,11 +56,10 @@ public interface IntakeConstants {
           .withStatorCurrentLimit(Amps.of(80))
           .withTelemetry("bottomIntakeRollerMotor", TelemetryVerbosity.HIGH);
 
-  SmartMotorControllerConfig extensionMotorConfig =
+  SmartMotorControllerConfig baseExtensionMotorConfig =
       new SmartMotorControllerConfig()
           .withMechanismCircumference(Inches.of(Math.PI))
           .withControlMode(ControlMode.CLOSED_LOOP)
-          .withMotorInverted(false)
           .withIdleMode(MotorMode.BRAKE)
           .withStartingPosition(Meters.of(0))
           .withGearing(1)
@@ -69,8 +68,19 @@ public interface IntakeConstants {
           .withFeedforward(new ElevatorFeedforward(0.0, 0.0, 0.0))
           .withSimFeedforward(new ElevatorFeedforward(0.0, 0.0, 0.0))
           .withMomentOfInertia(Meters.of(0.04), Kilograms.of(0.09))
-          .withStatorCurrentLimit(Amps.of(80))
-          .withTelemetry("intakeExtensionMotor", TelemetryVerbosity.HIGH);
+          .withStatorCurrentLimit(Amps.of(80));
+
+  SmartMotorControllerConfig extensionMotorConfigLeft =
+      baseExtensionMotorConfig
+          .clone()
+          .withMotorInverted(false)
+          .withTelemetry("intakeExtensionMotorLeft", TelemetryVerbosity.HIGH);
+
+  SmartMotorControllerConfig extensionMotorConfigRight =
+      baseExtensionMotorConfig
+          .clone()
+          .withMotorInverted(!extensionMotorConfigLeft.getMotorInverted().get())
+          .withTelemetry("intakeExtensionMotorRight", TelemetryVerbosity.HIGH);
 
   ElevatorConfig extensionMechanismConfig =
       new ElevatorConfig()

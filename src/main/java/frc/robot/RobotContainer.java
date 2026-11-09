@@ -41,7 +41,6 @@ import frc.robot.subsystems.intake.IntakeRollers;
 import frc.robot.subsystems.shooter.Flywheel;
 import frc.robot.subsystems.shooter.Hood;
 import frc.robot.subsystems.shooter.Turret;
-import frc.robot.utils.Utils;
 import frc.robot.vision.HPoseEstimator;
 import frc.robot.vision.MainVision;
 import java.util.EnumSet;
@@ -108,7 +107,7 @@ public class RobotContainer {
   private final IntakeExtension intakeExtension = new IntakeExtension();
   private final IntakeRollers intakeRollers = new IntakeRollers();
 
-  private final PowerDistribution pdh = new PowerDistribution(63, ModuleType.kRev);
+  private final PowerDistribution pdh = new PowerDistribution(59, ModuleType.kRev);
 
   private final CommandXboxController driverController = new CommandXboxController(0);
   private final CommandXboxController coDriverController = new CommandXboxController(1);
@@ -253,7 +252,7 @@ public class RobotContainer {
     // Utils.setLightSusbsytemDefaultCommandFromMap(hook, testCommandsMap);
     // Utils.setLightSusbsytemDefaultCommandFromMap(kicker, testCommandsMap);
 
-    Utils.setLightSusbsytemDefaultCommandFromMap(intakeExtension, testCommandsMap);
+    frc.robot.utils.Utils.setLightSusbsytemDefaultCommandFromMap(intakeExtension, testCommandsMap);
     // Utils.setLightSusbsytemDefaultCommandFromMap(intakeRollers, testCommandsMap);
   }
 

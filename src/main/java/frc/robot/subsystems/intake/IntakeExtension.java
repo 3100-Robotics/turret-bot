@@ -8,7 +8,6 @@ import com.sbdc.loggerhead.logging.Loggable;
 import com.sbdc.loggerhead.logging.Loggerhead;
 import com.sbdc.loggerhead.logging.Table;
 import com.sbdc.loggerhead.util.LightSubsystem;
-import edu.wpi.first.math.Pair;
 import edu.wpi.first.units.measure.Distance;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.targets.IntakeTargets.IntakeExtensionTarget;
@@ -21,34 +20,41 @@ public class IntakeExtension extends LightSubsystem implements Loggable {
   private final TalonFX extensionMotorLeft = new TalonFX(IntakeConstants.extensionMotorLeftCanID);
   private final TalonFX extensionMotorRight = new TalonFX(IntakeConstants.extensionMotorRightCanID);
 
-  private final SmartMotorController motor =
+  private final SmartMotorController rightMotor =
+      new TalonFXWrapper(
+          extensionMotorRight,
+          IntakeConstants.extensionMotorPhysical,
+          IntakeConstants.extensionMotorConfigRight.withSubsystem(this));
+
+  private final SmartMotorController leftMotor =
       new TalonFXWrapper(
           extensionMotorLeft,
           IntakeConstants.extensionMotorPhysical,
-          IntakeConstants.extensionMotorConfig
-              .withFollowers(Pair.of(extensionMotorRight, true))
+          IntakeConstants.extensionMotorConfigLeft
+              .withLooselyCoupledFollowers(rightMotor) // Pair.of(extensionMotorRight, true))
               .withSubsystem(this));
 
   private final Elevator linearMechanism =
-      new Elevator(IntakeConstants.extensionMechanismConfig, motor);
+      new Elevator(IntakeConstants.extensionMechanismConfig, leftMotor);
 
   public void setIntakeExtensionTarget(IntakeExtensionTarget target) {
-    motor.setPosition(target.extensionDistance);
+    leftMotor.setPosition(target.extensionDistance);
   }
 
   public void setPositionRaw(Distance distance) {
     Utils.warnIfDriverStationOutOfTest();
 
-    motor.setPosition(distance);
+    leftMotor.setPosition(distance);
   }
 
   public void stopIntakeExtension() {
-    motor.setDutyCycle(0);
+    leftMotor.setDutyCycle(0);
   }
 
   @Override
   public void periodic() {
     linearMechanism.updateTelemetry();
+    rightMotor.updateTelemetry();
   }
 
   @Override
@@ -59,6 +65,6 @@ public class IntakeExtension extends LightSubsystem implements Loggable {
   @Override
   public void setupLogging(Table parentTable, LogMode logMode, Loggerhead loggerhead) {
     parentTable.addDoubleLogger(
-        "measuredExtensionDistance", logMode, () -> motor.getMeasurementPosition().in(Meters));
+        "measuredExtensionDistance", logMode, () -> leftMotor.getMeasurementPosition().in(Meters));
   }
 }
