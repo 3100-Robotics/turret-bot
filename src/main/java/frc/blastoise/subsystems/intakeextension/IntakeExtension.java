@@ -3,7 +3,6 @@ package frc.blastoise.subsystems.intakeextension;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.blastoise.AKitConstants;
 import java.util.function.Function;
 import org.littletonrobotics.junction.Logger;
 
