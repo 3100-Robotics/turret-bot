@@ -41,6 +41,7 @@ import frc.robot.subsystems.intake.IntakeRollers;
 import frc.robot.subsystems.shooter.Flywheel;
 import frc.robot.subsystems.shooter.Hood;
 import frc.robot.subsystems.shooter.Turret;
+import frc.robot.utils.Utils;
 import frc.robot.vision.HPoseEstimator;
 import frc.robot.vision.MainVision;
 import java.util.EnumSet;
@@ -137,7 +138,15 @@ public class RobotContainer {
   private void createActionMap() {
     Command shootCommand =
         BlastoiseCommands.shootCommand(
-            flywheel, hood, turret, hook, kicker, intakeExtension, intakeRollers, dashShotMap, driverController.leftTrigger());
+            flywheel,
+            hood,
+            turret,
+            hook,
+            kicker,
+            intakeExtension,
+            intakeRollers,
+            dashShotMap,
+            driverController.leftTrigger());
 
     Command autoAlignCommand =
         new ProxyCommand(
@@ -252,8 +261,8 @@ public class RobotContainer {
     // Utils.setLightSusbsytemDefaultCommandFromMap(hook, testCommandsMap);
     // Utils.setLightSusbsytemDefaultCommandFromMap(kicker, testCommandsMap);
 
-    frc.robot.utils.Utils.setLightSusbsytemDefaultCommandFromMap(intakeExtension, testCommandsMap);
-    // Utils.setLightSusbsytemDefaultCommandFromMap(intakeRollers, testCommandsMap);
+    Utils.setLightSusbsytemDefaultCommandFromMap(intakeExtension, testCommandsMap);
+    Utils.setLightSusbsytemDefaultCommandFromMap(intakeRollers, testCommandsMap);
   }
 
   private void configureLogging() {

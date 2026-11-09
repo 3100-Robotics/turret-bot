@@ -35,7 +35,8 @@ public interface IntakeTargets {
     Max(0.8484996902917544),
     Full(0.83),
     Half(0.5),
-    Stowed(0);
+    Stowed(0.03),
+    Min(0);
 
     public final Distance extensionDistance;
 

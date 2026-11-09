@@ -3,7 +3,10 @@
     "transitory": {
       "SmartDashboard": {
         "manualSubsystemControlPanel": {
-          "Hood": {
+          "IntakeExtension": {
+            "open": true
+          },
+          "IntakeRollers": {
             "open": true
           },
           "open": true
@@ -12,6 +15,12 @@
       },
       "Subsystems": {
         "hood": {
+          "open": true
+        },
+        "intakeExtension": {
+          "open": true
+        },
+        "intakeRoller": {
           "open": true
         },
         "open": true
@@ -28,6 +37,12 @@
       "/SmartDashboard/Mechanisms/Commands/intakeExtensionMotor/Down": "Command",
       "/SmartDashboard/Mechanisms/Commands/intakeExtensionMotor/Up": "Command",
       "/SmartDashboard/Mechanisms/Commands/intakeExtensionMotor/ZeroEncoder": "Command",
+      "/SmartDashboard/Mechanisms/Commands/intakeExtensionMotorLeft/Down": "Command",
+      "/SmartDashboard/Mechanisms/Commands/intakeExtensionMotorLeft/Up": "Command",
+      "/SmartDashboard/Mechanisms/Commands/intakeExtensionMotorLeft/ZeroEncoder": "Command",
+      "/SmartDashboard/Mechanisms/Commands/intakeExtensionMotorRight/Down": "Command",
+      "/SmartDashboard/Mechanisms/Commands/intakeExtensionMotorRight/Up": "Command",
+      "/SmartDashboard/Mechanisms/Commands/intakeExtensionMotorRight/ZeroEncoder": "Command",
       "/SmartDashboard/Mechanisms/Commands/topIntakeRollerMotor/Down": "Command",
       "/SmartDashboard/Mechanisms/Commands/topIntakeRollerMotor/Up": "Command",
       "/SmartDashboard/Mechanisms/Commands/topIntakeRollerMotor/ZeroEncoder": "Command",

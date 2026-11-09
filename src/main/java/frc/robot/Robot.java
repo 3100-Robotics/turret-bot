@@ -20,8 +20,7 @@ public class Robot extends TimedRobot {
 
   public Robot() {
     m_robotContainer = new RobotContainer();
-    // m_robotContainer.registerPeriodics(this);
-    System.out.println("BarsSEBSEBSEB");
+    m_robotContainer.registerPeriodics(this);
   }
 
   @Override
@@ -71,7 +70,7 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().cancelAll();
     LightSubsystem.getAllLightSubsystems()
         .forEach(subsystem -> CommandScheduler.getInstance().removeDefaultCommand(subsystem));
-    // m_robotContainer.configureTestDefaultCommands(testModeCommands, !testModeIsWarm);
+    m_robotContainer.configureTestDefaultCommands(testModeCommands, !testModeIsWarm);
     if (!testModeIsWarm) {
       testModeIsWarm = true;
     }
@@ -85,6 +84,6 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().cancelAll();
     LightSubsystem.getAllLightSubsystems()
         .forEach(subsystem -> CommandScheduler.getInstance().removeDefaultCommand(subsystem));
-    // m_robotContainer.configureTeleopDefaultCommands();
+    m_robotContainer.configureTeleopDefaultCommands();
   }
 }

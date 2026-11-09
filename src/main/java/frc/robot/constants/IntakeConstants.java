@@ -4,6 +4,8 @@ import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Kilograms;
 import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.MetersPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Pounds;
 
 import edu.wpi.first.math.controller.ElevatorFeedforward;
@@ -67,6 +69,7 @@ public interface IntakeConstants {
           .withSimClosedLoopController(1, 0.0, 0.0)
           .withFeedforward(new ElevatorFeedforward(0.0, 0.0, 0.0))
           .withSimFeedforward(new ElevatorFeedforward(0.0, 0.0, 0.0))
+          .withTrapezoidalProfile(MetersPerSecond.of(100), MetersPerSecondPerSecond.of(100))
           .withMomentOfInertia(Meters.of(0.04), Kilograms.of(0.09))
           .withStatorCurrentLimit(Amps.of(80));
 
