@@ -53,6 +53,7 @@ public class Camera implements Loggable {
   private String newStdDevMode = "";
   private String distMode = "";
   private String currentStrat = "";
+  private double currentPoseAmbiguity = 0;
 
   public boolean multiTagFound = false;
   public double latency = 0;
@@ -118,7 +119,7 @@ public class Camera implements Loggable {
 
       // visionEst = photonEstimator.estimatePnpDistanceTrigSolvePose(result);
       visionEst = photonEstimator.estimateCoprocMultiTagPose(result);
-      currentStrat = "PnpDistanceTrigSolvePose";
+      currentStrat = "CoprocMultiTag";
       if (visionEst.isEmpty()) {
         currentStrat = "LowestAmbiguityPose";
         visionEst = photonEstimator.estimateLowestAmbiguityPose(result);
@@ -133,6 +134,14 @@ public class Camera implements Loggable {
               () -> multiTagFound = false);
 
       updateEstimationStdDevs(visionEst, result.getTargets());
+
+      double total = 0;
+      for (PhotonTrackedTarget t : result.getTargets()) {
+        total += t.poseAmbiguity;
+      }
+
+      currentPoseAmbiguity =
+          result.getTargets().size() > 0 ? total / result.getTargets().size() : 0;
 
       latency = result.metadata.getLatencyMillis();
 
@@ -234,6 +243,7 @@ public class Camera implements Loggable {
             camName + "rawLatestPose", logMode, () -> intRawPose3d.toPose2d(), Pose2d.struct)
         .addStructLogger(camName + "camPose", logMode, () -> robotToCam, Transform3d.struct)
         .addDoubleLogger(camName + "latency", logMode, () -> latency)
+        .addDoubleLogger(camName + "currentAmbig", logMode, () -> currentPoseAmbiguity)
         .addStringLogger(camName + "curStdDevs", logMode, () -> curStdDevs.toString())
         .addStringLogger(camName + "stdDevMode", logMode, () -> stdevMode)
         .addStringLogger(camName + "newStdDevMode", logMode, () -> newStdDevMode)
