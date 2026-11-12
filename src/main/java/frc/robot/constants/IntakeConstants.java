@@ -8,7 +8,6 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.MetersPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Pounds;
 
-import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
 import yams.gearing.GearBox;
@@ -42,7 +41,7 @@ public interface IntakeConstants {
           .withSimFeedforward(new SimpleMotorFeedforward(0.0, 0.10, 0.0))
           .withMomentOfInertia(Meters.of(0.0508), Kilograms.of(0.18))
           .withStatorCurrentLimit(Amps.of(80))
-          .withTelemetry("topIntakeRollerMotor", TelemetryVerbosity.HIGH);
+          .withTelemetry("topIntakeRollerMotor", TelemetryVerbosity.LOW);
 
   SmartMotorControllerConfig bottomRollerMotorConfig =
       new SmartMotorControllerConfig()
@@ -56,7 +55,7 @@ public interface IntakeConstants {
           .withSimFeedforward(new SimpleMotorFeedforward(0.0, 0.10, 0.0))
           .withMomentOfInertia(Meters.of(0.0508), Kilograms.of(0.18))
           .withStatorCurrentLimit(Amps.of(80))
-          .withTelemetry("bottomIntakeRollerMotor", TelemetryVerbosity.HIGH);
+          .withTelemetry("bottomIntakeRollerMotor", TelemetryVerbosity.LOW);
 
   SmartMotorControllerConfig baseExtensionMotorConfig =
       new SmartMotorControllerConfig()
@@ -67,9 +66,9 @@ public interface IntakeConstants {
           .withGearing(1)
           .withClosedLoopController(10, 0.0, 0.0)
           .withSimClosedLoopController(1, 0.0, 0.0)
-          .withFeedforward(new ElevatorFeedforward(0.0, 0.0, 0.0))
-          .withSimFeedforward(new ElevatorFeedforward(0.0, 0.0, 0.0))
-          .withTrapezoidalProfile(MetersPerSecond.of(100), MetersPerSecondPerSecond.of(100))
+          .withFeedforward(new SimpleMotorFeedforward(0.0, 0.0, 0.0))
+          .withSimFeedforward(new SimpleMotorFeedforward(0.0, 0.0, 0.0))
+          .withTrapezoidalProfile(MetersPerSecond.of(100), MetersPerSecondPerSecond.of(50))
           .withMomentOfInertia(Meters.of(0.04), Kilograms.of(0.09))
           .withStatorCurrentLimit(Amps.of(80));
 
@@ -77,17 +76,17 @@ public interface IntakeConstants {
       baseExtensionMotorConfig
           .clone()
           .withMotorInverted(false)
-          .withTelemetry("intakeExtensionMotorLeft", TelemetryVerbosity.HIGH);
+          .withTelemetry("intakeExtensionMotorLeft", TelemetryVerbosity.LOW);
 
   SmartMotorControllerConfig extensionMotorConfigRight =
       baseExtensionMotorConfig
           .clone()
           .withMotorInverted(!extensionMotorConfigLeft.getMotorInverted().get())
-          .withTelemetry("intakeExtensionMotorRight", TelemetryVerbosity.HIGH);
+          .withTelemetry("intakeExtensionMotorRight", TelemetryVerbosity.LOW);
 
   ElevatorConfig extensionMechanismConfig =
       new ElevatorConfig()
           .withHardLimits(Meters.of(0), Meters.of(2))
-          .withTelemetry("intakeExtensionMechanism", TelemetryVerbosity.HIGH)
+          .withTelemetry("intakeExtensionMechanism", TelemetryVerbosity.LOW)
           .withCarriageWeight(Pounds.of(10));
 }

@@ -1,5 +1,6 @@
 package frc.robot.subsystems.intake;
 
+import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Meters;
 
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -9,6 +10,7 @@ import com.sbdc.loggerhead.logging.Loggerhead;
 import com.sbdc.loggerhead.logging.Table;
 import com.sbdc.loggerhead.util.LightSubsystem;
 import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.targets.IntakeTargets.IntakeExtensionTarget;
 import frc.robot.utils.Utils;
@@ -31,11 +33,25 @@ public class IntakeExtension extends LightSubsystem implements Loggable {
           extensionMotorLeft,
           IntakeConstants.extensionMotorPhysical,
           IntakeConstants.extensionMotorConfigLeft
-              .withLooselyCoupledFollowers(rightMotor) // Pair.of(extensionMotorRight, true))
+              .withLooselyCoupledFollowers(rightMotor)
               .withSubsystem(this));
 
   private final Elevator linearMechanism =
       new Elevator(IntakeConstants.extensionMechanismConfig, leftMotor);
+
+  public final Trigger isAtSetpoint =
+      new Trigger(
+          () ->
+              leftMotor
+                  .getMeasurementPosition()
+                  .isNear(
+                      leftMotor
+                          .getConfig()
+                          .convertFromMechanism(
+                              leftMotor
+                                  .getMechanismPositionSetpoint()
+                                  .orElseGet(() -> Degrees.of(0))),
+                      0.1));
 
   public void setIntakeExtensionTarget(IntakeExtensionTarget target) {
     leftMotor.setPosition(target.extensionDistance);

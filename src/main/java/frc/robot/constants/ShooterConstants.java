@@ -95,7 +95,7 @@ public interface ShooterConstants {
           .withFeedforward(new ArmFeedforward(0, 0, 0))
           .withSimFeedforward(new ArmFeedforward(0, 0, 0))
           // Telemetry name and verbosity level
-          .withTelemetry("turretMotor", TelemetryVerbosity.HIGH)
+          .withTelemetry("turretMotor", TelemetryVerbosity.LOW)
           // Gearing from the motor rotor to final shaft.
           // In this example GearBox.fromReductionStages(3,4) is the same as
           // GearBox.fromStages("3:1","4:1") which corresponds to the gearbox attached to your
@@ -116,5 +116,5 @@ public interface ShooterConstants {
   PivotConfig turretConfig =
       new PivotConfig()
           .withHardLimits(minTurretAngle, maxTurretAngle)
-          .withTelemetry("turretMech", TelemetryVerbosity.HIGH);
+          .withTelemetry("turretMech", TelemetryVerbosity.LOW);
 }

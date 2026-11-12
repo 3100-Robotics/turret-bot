@@ -45,7 +45,11 @@ public class BlastoiseCommands {
       Trigger intakeHold) {
     return Commands.parallel(
         // Intake
-        new ConditionalCommand(IntakeCommands.holdIn(), IntakeCommands.agitateOneCycle(intakeExtension), intakeHold).repeatedly(),
+        new ConditionalCommand(
+                IntakeCommands.holdIn(intakeExtension),
+                IntakeCommands.agitateOneCycle(intakeExtension),
+                intakeHold)
+            .repeatedly(),
         // Dye rotor
         Commands.waitSeconds(1)
             .andThen(

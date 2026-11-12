@@ -22,9 +22,11 @@ import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.BlastoiseCommands;
+import frc.robot.commands.IntakeCommands;
 import frc.robot.commands.drivecommands.DrivePointAtAngle;
 import frc.robot.commands.drivecommands.DriveTeleop;
 import frc.robot.commands.testcommands.TestCommands;
@@ -48,22 +50,6 @@ import java.util.EnumSet;
 import java.util.HashMap;
 
 public class RobotContainer {
-  public static enum BlastoiseActions {
-    shootCommand,
-    autoAlignCommand,
-    intakeHighCommand,
-    intakeMidLowToggleCommand,
-    intakeRunCommand,
-
-    resetHeadingAllCommand,
-    resetHeadingSimCommand,
-    resetHeadingCTRECommand,
-    resetHeadingGyroCommand,
-    resetHeadingGyroWrapperCommand,
-    resetHeadingHPoseCommand,
-    ;
-  }
-
   public static enum PoseHeadingResetParams {
     gyroReset,
     gyroWrapperReset,
@@ -71,8 +57,6 @@ public class RobotContainer {
     CTREReset,
     hPoseReset;
   }
-
-  private final HashMap<BlastoiseActions, Command> blastoiseCommandMap = new HashMap<>();
 
   private final Drivetrain drivetrain = TunerConstantsBlastoise1022.createDrivetrain();
   private final ShotMap dashShotMap = new DashboardStaticShotMap();
@@ -115,7 +99,6 @@ public class RobotContainer {
 
   public RobotContainer() {
     WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
-    createActionMap();
 
     // Do replace these function calls with the new ones you currently want to use then redeploy
     // code
@@ -133,72 +116,6 @@ public class RobotContainer {
                     .setConfigureCallback(this::configureLogging)
                     .addHook(DriverStation::isFMSAttached))
         .initializeLogging(); // Must be the final call in the configuration chain
-  }
-
-  private void createActionMap() {
-    Command shootCommand =
-        BlastoiseCommands.shootCommand(
-            flywheel,
-            hood,
-            turret,
-            hook,
-            kicker,
-            intakeExtension,
-            intakeRollers,
-            dashShotMap,
-            driverController.leftTrigger());
-
-    Command autoAlignCommand =
-        new ProxyCommand(
-            new DrivePointAtAngle(
-                drivetrain,
-                driverController::getLeftY,
-                driverController::getLeftX,
-                driverController::getRightTriggerAxis,
-                sotmstate::getHeading));
-
-    // Command intakeHighCommand = IntakeCommands.pivotHigh(intakePivot);
-    // Command intakeMidLowToggleCommand = IntakeCommands.pivotMidLowToggle(intakePivot);
-    // Command intakeRunCommand = IntakeCommands.rollerForward(intakeRoller);
-
-    Command resetHeadingAllCommand =
-        Commands.runOnce(() -> resetPoseAndHeadings(EnumSet.allOf(PoseHeadingResetParams.class)));
-
-    Command resetHeadingSimCommand =
-        Commands.runOnce(
-            () -> resetPoseAndHeadings(EnumSet.of(PoseHeadingResetParams.simPoseReset)));
-
-    Command resetHeadingCTRECommand =
-        Commands.runOnce(() -> resetPoseAndHeadings(EnumSet.of(PoseHeadingResetParams.CTREReset)));
-
-    Command resetHeadingGyroCommand =
-        Commands.runOnce(() -> resetPoseAndHeadings(EnumSet.of(PoseHeadingResetParams.gyroReset)));
-
-    Command resetHeadingGyroWrapperCommand =
-        Commands.runOnce(
-            () -> resetPoseAndHeadings(EnumSet.of(PoseHeadingResetParams.gyroWrapperReset)));
-
-    Command resetHeadingHPoseCommand =
-        Commands.runOnce(() -> resetPoseAndHeadings(EnumSet.of(PoseHeadingResetParams.hPoseReset)));
-
-    blastoiseCommandMap.put(BlastoiseActions.shootCommand, shootCommand);
-    blastoiseCommandMap.put(BlastoiseActions.autoAlignCommand, autoAlignCommand);
-    // blastoiseCommandMap.put("intakeHighCommand", intakeHighCommand);
-    // blastoiseCommandMap.put("intakeMidLowToggleCommand", intakeMidLowToggleCommand);
-    // blastoiseCommandMap.put("intakeRunCommand", intakeRunCommand);
-
-    blastoiseCommandMap.put(BlastoiseActions.resetHeadingAllCommand, resetHeadingAllCommand);
-    blastoiseCommandMap.put(BlastoiseActions.resetHeadingSimCommand, resetHeadingSimCommand);
-    blastoiseCommandMap.put(BlastoiseActions.resetHeadingCTRECommand, resetHeadingCTRECommand);
-    blastoiseCommandMap.put(BlastoiseActions.resetHeadingGyroCommand, resetHeadingGyroCommand);
-    blastoiseCommandMap.put(
-        BlastoiseActions.resetHeadingGyroWrapperCommand, resetHeadingGyroWrapperCommand);
-    blastoiseCommandMap.put(BlastoiseActions.resetHeadingHPoseCommand, resetHeadingHPoseCommand);
-  }
-
-  @SuppressWarnings("unused")
-  private Command getAction(BlastoiseActions action) {
-    return blastoiseCommandMap.get(action);
   }
 
   private void resetPoseAndHeadings(EnumSet<PoseHeadingResetParams> resetParams) {
@@ -225,7 +142,43 @@ public class RobotContainer {
     }
   }
 
-  private void configureTeleopDriverBindings() {}
+  private void configureTeleopDriverBindings() {
+    Command shootCommand =
+        BlastoiseCommands.shootCommand(
+            flywheel,
+            hood,
+            turret,
+            hook,
+            kicker,
+            intakeExtension,
+            intakeRollers,
+            dashShotMap,
+            driverController.leftTrigger());
+
+    Command autoAlignCommand =
+        new ProxyCommand(
+            new DrivePointAtAngle(
+                drivetrain,
+                driverController::getLeftY,
+                driverController::getLeftX,
+                driverController::getRightTriggerAxis,
+                sotmstate::getHeading));
+
+    // Command intakeHighCommand = IntakeCommands.pivotHigh(intakePivot);
+    // Command intakeMidLowToggleCommand = IntakeCommands.pivotMidLowToggle(intakePivot);
+    // Command intakeRunCommand = IntakeCommands.rollerForward(intakeRoller);
+
+    driverController
+        .a()
+        .whileTrue(
+            new ConditionalCommand(
+                    IntakeCommands.holdIn(intakeExtension)
+                        .until(driverController.rightTrigger().negate()),
+                    IntakeCommands.agitateOneCycle(intakeExtension)
+                        .until(intakeExtension.isAtSetpoint),
+                    driverController.rightTrigger())
+                .repeatedly());
+  }
 
   private void configureTeleopCoDriverBindings() {}
 
