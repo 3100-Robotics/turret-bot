@@ -14,6 +14,10 @@ public class IntakeCommands {
         intakeExtension);
   }
 
+  public static Command holdIn(IntakeExtension intakeExtension) {
+    return setIntakeState(intakeExtension, IntakeExtensionTarget.Stowed);
+  }
+
   public static Command agitateOneCycle(IntakeExtension intakeExtension) {
     return setIntakeState(intakeExtension, IntakeExtensionTarget.Full)
         .withTimeout(1)
