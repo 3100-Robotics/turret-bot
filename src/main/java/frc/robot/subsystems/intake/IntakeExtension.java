@@ -1,5 +1,6 @@
 package frc.robot.subsystems.intake;
 
+import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Meters;
 
@@ -80,7 +81,10 @@ public class IntakeExtension extends LightSubsystem implements Loggable {
 
   @Override
   public void setupLogging(Table parentTable, LogMode logMode, Loggerhead loggerhead) {
+    parentTable.addBooleanLogger("isAtSetpoint", logMode, isAtSetpoint::getAsBoolean);
     parentTable.addDoubleLogger(
         "measuredExtensionDistance", logMode, () -> leftMotor.getMeasurementPosition().in(Meters));
+    parentTable.addDoubleLogger(
+        "intakeExtensionCurrent", logMode, () -> leftMotor.getStatorCurrent().in(Amps));
   }
 }

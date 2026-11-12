@@ -32,8 +32,8 @@ public interface IntakeTargets {
   }
 
   public enum IntakeExtensionTarget {
-    Max(0.8484996902917544),
-    Full(0.83),
+    Max(0.8462787929070537),
+    Full(0.839),
     Half(0.5),
     Stowed(0.03),
     Min(0);

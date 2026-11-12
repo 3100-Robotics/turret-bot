@@ -27,7 +27,7 @@ public class IntakeRollers extends LightSubsystem implements Loggable {
           IntakeConstants.topRollerMotorPhysical,
           IntakeConstants.topRollerMotorConfig
               .withSubsystem(this)
-              .withFollowers(Pair.of(topRawMotor2, false)));
+              .withFollowers(Pair.of(topRawMotor2, true)));
 
   private final SmartMotorController bottomMotor =
       new TalonFXWrapper(
@@ -39,7 +39,7 @@ public class IntakeRollers extends LightSubsystem implements Loggable {
     switch (state) {
       case On:
         topMotor.setVelocity(state.topSpeed.get());
-        bottomMotor.setVelocity(state.bottomSpeed.get());
+        // bottomMotor.setVelocity(state.bottomSpeed.get());
         break;
       case Off:
         stopIntakeRollers();

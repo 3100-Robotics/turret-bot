@@ -24,8 +24,10 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.BlastoiseCommands;
+import frc.robot.commands.IntakeCommands;
 import frc.robot.commands.drivecommands.DrivePointAtAngle;
 import frc.robot.commands.drivecommands.DriveTeleop;
+import frc.robot.commands.intakecommands.Agitate;
 import frc.robot.commands.testcommands.TestCommands;
 import frc.robot.generated.TunerConstantsBlastoise1022;
 import frc.robot.sotm.DashboardStaticShotMap;
@@ -165,6 +167,10 @@ public class RobotContainer {
     // Command intakeHighCommand = IntakeCommands.pivotHigh(intakePivot);
     // Command intakeMidLowToggleCommand = IntakeCommands.pivotMidLowToggle(intakePivot);
     // Command intakeRunCommand = IntakeCommands.rollerForward(intakeRoller);
+
+    driverController.b().whileTrue(new Agitate(intakeExtension, driverController.leftTrigger()));
+    driverController.x().whileTrue(IntakeCommands.holdIn(intakeExtension));
+    driverController.leftBumper().whileTrue(IntakeCommands.runIntakeRollers(intakeRollers));
 
     driverController
         .a()

@@ -46,7 +46,7 @@ public interface IntakeConstants {
   SmartMotorControllerConfig bottomRollerMotorConfig =
       new SmartMotorControllerConfig()
           .withControlMode(ControlMode.CLOSED_LOOP)
-          .withMotorInverted(false)
+          .withMotorInverted(true)
           .withIdleMode(MotorMode.BRAKE)
           .withGearing(new MechanismGearing(GearBox.fromReductionStages(18 / 11)))
           .withClosedLoopController(1, 0.0, 0.0)
@@ -64,11 +64,12 @@ public interface IntakeConstants {
           .withIdleMode(MotorMode.BRAKE)
           .withStartingPosition(Meters.of(0))
           .withGearing(1)
-          .withClosedLoopController(10, 0.0, 0.0)
+          .withLinearClosedLoopController(true)
+          .withClosedLoopController(7, 0.0, 0.0)
           .withSimClosedLoopController(1, 0.0, 0.0)
           .withFeedforward(new SimpleMotorFeedforward(0.0, 0.0, 0.0))
           .withSimFeedforward(new SimpleMotorFeedforward(0.0, 0.0, 0.0))
-          .withTrapezoidalProfile(MetersPerSecond.of(100), MetersPerSecondPerSecond.of(50))
+          .withTrapezoidalProfile(MetersPerSecond.of(25), MetersPerSecondPerSecond.of(25))
           .withMomentOfInertia(Meters.of(0.04), Kilograms.of(0.09))
           .withStatorCurrentLimit(Amps.of(80));
 
