@@ -8,13 +8,12 @@ import static edu.wpi.first.units.Units.Degrees;
 
 import com.sbdc.loggerhead.logging.LogMode;
 import com.sbdc.loggerhead.logging.Loggerhead;
+import com.sbdc.loggerhead.logging.compoundlogger.LogCTREDrivetrain;
+import com.sbdc.loggerhead.logging.compoundlogger.LogNetworkXboxController;
 import com.sbdc.loggerhead.logging.compoundlogger.LogSubsystemCommands;
 import com.sbdc.loggerhead.util.LightSubsystem;
-import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.numbers.N1;
-import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.net.WebServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
@@ -22,11 +21,9 @@ import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.BlastoiseCommands;
-import frc.robot.commands.IntakeCommands;
 import frc.robot.commands.drivecommands.DrivePointAtAngle;
 import frc.robot.commands.drivecommands.DriveTeleop;
 import frc.robot.commands.testcommands.TestCommands;
@@ -44,7 +41,6 @@ import frc.robot.subsystems.shooter.Flywheel;
 import frc.robot.subsystems.shooter.Hood;
 import frc.robot.subsystems.shooter.Turret;
 import frc.robot.utils.Utils;
-import frc.robot.vision.HPoseEstimator;
 import frc.robot.vision.MainVision;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -63,16 +59,18 @@ public class RobotContainer {
   private final SOTMStateTracker sotmstate = new SOTMStateTracker(drivetrain);
   private final DynamicShotMap dynamicShotMap = new DynamicShotMap(sotmstate);
 
-  private final HPoseEstimator hPoseEstimator = new HPoseEstimator(drivetrain);
+  // private final HPoseEstimator hPoseEstimator = new HPoseEstimator(drivetrain);
 
   public final MainVision mainVision =
       new MainVision(
-          (Pose2d visionRobotPoseMeters,
-              double timestampSeconds,
-              Matrix<N3, N1> visionMeasurementStdDevs) -> {
-            hPoseEstimator.addVisionMeasurement(
-                visionRobotPoseMeters, timestampSeconds, visionMeasurementStdDevs);
-          },
+          // (Pose2d visionRobotPoseMeters,
+          //     double timestampSeconds,
+          //     Matrix<N3, N1> visionMeasurementStdDevs) -> {
+          //   // hPoseEstimator.addVisionMeasurement(
+          //   //     visionRobotPoseMeters, timestampSeconds, visionMeasurementStdDevs);
+          //   drivetrain.addVisionMeasurement(visionRobotPoseMeters, 0);
+          // },
+          drivetrain::addVisionMeasurement,
           Robot.isReal()
               ? () -> Pose2d.kZero
               : () ->
@@ -123,9 +121,9 @@ public class RobotContainer {
       drivetrain.resetPose(new Pose2d(1, 1, Rotation2d.kZero));
     }
 
-    if (resetParams.contains(PoseHeadingResetParams.hPoseReset)) {
-      hPoseEstimator.reset(new Pose2d(1, 1, Rotation2d.kZero), true, true);
-    }
+    // if (resetParams.contains(PoseHeadingResetParams.hPoseReset)) {
+    //   hPoseEstimator.reset(new Pose2d(1, 1, Rotation2d.kZero), true, true);
+    // }
 
     if (resetParams.contains(PoseHeadingResetParams.gyroWrapperReset)) {
       drivetrain.getPigeon2().setYaw(Degrees.of(0));
@@ -171,13 +169,16 @@ public class RobotContainer {
     driverController
         .a()
         .whileTrue(
-            new ConditionalCommand(
-                    IntakeCommands.holdIn(intakeExtension)
-                        .until(driverController.rightTrigger().negate()),
-                    IntakeCommands.agitateOneCycle(intakeExtension)
-                        .until(intakeExtension.isAtSetpoint),
-                    driverController.rightTrigger())
-                .repeatedly());
+            BlastoiseCommands.shootCommand(
+                flywheel,
+                hood,
+                turret,
+                hook,
+                kicker,
+                intakeExtension,
+                intakeRollers,
+                dashShotMap,
+                driverController.leftTrigger()));
   }
 
   private void configureTeleopCoDriverBindings() {}
@@ -223,9 +224,18 @@ public class RobotContainer {
 
     LogMode commandsLogMode = LogMode.NetworkOnly;
     LogMode loggableSubsystemLogMode = LogMode.NetworkOnly;
+
+    var controllersTable = rootTable.getSubTable("Controllers");
+    controllersTable.addCompoundLogger(new LogNetworkXboxController("evenctl", driverController));
+
     var subsystemsTable = rootTable.getSubTable("Subsystems");
 
     // spotless:off
+    subsystemsTable
+        .getSubTable("drivetrain")
+        .addCompoundLogger(new LogSubsystemCommands("Commands", commandsLogMode, drivetrain))
+        .addCompoundLogger(new LogCTREDrivetrain("CTREDrivetrain", loggableSubsystemLogMode, drivetrain))
+        .addLoggable(drivetrain, loggableSubsystemLogMode); 
     subsystemsTable
         .getSubTable("hood")
         .addCompoundLogger(new LogSubsystemCommands("Commands", commandsLogMode, hood))
@@ -254,6 +264,9 @@ public class RobotContainer {
         .getSubTable("intakeRoller")
         .addCompoundLogger(new LogSubsystemCommands("Commands", commandsLogMode, intakeRollers))
         .addLoggable(intakeRollers, loggableSubsystemLogMode);
+    subsystemsTable
+        .getSubTable("vision")
+        .addLoggable(mainVision, loggableSubsystemLogMode);
     // spotless:on
   }
 

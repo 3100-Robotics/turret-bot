@@ -9,6 +9,7 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
@@ -104,10 +105,25 @@ public class MainVision extends LightSubsystem implements Loggable {
     for (Camera camera : cameras) {
       parentTable.addLoggable(camera, logMode);
     }
+
+    for (Camera camera : cameras) {
+      parentTable.addStructLogger(
+          "pose_cam" + camera.camName,
+          logMode,
+          () -> new Pose3d(drivetrain.getState().Pose).plus(camera.robotToCam),
+          // () ->
+          //     new Pose3d(
+          //         camera.robotToCam.getX(),
+          //         camera.robotToCam.getY(),
+          //         camera.robotToCam.getZ(),
+          //         camera.robotToCam.getRotation()),
+          Pose3d.struct);
+    }
+
     parentTable.addDoubleLogger(
-        "rot0", logMode, () -> drivetrain.getPigeon2().getRotation3d().getZ());
-    parentTable.addDoubleLogger(
-        "rot1", logMode, () -> drivetrain.getPigeon2().getRotation2d().getDegrees());
+        "rot0Degrees", logMode, () -> drivetrain.getState().Pose.getRotation().getDegrees());
+    // parentTable.addDoubleLogger(
+    //     "rot1Degrees", logMode, () -> drivetrain.getState().Pose.getRotation().getDegrees());
   }
 
   @FunctionalInterface

@@ -44,21 +44,25 @@ public class BlastoiseCommands {
       ShotMap shotMap,
       Trigger intakeHold) {
     return Commands.parallel(
-        // Intake
-        new ConditionalCommand(
-                IntakeCommands.holdIn(intakeExtension),
-                IntakeCommands.agitateOneCycle(intakeExtension),
-                intakeHold)
-            .repeatedly(),
-        // Dye rotor
-        Commands.waitSeconds(1)
-            .andThen(
-                DyeRotorCommands.runDyeRotor(hook, kicker) // Run dye rotor ...
-                    .until(turret.isNearSetpoint.negate()), // ... until the turret hasto flip
-                Commands.waitUntil(turret.isNearSetpoint) // Hold until its back
-                    .repeatedly() // back to top
-                ),
-        // Shooter
-        ShooterCommands.shooterDynamic(hood, flywheel, shotMap));
+            // Intake
+            new ConditionalCommand(
+                    IntakeCommands.holdIn(intakeExtension).until(intakeHold.negate()),
+                    IntakeCommands.agitateOneCycle(intakeExtension)
+                        .until(intakeExtension.isAtSetpoint),
+                    intakeHold)
+                .repeatedly(),
+            // Dye rotor
+            Commands.waitSeconds(2)
+                .andThen(
+                    DyeRotorCommands.runDyeRotor(hook, kicker) // Run dye rotor ...
+                        .until(turret.isNearSetpoint.negate()), // ... until the turret has to flip
+                    Commands.waitUntil(turret.isNearSetpoint) // Hold until its back
+                        .repeatedly() // back to top
+                    ),
+            // Shooter
+            ShooterCommands.shooterDynamic(hood, flywheel, shotMap)
+                .onlyWhile(turret.isNearSetpoint))
+        .andThen(Commands.waitUntil(turret.isNearSetpoint))
+        .repeatedly();
   }
 }

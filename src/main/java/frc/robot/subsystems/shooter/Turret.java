@@ -57,8 +57,7 @@ public class Turret extends LightSubsystem implements Loggable {
 
   public Pair<Angle, Angle> getSetpointAndPosition() {
     return Pair.of(
-        motor.getMechanismPositionSetpoint().orElse(Degrees.of(4000)),
-        motor.getMechanismPosition());
+        motor.getMechanismPositionSetpoint().orElse(Degrees.of(0)), motor.getMechanismPosition());
   }
 
   private boolean isPositionNearSetpoint() {
