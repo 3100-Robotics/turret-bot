@@ -15,11 +15,9 @@ import org.photonvision.simulation.SimCameraProperties;
 public class VisionAndPoseEstConstants {
   public static final double maxReasonableVisionDistance = 4;
 
-  public static final boolean simulateCoproc = true;
+  public static final boolean simulateCoproc = false;
 
   public static final AprilTagFieldLayout kTagLayout = FieldConstants.fieldAprilTags;
-
-  // TODO: May need to flip YAW signs
 
   public static final Camera CAM_FRONT_RIGHT =
       new Camera(

@@ -27,7 +27,6 @@ import frc.robot.commands.BlastoiseCommands;
 import frc.robot.commands.IntakeCommands;
 import frc.robot.commands.drivecommands.DrivePointAtAngle;
 import frc.robot.commands.drivecommands.DriveTeleop;
-import frc.robot.commands.intakecommands.Agitate;
 import frc.robot.commands.testcommands.TestCommands;
 import frc.robot.generated.TunerConstantsBlastoise1022;
 import frc.robot.sotm.DashboardStaticShotMap;
@@ -100,6 +99,10 @@ public class RobotContainer {
   public RobotContainer() {
     WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
 
+    if (Robot.isSimulation()) {
+      DriverStation.silenceJoystickConnectionWarning(true);
+    }
+
     // Do replace these function calls with the new ones you currently want to use then redeploy
     // code
     configureTeleopCoDriverBindings();
@@ -168,7 +171,9 @@ public class RobotContainer {
     // Command intakeMidLowToggleCommand = IntakeCommands.pivotMidLowToggle(intakePivot);
     // Command intakeRunCommand = IntakeCommands.rollerForward(intakeRoller);
 
-    driverController.b().whileTrue(new Agitate(intakeExtension, driverController.leftTrigger()));
+    driverController
+        .b()
+        .whileTrue(IntakeCommands.agitate(intakeExtension, driverController.leftTrigger()));
     driverController.x().whileTrue(IntakeCommands.holdIn(intakeExtension));
     driverController.leftBumper().whileTrue(IntakeCommands.runIntakeRollers(intakeRollers));
 

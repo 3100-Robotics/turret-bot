@@ -48,7 +48,7 @@ public class BlastoiseCommands {
             new ConditionalCommand(
                     IntakeCommands.holdIn(intakeExtension).until(intakeHold.negate()),
                     IntakeCommands.agitateOneCycle(intakeExtension)
-                        .until(intakeExtension.isAtSetpoint),
+                        .until(intakeExtension.isAtSetpointTrigger),
                     intakeHold)
                 .repeatedly(),
             // Dye rotor

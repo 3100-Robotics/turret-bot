@@ -10,6 +10,7 @@ import com.sbdc.loggerhead.logging.Loggable;
 import com.sbdc.loggerhead.logging.Loggerhead;
 import com.sbdc.loggerhead.logging.Table;
 import com.sbdc.loggerhead.util.LightSubsystem;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.constants.IntakeConstants;
@@ -40,19 +41,8 @@ public class IntakeExtension extends LightSubsystem implements Loggable {
   private final Elevator linearMechanism =
       new Elevator(IntakeConstants.extensionMechanismConfig, leftMotor);
 
-  public final Trigger isAtSetpoint =
-      new Trigger(
-          () ->
-              leftMotor
-                  .getMeasurementPosition()
-                  .isNear(
-                      leftMotor
-                          .getConfig()
-                          .convertFromMechanism(
-                              leftMotor
-                                  .getMechanismPositionSetpoint()
-                                  .orElseGet(() -> Degrees.of(0))),
-                      0.1));
+  public final Trigger isAtSetpointTrigger =
+      new Trigger(() -> isLinearMotorAtSetpoint(leftMotor) && isLinearMotorAtSetpoint(rightMotor));
 
   public void setIntakeExtensionTarget(IntakeExtensionTarget target) {
     leftMotor.setPosition(target.extensionDistance);
@@ -68,6 +58,17 @@ public class IntakeExtension extends LightSubsystem implements Loggable {
     leftMotor.setDutyCycle(0);
   }
 
+  public static Distance getLinearMotorSetpointOrZero(SmartMotorController motor) {
+    Angle motorSetpointAngle = motor.getMechanismPositionSetpoint().orElseGet(Degrees::zero);
+    Distance motorSetpoint = motor.getConfig().convertFromMechanism(motorSetpointAngle);
+    return motorSetpoint;
+  }
+
+  public static boolean isLinearMotorAtSetpoint(SmartMotorController motor) {
+    Distance motorPosition = motor.getMeasurementPosition();
+    return motorPosition.isNear(getLinearMotorSetpointOrZero(motor), 0.05);
+  }
+
   @Override
   public void periodic() {
     linearMechanism.updateTelemetry();
@@ -81,9 +82,19 @@ public class IntakeExtension extends LightSubsystem implements Loggable {
 
   @Override
   public void setupLogging(Table parentTable, LogMode logMode, Loggerhead loggerhead) {
-    parentTable.addBooleanLogger("isAtSetpoint", logMode, isAtSetpoint::getAsBoolean);
+    parentTable.addBooleanLogger("isAtSetpoint", logMode, isAtSetpointTrigger::getAsBoolean);
     parentTable.addDoubleLogger(
-        "measuredExtensionDistance", logMode, () -> leftMotor.getMeasurementPosition().in(Meters));
+        "leftMotorSetpoint", logMode, () -> getLinearMotorSetpointOrZero(leftMotor).in(Meters));
+    parentTable.addDoubleLogger(
+        "rightMotorSetpoint", logMode, () -> getLinearMotorSetpointOrZero(rightMotor).in(Meters));
+    parentTable.addDoubleLogger(
+        "leftMeasuredExtensionDistance",
+        logMode,
+        () -> leftMotor.getMeasurementPosition().in(Meters));
+    parentTable.addDoubleLogger(
+        "rightMeasuredExtensionDistance",
+        logMode,
+        () -> rightMotor.getMeasurementPosition().in(Meters));
     parentTable.addDoubleLogger(
         "intakeExtensionCurrent", logMode, () -> leftMotor.getStatorCurrent().in(Amps));
   }

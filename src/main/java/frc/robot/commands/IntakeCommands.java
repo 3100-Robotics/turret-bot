@@ -36,12 +36,20 @@ public class IntakeCommands {
     //         holdTrigger)
     //     .repeatedly();
     // return IntakeCommands.agitateOneCycle(intakeExtension).repeatedly();
-    return Commands.runEnd(
-        () -> {
-          intakeExtension.setIntakeExtensionTarget(IntakeExtensionTarget.Full);
-        },
-        null,
-        intakeExtension);
+    // return Commands.runEnd(
+    //     () -> {
+    //       intakeExtension.setIntakeExtensionTarget(IntakeExtensionTarget.Full);
+    //     },
+    //     null,
+    //     intakeExtension);
+    return Commands.sequence(
+            IntakeCommands.setIntakeState(intakeExtension, IntakeExtensionTarget.Stowed)
+                .withTimeout(0.25),
+            Commands.waitUntil(holdTrigger.negate()),
+            IntakeCommands.setIntakeState(intakeExtension, IntakeExtensionTarget.Full)
+                .withTimeout(0.25)
+            )
+        .repeatedly();
   }
 
   public static Command runIntakeRollers(IntakeRollers rollers) {
