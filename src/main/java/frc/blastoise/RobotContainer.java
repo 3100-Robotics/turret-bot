@@ -18,15 +18,30 @@ import frc.blastoise.subsystems.drive.GyroIOPigeon2;
 import frc.blastoise.subsystems.drive.ModuleIO;
 import frc.blastoise.subsystems.drive.ModuleIOSim;
 import frc.blastoise.subsystems.drive.ModuleIOTalonFX;
+import frc.blastoise.subsystems.flywheel.Flywheel;
+import frc.blastoise.subsystems.hood.Hood;
+import frc.blastoise.subsystems.hook.Hook;
 import frc.blastoise.subsystems.intakeextension.IntakeExtension;
 import frc.blastoise.subsystems.intakeextension.IntakeExtensionIO.IntakeExtensionIOReplay;
+import frc.blastoise.subsystems.turret.Turret;
 import frc.blastoise.subsystems.intakeextension.IntakeExtensionIOTalonFX;
+import frc.blastoise.subsystems.intakerollers.IntakeRollers;
+import frc.blastoise.subsystems.kicker.Kicker;
 import frc.blastoise.util.CommandXboxStyleController;
 
 public class RobotContainer {
   // Subsystems
   private final Drivetrain drivetrain;
+
+  private final Hood hood;
+  private final Flywheel flywheel;
+  private final Turret turret;
+
+  private final Hook hook;
+  private final Kicker kicker;
+
   private final IntakeExtension intakeExtension;
+  private final IntakeRollers intakeRollers;
 
   private final CommandXboxStyleController driverController =
       new CommandXboxStyleController(0, OperatorsControllerType.PlayStation);
@@ -67,6 +82,7 @@ public class RobotContainer {
     switch (AKitConstants.currentMode) {
       case REPLAY:
         intakeExtension = new IntakeExtension(new IntakeExtensionIOReplay());
+        intakeRollers = new IntakeRollers(new IntakeRollersIOReplay());
         break;
       default:
         intakeExtension = new IntakeExtension(IntakeExtensionIOTalonFX::new);
