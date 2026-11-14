@@ -160,7 +160,6 @@ public class Camera implements Loggable {
           est -> {
             // Change our trust in the measurement based on the tags we can see
             var estStdDevs = getEstimationStdDevs();
-
             // if (est.estimatedPose.)
             // return;
 

@@ -42,18 +42,27 @@ public class IntakeCommands {
     //     },
     //     null,
     //     intakeExtension);
+
     return Commands.sequence(
             IntakeCommands.setIntakeState(intakeExtension, IntakeExtensionTarget.Stowed)
                 .withTimeout(0.25),
             Commands.waitUntil(holdTrigger.negate()),
-            IntakeCommands.setIntakeState(intakeExtension, IntakeExtensionTarget.Full)
-                .withTimeout(0.25)
-            )
+            IntakeCommands.setIntakeState(intakeExtension, IntakeExtensionTarget.Max)
+                .withTimeout(0.50))
         .repeatedly();
+  }
+
+  public static Command holdDeploy(IntakeExtension extension) {
+    return setIntakeState(extension, IntakeExtensionTarget.Full);
   }
 
   public static Command runIntakeRollers(IntakeRollers rollers) {
     return Commands.runEnd(
         () -> rollers.setState(IntakeRollerTarget.On), rollers::stopIntakeRollers, rollers);
+  }
+
+  public static Command helpKickerBar(IntakeRollers rollers) {
+    return Commands.runEnd(
+        () -> rollers.setState(IntakeRollerTarget.Reverse), rollers::stopIntakeRollers, rollers);
   }
 }

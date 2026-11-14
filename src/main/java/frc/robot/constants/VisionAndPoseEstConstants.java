@@ -13,7 +13,7 @@ import frc.robot.vision.Camera;
 import org.photonvision.simulation.SimCameraProperties;
 
 public class VisionAndPoseEstConstants {
-  public static final double maxReasonableVisionDistance = 4;
+  public static final double maxReasonableVisionDistance = 6;
 
   public static final boolean simulateCoproc = false;
 

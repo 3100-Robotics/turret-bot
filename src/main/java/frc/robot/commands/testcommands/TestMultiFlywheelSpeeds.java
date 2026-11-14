@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.shooter.Flywheel;
 
 class TestMultiFlywheelSpeeds extends SequentialCommandGroup {
-  private static final double[] rpmSpeeds = {1000, 2000, 3000, 4000};
+  private static final double[] rpmSpeeds = {1000, 2000, 3000, 4000, 5000, 6000};
 
   private final Flywheel flywheel;
 
@@ -29,6 +29,6 @@ class TestMultiFlywheelSpeeds extends SequentialCommandGroup {
                   TestCommands.SmartDashboardKeys.Flywheel.getKeyTarget(), rpmSpeed);
               OneShot.setDouble("MultiFlywheelTestRPM", rpmSpeed);
             })
-        .andThen(TestCommands.testFlywheel(flywheel).withTimeout(4));
+        .andThen(TestCommands.testFlywheel(flywheel).withTimeout(1.5));
   }
 }

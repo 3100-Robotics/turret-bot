@@ -28,8 +28,8 @@ public interface DyeRotorConstants {
           // Gearing
           .withGearing(new MechanismGearing(GearBox.fromReductionStages(80 / 16, 80 / 10)))
           // PID / FF
-          .withClosedLoopController(new PIDController(0, 0, 0))
-          .withFeedforward(new SimpleMotorFeedforward(0, 6, 0))
+          .withClosedLoopController(new PIDController(0.1, 0, 0))
+          .withFeedforward(new SimpleMotorFeedforward(0, 5.4, 0))
           // Sim PID / FF
           .withSimClosedLoopController(new PIDController(5, 0, 0))
           .withSimFeedforward(new SimpleMotorFeedforward(0, 0, 0))

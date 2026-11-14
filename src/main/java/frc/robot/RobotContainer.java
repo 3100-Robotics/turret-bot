@@ -21,13 +21,11 @@ import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.commands.BlastoiseCommands;
 import frc.robot.commands.IntakeCommands;
-import frc.robot.commands.drivecommands.DrivePointAtAngle;
 import frc.robot.commands.drivecommands.DriveTeleop;
 import frc.robot.commands.testcommands.TestCommands;
+import frc.robot.commands.testcommands.TestMultiHookSpeeds;
 import frc.robot.generated.TunerConstantsBlastoise1022;
 import frc.robot.sotm.DashboardStaticShotMap;
 import frc.robot.sotm.DynamicShotMap;
@@ -146,50 +144,56 @@ public class RobotContainer {
   }
 
   private void configureTeleopDriverBindings() {
-    Command shootCommand =
-        BlastoiseCommands.shootCommand(
-            flywheel,
-            hood,
-            turret,
-            hook,
-            kicker,
-            intakeExtension,
-            intakeRollers,
-            dashShotMap,
-            driverController.leftTrigger());
+    // Command shootCommand =
+    //     BlastoiseCommands.shootCommand(
+    //         flywheel,
+    //         hood,
+    //         turret,
+    //         hook,
+    //         kicker,
+    //         intakeExtension,
+    //         intakeRollers,
+    //         dashShotMap,
+    //         driverController.leftTrigger());
 
-    Command autoAlignCommand =
-        new ProxyCommand(
-            new DrivePointAtAngle(
-                drivetrain,
-                driverController::getLeftY,
-                driverController::getLeftX,
-                driverController::getRightTriggerAxis,
-                sotmstate::getHeading));
+    // Command autoAlignCommand =
+    //     new ProxyCommand(
+    //         new DrivePointAtAngle(
+    //             drivetrain,
+    //             driverController::getLeftY,
+    //             driverController::getLeftX,
+    //             driverController::getRightTriggerAxis,
+    //             sotmstate::getHeading));
 
     // Command intakeHighCommand = IntakeCommands.pivotHigh(intakePivot);
     // Command intakeMidLowToggleCommand = IntakeCommands.pivotMidLowToggle(intakePivot);
     // Command intakeRunCommand = IntakeCommands.rollerForward(intakeRoller);
 
     driverController
-        .b()
-        .whileTrue(IntakeCommands.agitate(intakeExtension, driverController.leftTrigger()));
-    driverController.x().whileTrue(IntakeCommands.holdIn(intakeExtension));
-    driverController.leftBumper().whileTrue(IntakeCommands.runIntakeRollers(intakeRollers));
+        .rightBumper()
+        .whileTrue(
+            IntakeCommands.holdDeploy(intakeExtension)
+                .alongWith(
+                    Commands.waitSeconds(0.2)
+                        .andThen(IntakeCommands.runIntakeRollers(intakeRollers))));
+    driverController.povDown().whileTrue(IntakeCommands.helpKickerBar(intakeRollers));
+    driverController.leftBumper().whileTrue(IntakeCommands.holdIn(intakeExtension));
 
     driverController
         .a()
         .whileTrue(
-            BlastoiseCommands.shootCommand(
-                flywheel,
-                hood,
-                turret,
-                hook,
-                kicker,
-                intakeExtension,
-                intakeRollers,
-                dashShotMap,
-                driverController.leftTrigger()));
+            new TestMultiHookSpeeds(hook)
+            // BlastoiseCommands.shootCommand(
+            //     flywheel,
+            //     hood,
+            //     turret,
+            //     hook,
+            //     kicker,
+            //     intakeExtension,
+            //     intakeRollers,
+            //     dashShotMap,
+            //     driverController.leftTrigger())
+            );
   }
 
   private void configureTeleopCoDriverBindings() {}

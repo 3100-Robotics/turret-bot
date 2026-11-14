@@ -1,5 +1,6 @@
 package frc.robot.subsystems.dyerotor;
 
+import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.RPM;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -20,7 +21,8 @@ import yams.motorcontrollers.local.SparkWrapper;
 public class Hook extends LightSubsystem implements Loggable {
   private SparkMax rawMotor = new SparkMax(DyeRotorConstants.hookMotorCanID, MotorType.kBrushless);
   private SmartMotorController motor =
-      new SparkWrapper(rawMotor, DCMotor.getNEO(1), DyeRotorConstants.hookMotorConfig);
+      new SparkWrapper(
+          rawMotor, DCMotor.getNEO(1), DyeRotorConstants.hookMotorConfig.withSubsystem(this));
 
   public void setTarget(HookTargets targetVelocity) {
     switch (targetVelocity) {
@@ -61,5 +63,12 @@ public class Hook extends LightSubsystem implements Loggable {
   public void setupLogging(Table parentTable, LogMode logMode, Loggerhead loggerhead) {
     parentTable.addDoubleLogger(
         "hookSpeedRPM", logMode, () -> motor.getMechanismVelocity().in(RPM));
+
+    parentTable.addDoubleLogger("hookCurrent", logMode, () -> motor.getStatorCurrent().in(Amps));
+
+    parentTable.addDoubleLogger(
+        "hookSetpointRPM",
+        logMode,
+        () -> motor.getMechanismSetpointVelocity().orElseGet(RPM::zero).in(RPM));
   }
 }

@@ -72,8 +72,8 @@ public interface ShooterConstants {
           .withMomentOfInertia(Inches.of(1.9825395), Pound.of(0.9))
           .withMotorInverted(true)
           // PID / FF
-          .withClosedLoopController(new PIDController(0.003, 0, 0))
-          .withFeedforward(new SimpleMotorFeedforward(0, 0.137))
+          .withClosedLoopController(new PIDController(1.0, 0, 0))
+          .withFeedforward(new SimpleMotorFeedforward(0, 0.12))
           // Sim PID / FF
           .withSimClosedLoopController(new PIDController(0.003, 0, 0))
           .withSimFeedforward(new SimpleMotorFeedforward(0, 0.137))
