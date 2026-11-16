@@ -25,11 +25,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.BlastoiseCommands;
+import frc.robot.commands.DyeRotorCommands;
 import frc.robot.commands.IntakeCommands;
+import frc.robot.commands.ShooterCommands;
 import frc.robot.commands.drivecommands.DrivePointAtAngle;
 import frc.robot.commands.drivecommands.DriveTeleop;
 import frc.robot.commands.testcommands.TestCommands;
-import frc.robot.commands.testcommands.TestMultiHookSpeeds;
 import frc.robot.generated.TunerConstantsBlastoise1022;
 import frc.robot.sotm.DashboardStaticShotMap;
 import frc.robot.sotm.DynamicShotMap;
@@ -185,10 +187,22 @@ public class RobotContainer {
     driverController.povUp().onTrue(Commands.runOnce(() -> drivetrain.seedFieldCentric()));
     driverController.leftBumper().whileTrue(IntakeCommands.holdIn(intakeExtension));
 
+    driverController.povRight().whileTrue(DyeRotorCommands.reverseDyeRotot(hook, kicker));
+
     driverController
         .a()
         .whileTrue(
-            new TestMultiHookSpeeds(hook)
+            BlastoiseCommands.shootCommand(
+                flywheel,
+                hood,
+                turret,
+                hook,
+                kicker,
+                intakeExtension,
+                intakeRollers,
+                dashShotMap,
+                driverController.leftTrigger())
+            // new TestMultiHookSpeeds(hook)
             // BlastoiseCommands.shootCommand(
             //     flywheel,
             //     hood,
@@ -213,6 +227,8 @@ public class RobotContainer {
             () -> -driverController.getRightX(),
             driverController::getRightTriggerAxis,
             isShooting::getAsBoolean));
+
+    hood.setDefaultCommand(ShooterCommands.hoodLow(hood));
   }
 
   public void configureTestDefaultCommands(

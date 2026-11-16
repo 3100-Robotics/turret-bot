@@ -17,6 +17,7 @@ import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
@@ -27,6 +28,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import frc.robot.MatchContext;
 import frc.robot.generated.TunerConstantsBlastoise1022;
 import frc.robot.generated.TunerConstantsBlastoise1022.TunerSwerveDrivetrain;
 import frc.robot.utils.simulation.MapleSimSwerveDrivetrain;
@@ -252,7 +254,13 @@ public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem, Logg
     parentTable
         .addBooleanLogger(
             "hasAppliedOperatorPerspective", logMode, () -> m_hasAppliedOperatorPerspective)
-        .addStringLogger("currentBasedSpeedLimit", logMode, getCurrentBasedSpeedLimit()::toString);
+        .addStringLogger("currentBasedSpeedLimit", logMode, getCurrentBasedSpeedLimit()::toString)
+        .addDoubleLogger("hubDistanceMeters", logMode, this::getDistanceToHubMeters);
+  }
+
+  public double getDistanceToHubMeters() {
+    Transform2d t = MatchContext.getInstance().getHubPose().minus(getState().Pose);
+    return Math.sqrt(Math.pow(t.getX(), 2) + Math.pow(t.getY(), 2));
   }
 
   public Pair<Double, Double> getCurrentBasedSpeedLimit() {

@@ -16,6 +16,7 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import frc.robot.constants.DyeRotorConstants;
 import frc.robot.targets.DyeRotorTargets.HookTargets;
 import yams.motorcontrollers.SmartMotorController;
+import yams.motorcontrollers.SmartMotorController.ClosedLoopControllerSlot;
 import yams.motorcontrollers.local.SparkWrapper;
 
 public class Hook extends LightSubsystem implements Loggable {
@@ -45,6 +46,7 @@ public class Hook extends LightSubsystem implements Loggable {
     if (speed.in(RPM) == 0) {
       stopHook();
     } else {
+      motor.setClosedLoopSlot(ClosedLoopControllerSlot.SLOT_0);
       motor.setVelocity(speed);
     }
   }

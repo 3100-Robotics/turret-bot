@@ -22,4 +22,11 @@ public class DyeRotorCommands {
     return Commands.runEnd(
         () -> kicker.setState(KickerTarget.On), () -> kicker.setState(KickerTarget.Off), kicker);
   }
+
+  public static Command reverseDyeRotot(Hook hook, Kicker kicker) {
+    return Commands.runEnd(() -> hook.setTarget(HookTargets.Reverse), hook::stopHook, hook)
+        .alongWith(
+            Commands.runEnd(
+                () -> kicker.setState(KickerTarget.Reverse), kicker::stopKicker, kicker));
+  }
 }

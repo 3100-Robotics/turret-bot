@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.constants.ShooterConstants;
 import frc.robot.sotm.ShotMap;
 import frc.robot.subsystems.shooter.Flywheel;
 import frc.robot.subsystems.shooter.Hood;
@@ -29,6 +30,11 @@ public class ShooterCommands {
             },
             hood)
         .withName("hoodDynamic w target: " + shotMap.getTarget());
+  }
+
+  public static Command hoodLow(Hood hood) {
+    return Commands.runEnd(
+        () -> hood.setHoodAngle(ShooterConstants.minHoodAngle), hood::stopHood, hood);
   }
 
   public static Command shooterDynamic(Hood hood, Flywheel flywheel, ShotMap shotMap) {
