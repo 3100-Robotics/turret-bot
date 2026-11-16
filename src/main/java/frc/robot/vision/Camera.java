@@ -26,6 +26,7 @@ import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.simulation.PhotonCameraSim;
 import org.photonvision.simulation.SimCameraProperties;
+import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 public class Camera implements Loggable {
@@ -107,7 +108,7 @@ public class Camera implements Loggable {
 
   public void update() {
     var heading = headingSupplier.get();
-    photonEstimator.addHeadingData(heading.getSecond(), heading.getFirst());
+    // photonEstimator.addHeadingData(heading.getSecond(), heading.getFirst());
 
     Optional<EstimatedRobotPose> visionEst = Optional.empty();
     for (var result : camera.getAllUnreadResults()) {
@@ -229,11 +230,19 @@ public class Camera implements Loggable {
           estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
         } else {
           newStdDevMode = "Many, distance augmented (one tag, long)";
-          estStdDevs = estStdDevs.times(1 + (avgDist * avgDist / 30)).times(1.1);
+          estStdDevs = estStdDevs.times(1 + (avgDist * avgDist / 30)).times(1.4);
         }
         curStdDevs = estStdDevs;
       }
     }
+  }
+
+  private String stdDevsToString() {
+    double x = curStdDevs.get(0, 0);
+    double y = curStdDevs.get(1, 0);
+    double rot = curStdDevs.get(2, 0);
+
+    return "X: " + x + " Y: " + y + " T: " + rot;
   }
 
   public void setupLogging(Table parentTable, LogMode logMode, Loggerhead loggerhead) {
@@ -243,7 +252,9 @@ public class Camera implements Loggable {
         .addStructLogger(camName + "camPose", logMode, () -> robotToCam, Transform3d.struct)
         .addDoubleLogger(camName + "latency", logMode, () -> latency)
         .addDoubleLogger(camName + "currentAmbig", logMode, () -> currentPoseAmbiguity)
-        .addStringLogger(camName + "curStdDevs", logMode, () -> curStdDevs.toString())
+        .addDoubleLogger(camName + "stdX", logMode, () -> curStdDevs.get(0, 0))
+        .addDoubleLogger(camName + "stdY", logMode, () -> curStdDevs.get(1, 0))
+        .addDoubleLogger(camName + "stdT", logMode, () -> curStdDevs.get(2, 0))
         .addStringLogger(camName + "stdDevMode", logMode, () -> stdevMode)
         .addStringLogger(camName + "newStdDevMode", logMode, () -> newStdDevMode)
         .addStringLogger(camName + "currentStrat", logMode, () -> currentStrat)

@@ -182,6 +182,7 @@ public class RobotContainer {
                     Commands.waitSeconds(0.2)
                         .andThen(IntakeCommands.runIntakeRollers(intakeRollers))));
     driverController.povDown().whileTrue(IntakeCommands.helpKickerBar(intakeRollers));
+    driverController.povUp().onTrue(Commands.runOnce(() -> drivetrain.seedFieldCentric()));
     driverController.leftBumper().whileTrue(IntakeCommands.holdIn(intakeExtension));
 
     driverController
