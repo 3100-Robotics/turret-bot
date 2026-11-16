@@ -6,12 +6,13 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.Degrees;
 
+import com.sbdc.loggerhead.core.LightSubsystem;
+import com.sbdc.loggerhead.core.LoggerheadUtils;
 import com.sbdc.loggerhead.logging.LogMode;
 import com.sbdc.loggerhead.logging.Loggerhead;
 import com.sbdc.loggerhead.logging.compoundlogger.LogCTREDrivetrain;
 import com.sbdc.loggerhead.logging.compoundlogger.LogNetworkXboxController;
 import com.sbdc.loggerhead.logging.compoundlogger.LogSubsystemCommands;
-import com.sbdc.loggerhead.util.LightSubsystem;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.net.WebServer;
@@ -39,7 +40,6 @@ import frc.robot.subsystems.intake.IntakeRollers;
 import frc.robot.subsystems.shooter.Flywheel;
 import frc.robot.subsystems.shooter.Hood;
 import frc.robot.subsystems.shooter.Turret;
-import frc.robot.utils.Utils;
 import frc.robot.vision.MainVision;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -230,8 +230,8 @@ public class RobotContainer {
     // Utils.setLightSusbsytemDefaultCommandFromMap(hook, testCommandsMap);
     // Utils.setLightSusbsytemDefaultCommandFromMap(kicker, testCommandsMap);
 
-    Utils.setLightSusbsytemDefaultCommandFromMap(intakeExtension, testCommandsMap);
-    Utils.setLightSusbsytemDefaultCommandFromMap(intakeRollers, testCommandsMap);
+    LoggerheadUtils.setLightSusbsytemDefaultCommandFromMap(intakeExtension, testCommandsMap);
+    LoggerheadUtils.setLightSusbsytemDefaultCommandFromMap(intakeRollers, testCommandsMap);
   }
 
   private void configureLogging() {
