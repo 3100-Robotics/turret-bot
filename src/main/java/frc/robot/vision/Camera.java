@@ -38,8 +38,8 @@ public class Camera implements Loggable {
   // public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(1, 1, 1);
   // public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(1.1, 1.1, 1.1);
 
-  public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(1.5, 1.5, 1.5);
-  public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(1.5, 1.5, 1.5);
+  public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(1.5, 1.5, 4.5);
+  public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(1.5, 1.5, 2.5);
 
   private Field2d simField;
 
@@ -191,7 +191,7 @@ public class Camera implements Loggable {
       // Pose present. Start running Heuristic
       var estStdDevs = kSingleTagStdDevs;
       int numTags = 0;
-      avgDist = 0;
+      double avgDist = 0;
 
       // Precalculation - see how many tags we found, and calculate an average-distance metric
       for (var tgt : targets) {

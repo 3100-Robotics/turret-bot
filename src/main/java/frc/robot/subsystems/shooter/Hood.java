@@ -17,6 +17,8 @@ public class Hood extends LightSubsystem implements Loggable {
   // Define vendor motors
   private final TalonFX rawMotor = new TalonFX(ShooterConstants.hoodMotorCanID);
 
+  public boolean isRunning = false;
+
   // Define SmartMotorControllers
   private final SmartMotorController motor =
       new TalonFXWrapper(
@@ -25,6 +27,7 @@ public class Hood extends LightSubsystem implements Loggable {
           ShooterConstants.hoodMotorConfig.withSubsystem(this));
 
   public void setHoodAngle(Angle angle) {
+    isRunning = true;
     motor.setPosition(angle);
   }
 
@@ -33,6 +36,7 @@ public class Hood extends LightSubsystem implements Loggable {
   }
 
   public void stopHood() {
+    isRunning = false;
     motor.setDutyCycle(0);
   }
 

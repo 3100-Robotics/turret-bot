@@ -11,18 +11,21 @@ public class DriveTeleop extends Command {
   private Supplier<Double> ySpeed;
   private Supplier<Double> thetaSpeed;
   private Supplier<Double> throttle;
+  private final Supplier<Boolean> isShooting;
 
   public DriveTeleop(
       Drivetrain drivetrain,
       Supplier<Double> xSpeed,
       Supplier<Double> ySpeed,
       Supplier<Double> thetaSpeed,
-      Supplier<Double> throttle) {
+      Supplier<Double> throttle,
+      Supplier<Boolean> isShooting) {
     this.drivetrain = drivetrain;
     this.xSpeed = xSpeed;
     this.ySpeed = ySpeed;
     this.thetaSpeed = thetaSpeed;
     this.throttle = throttle;
+    this.isShooting = isShooting;
     addRequirements(drivetrain);
   }
 
@@ -33,9 +36,17 @@ public class DriveTeleop extends Command {
   public void execute() {
     drivetrain.setControl(
         DrivetrainConstants.DRIVE_FIELD
-            .withVelocityX(-xSpeed.get() * throttle.get())
-            .withVelocityY(-ySpeed.get() * throttle.get())
-            .withRotationalRate(thetaSpeed.get()));
+            .withVelocityX(
+                -xSpeed.get()
+                    * throttle.get()
+                    * (isShooting.get() ? DrivetrainConstants.DRIVETRAIN_SHOOTING_SPEED_TRANS : 1))
+            .withVelocityY(
+                -ySpeed.get()
+                    * throttle.get()
+                    * (isShooting.get() ? DrivetrainConstants.DRIVETRAIN_SHOOTING_SPEED_TRANS : 1))
+            .withRotationalRate(
+                thetaSpeed.get()
+                    * (isShooting.get() ? DrivetrainConstants.DRIVETRAIN_SHOOTING_SPEED_ROT : 1)));
   }
 
   @Override

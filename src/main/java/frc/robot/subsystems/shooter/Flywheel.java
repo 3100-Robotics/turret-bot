@@ -29,7 +29,10 @@ public class Flywheel extends LightSubsystem implements Loggable {
               .withFollowers(Pair.of(rawMotorRightFlywheel, true))
               .withSubsystem(this));
 
+  public boolean isRunning = false;
+
   public void setSpeed(AngularVelocity speed) {
+    isRunning = true;
     if (speed.in(RPM) == 0) {
       stopFlywheel();
     } else {
@@ -38,6 +41,7 @@ public class Flywheel extends LightSubsystem implements Loggable {
   }
 
   public void stopFlywheel() {
+    isRunning = false;
     motor.setDutyCycle(0);
   }
 

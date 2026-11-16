@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.FeetPerSecond;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Pounds;
 import static edu.wpi.first.units.Units.Seconds;
@@ -13,12 +14,14 @@ import com.sbdc.loggerhead.logging.Loggable;
 import com.sbdc.loggerhead.logging.Loggerhead;
 import com.sbdc.loggerhead.logging.Table;
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
@@ -29,6 +32,7 @@ import frc.robot.generated.TunerConstantsBlastoise1022.TunerSwerveDrivetrain;
 import frc.robot.utils.simulation.MapleSimSwerveDrivetrain;
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 /**
  * Class that extends the Phoenix 6 SwerveDrivetrain class and implements Subsystem so it can easily
@@ -49,6 +53,12 @@ public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem, Logg
   /* Keep track if we've ever applied the operator perspective before or not */
   private boolean m_hasAppliedOperatorPerspective = false;
 
+  public static final LinearVelocity THEORETICAL_MAX_SPEED = FeetPerSecond.of(17.7);
+
+  public double currentBasedSpeedLimit = 1;
+
+  private Supplier<Double> totalRobotCurrentSupplier = () -> 0.0;
+
   private void commonSetup() {
     if (Utils.isSimulation()) {
       startSimThread();
@@ -56,6 +66,10 @@ public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem, Logg
           new Pose2d(1, 1, Rotation2d.kZero));
     }
     configNeutralMode(NeutralModeValue.Brake);
+  }
+
+  public void setTotalRobotCurrentSupplier(Supplier<Double> totalRobotCurrentSupplier) {
+    this.totalRobotCurrentSupplier = totalRobotCurrentSupplier;
   }
 
   /**
@@ -235,7 +249,24 @@ public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem, Logg
 
   @Override
   public void setupLogging(Table parentTable, LogMode logMode, Loggerhead loggerhead) {
-    parentTable.addBooleanLogger(
-        "hasAppliedOperatorPerspective", logMode, () -> m_hasAppliedOperatorPerspective);
+    parentTable
+        .addBooleanLogger(
+            "hasAppliedOperatorPerspective", logMode, () -> m_hasAppliedOperatorPerspective)
+        .addStringLogger("currentBasedSpeedLimit", logMode, getCurrentBasedSpeedLimit()::toString);
+  }
+
+  public Pair<Double, Double> getCurrentBasedSpeedLimit() {
+    Double current = totalRobotCurrentSupplier.get();
+
+    double transLimit;
+    double rotLimit;
+    if (current > 60) {
+      transLimit = 0.2;
+      rotLimit = 0.2;
+    } else {
+      transLimit = 1;
+      rotLimit = 1;
+    }
+    return Pair.of(transLimit, rotLimit);
   }
 }

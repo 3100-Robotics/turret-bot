@@ -15,7 +15,7 @@ import org.photonvision.simulation.SimCameraProperties;
 public class VisionAndPoseEstConstants {
   public static final double maxReasonableVisionDistance = 6;
 
-  public static final boolean simulateCoproc = false;
+  public static final boolean simulateCoproc = true;
 
   public static final AprilTagFieldLayout kTagLayout = FieldConstants.fieldAprilTags;
 

@@ -12,6 +12,7 @@ import com.sbdc.loggerhead.logging.LogMode;
 import com.sbdc.loggerhead.logging.Loggerhead;
 import com.sbdc.loggerhead.logging.compoundlogger.LogCTREDrivetrain;
 import com.sbdc.loggerhead.logging.compoundlogger.LogNetworkXboxController;
+import com.sbdc.loggerhead.logging.compoundlogger.LogPowerDistribution;
 import com.sbdc.loggerhead.logging.compoundlogger.LogSubsystemCommands;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -23,7 +24,9 @@ import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.IntakeCommands;
+import frc.robot.commands.drivecommands.DrivePointAtAngle;
 import frc.robot.commands.drivecommands.DriveTeleop;
 import frc.robot.commands.testcommands.TestCommands;
 import frc.robot.commands.testcommands.TestMultiHookSpeeds;
@@ -52,6 +55,8 @@ public class RobotContainer {
     CTREReset,
     hPoseReset;
   }
+
+  private final PowerDistribution pdh = new PowerDistribution(59, ModuleType.kRev);
 
   private final Drivetrain drivetrain = TunerConstantsBlastoise1022.createDrivetrain();
   private final ShotMap dashShotMap = new DashboardStaticShotMap();
@@ -89,10 +94,10 @@ public class RobotContainer {
   private final IntakeExtension intakeExtension = new IntakeExtension();
   private final IntakeRollers intakeRollers = new IntakeRollers();
 
-  private final PowerDistribution pdh = new PowerDistribution(59, ModuleType.kRev);
-
   private final CommandXboxController driverController = new CommandXboxController(0);
   private final CommandXboxController coDriverController = new CommandXboxController(1);
+
+  private final Trigger isShooting = new Trigger(() -> flywheel.isRunning && hood.isRunning);
 
   public RobotContainer() {
     WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
@@ -156,14 +161,14 @@ public class RobotContainer {
     //         dashShotMap,
     //         driverController.leftTrigger());
 
-    // Command autoAlignCommand =
-    //     new ProxyCommand(
-    //         new DrivePointAtAngle(
-    //             drivetrain,
-    //             driverController::getLeftY,
-    //             driverController::getLeftX,
-    //             driverController::getRightTriggerAxis,
-    //             sotmstate::getHeading));
+    Command autoAlignCommand =
+        new DrivePointAtAngle(
+            drivetrain,
+            driverController::getLeftY,
+            driverController::getLeftX,
+            driverController::getRightTriggerAxis,
+            sotmstate::getHeading,
+            isShooting::getAsBoolean);
 
     // Command intakeHighCommand = IntakeCommands.pivotHigh(intakePivot);
     // Command intakeMidLowToggleCommand = IntakeCommands.pivotMidLowToggle(intakePivot);
@@ -205,7 +210,8 @@ public class RobotContainer {
             driverController::getLeftY,
             driverController::getLeftX,
             () -> -driverController.getRightX(),
-            driverController::getRightTriggerAxis));
+            driverController::getRightTriggerAxis,
+            isShooting::getAsBoolean));
   }
 
   public void configureTestDefaultCommands(
@@ -242,6 +248,11 @@ public class RobotContainer {
 
     var controllersTable = rootTable.getSubTable("Controllers");
     controllersTable.addCompoundLogger(new LogNetworkXboxController("evenctl", driverController));
+
+    rootTable
+        .getSubTable("PDH")
+        .addDoubleLogger("totalCurrent", loggableSubsystemLogMode, pdh::getTotalCurrent)
+        .addCompoundLogger(new LogPowerDistribution(LogMode.Both, pdh));
 
     var subsystemsTable = rootTable.getSubTable("Subsystems");
 
