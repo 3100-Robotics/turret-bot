@@ -10,13 +10,11 @@ import com.sbdc.loggerhead.logging.LogMode;
 import com.sbdc.loggerhead.logging.Loggable;
 import com.sbdc.loggerhead.logging.Loggerhead;
 import com.sbdc.loggerhead.logging.Table;
-
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.constants.IntakeConstants;
-import frc.robot.targets.IntakeTargets;
 import frc.robot.targets.IntakeTargets.IntakeExtensionTarget;
 import yams.mechanisms.positional.Elevator;
 import yams.motorcontrollers.SmartMotorController;
@@ -50,17 +48,16 @@ public class IntakeExtension extends LightSubsystem implements Loggable {
                   && LoggerheadUtils.isLinearMotorAtSetpoint(rightMotor, 0.05));
 
   private final LinearFilter intakeCurrentFilter = LinearFilter.singlePoleIIR(1, 0.02);
-  private final Trigger hardStopHitCurrent = new Trigger(() -> intakeCurrentFilter.lastValue() > 10);
+  private final Trigger hardStopHitCurrent =
+      new Trigger(() -> intakeCurrentFilter.lastValue() > 10);
 
   public IntakeExtension() {
     hardStopHitCurrent.onTrue(
-      Commands.runOnce(
-        () -> {
-          leftMotor.setEncoderPosition(IntakeExtensionTarget.Max.extensionDistance);
-          rightMotor.setEncoderPosition(IntakeExtensionTarget.Max.extensionDistance);
-        }
-      )
-    );
+        Commands.runOnce(
+            () -> {
+              leftMotor.setEncoderPosition(IntakeExtensionTarget.Max.extensionDistance);
+              rightMotor.setEncoderPosition(IntakeExtensionTarget.Max.extensionDistance);
+            }));
   }
 
   public void setIntakeExtensionTarget(IntakeExtensionTarget target) {
@@ -79,7 +76,8 @@ public class IntakeExtension extends LightSubsystem implements Loggable {
 
   @Override
   public void periodic() {
-    intakeCurrentFilter.calculate(rightMotor.getStatorCurrent().plus(leftMotor.getStatorCurrent()).div(2).in(Amps));
+    intakeCurrentFilter.calculate(
+        rightMotor.getStatorCurrent().plus(leftMotor.getStatorCurrent()).div(2).in(Amps));
     linearMechanism.updateTelemetry();
     rightMotor.updateTelemetry();
   }

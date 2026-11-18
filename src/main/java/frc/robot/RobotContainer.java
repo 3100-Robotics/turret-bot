@@ -98,9 +98,13 @@ public class RobotContainer {
   private final CommandXboxController driverController = new CommandXboxController(0);
   private final CommandXboxController coDriverController = new CommandXboxController(1);
 
-  private final DrivetrainControlAxisMapping driverAxisMapping = new DrivetrainControlAxisMapping(() -> driverController.getLeftY() * Drivetrain.THEORETICAL_MAX_SPEED.in(MetersPerSecond), 
-                                                                                                  () -> driverController.getLeftX() * Drivetrain.THEORETICAL_MAX_SPEED.in(MetersPerSecond), 
-                                                                                                  () -> -driverController.getRightX() * Drivetrain.THEORETICAL_MAX_ROT_SPEED.in(RadiansPerSecond));
+  private final DrivetrainControlAxisMapping driverAxisMapping =
+      new DrivetrainControlAxisMapping(
+          () -> driverController.getLeftY() * Drivetrain.THEORETICAL_MAX_SPEED.in(MetersPerSecond),
+          () -> driverController.getLeftX() * Drivetrain.THEORETICAL_MAX_SPEED.in(MetersPerSecond),
+          () ->
+              -driverController.getRightX()
+                  * Drivetrain.THEORETICAL_MAX_ROT_SPEED.in(RadiansPerSecond));
 
   private final Trigger isShooting = new Trigger(() -> flywheel.isRunning && hood.isRunning);
 
@@ -111,14 +115,10 @@ public class RobotContainer {
       DriverStation.silenceJoystickConnectionWarning(true);
     }
 
-
-
-
     configureTeleopCoDriverBindings();
     configureTeleopDriverBindings();
 
     configureTeleopDefaultCommands();
-
 
     Loggerhead.getInstance()
         .applyToConfigurator(
@@ -163,7 +163,14 @@ public class RobotContainer {
                     Commands.waitSeconds(0.2)
                         .andThen(IntakeCommands.runIntakeRollers(intakeRollers))));
     driverController.povDown().whileTrue(IntakeCommands.helpKickerBar(intakeRollers));
-    driverController.povUp().onTrue(Commands.runOnce(() -> drivetrain.seedFieldCentric()));
+    driverController
+        .povUp()
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  drivetrain.seedFieldCentric();
+                  mainVision.onPoseReset();
+                }));
     driverController.leftBumper().whileTrue(IntakeCommands.holdIn(intakeExtension));
 
     driverController.povRight().whileTrue(DyeRotorCommands.reverseDyeRotor(hook, kicker));

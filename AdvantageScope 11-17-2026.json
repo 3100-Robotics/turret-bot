@@ -1,0 +1,201 @@
+{
+  "hubs": [
+    {
+      "x": 408,
+      "y": 15,
+      "width": 1100,
+      "height": 650,
+      "state": {
+        "sidebar": {
+          "width": 331,
+          "expanded": [
+            "/drivetrain/robot",
+            "/Mechanisms/swerve",
+            "/Mechanisms/swerve/states",
+            "/Mechanisms/swerve/chassis",
+            "/Subsystems",
+            "/Subsystems/Drivetrain",
+            "/Subsystems/Drivetrain/Swerve",
+            "/SmartDashboard/Field",
+            "/Kicker",
+            "/Flywheel",
+            "/Flywheel/Commands",
+            "/Kicker/Commands",
+            "/SmartDashboard/turretMech/mechanism",
+            "/SmartDashboard/turretMech/mechanism/turretMechRoot",
+            "/Subsystems/intakeExtension/Subsystems",
+            "/Subsystems/intakeExtension/Subsystems/intakeExtension",
+            "/Subsystems/intakeExtension/Subsystems/intakeExtension/Commands",
+            "/Subsystems/hook/Subsystems/hook",
+            "/Subsystems/hook/Subsystems/hook/Commands",
+            "/Subsystems1",
+            "/Subsystems1/hood",
+            "/Subsystems1/hood/Commands",
+            "/SmartDashboard/manualSubsystemControlPanel/IntakeRollers",
+            "/SmartDashboard/manualSubsystemControlPanel/IntakeExtension",
+            "/SmartDashboard/manualSubsystemControlPanel",
+            "/Subsystems/Drivetrain/HPose",
+            "/Subsystems/Drivetrain/LogCTREBultin",
+            "/Subsystems/Drivetrain/LogCTREBultin/Pose",
+            "/AdvantageKit",
+            "/Mechanisms/rightIntakeExtensionMechanism",
+            "/ReplayOutputs",
+            "/Subsystems/drivetrain",
+            "/Subsystems/drivetrain/CTREDrivetrain",
+            "/SmartDashboard",
+            "/SmartDashboard/Vision",
+            "/SmartDashboard/Vision/frontright",
+            "/SmartDashboard/Vision/backleft"
+          ]
+        },
+        "tabs": {
+          "selected": 3,
+          "tabs": [
+            {
+              "type": 0,
+              "title": "",
+              "controller": null,
+              "controllerUUID": "47ungaowbkplt15uei1478smurllnlyq",
+              "renderer": "",
+              "controlsHeight": 0
+            },
+            {
+              "type": 1,
+              "title": "Line Graph",
+              "controller": {
+                "leftSources": [
+                  {
+                    "type": "stepped",
+                    "logKey": "NT:/SmartDashboard/Vision/peakCount",
+                    "logType": "Number",
+                    "visible": true,
+                    "options": {
+                      "color": "#e5b31b",
+                      "size": "normal"
+                    }
+                  }
+                ],
+                "rightSources": [],
+                "discreteSources": [
+                  {
+                    "type": "stripes",
+                    "logKey": "NT:/SmartDashboard/Vision/backleft/status",
+                    "logType": "String",
+                    "visible": true,
+                    "options": {
+                      "color": "#2b66a2"
+                    }
+                  },
+                  {
+                    "type": "stripes",
+                    "logKey": "NT:/SmartDashboard/Vision/frontright/status",
+                    "logType": "String",
+                    "visible": true,
+                    "options": {
+                      "color": "#80588e"
+                    }
+                  },
+                  {
+                    "type": "stripes",
+                    "logKey": "NT:/SmartDashboard/Vision/peakThisLoop",
+                    "logType": "Boolean",
+                    "visible": true,
+                    "options": {
+                      "color": "#af2437"
+                    }
+                  }
+                ],
+                "leftLockedRange": null,
+                "rightLockedRange": null,
+                "leftUnitConversion": {
+                  "autoTarget": null,
+                  "preset": null
+                },
+                "rightUnitConversion": {
+                  "autoTarget": null,
+                  "preset": null
+                },
+                "leftFilter": 0,
+                "rightFilter": 0
+              },
+              "controllerUUID": "ommeju9wd5pbckltkpyvb0bom8480bwz",
+              "renderer": null,
+              "controlsHeight": 200
+            },
+            {
+              "type": 5,
+              "title": "Console",
+              "controller": "NT:/SmartDashboard/Vision/backleft/status",
+              "controllerUUID": "shu2ub41znf47xwjg1lfx37ru5lalgkz",
+              "renderer": {
+                "highlight": false
+              },
+              "controlsHeight": 0
+            },
+            {
+              "type": 3,
+              "title": "3D Field",
+              "controller": {
+                "sources": [
+                  {
+                    "type": "ghost",
+                    "logKey": "NT:Subsystems/drivetrain/CTREDrivetrain/Pose/Robot",
+                    "logType": "Pose2d",
+                    "visible": true,
+                    "options": {
+                      "model": "2026 KitBot",
+                      "color": "#00ff00"
+                    }
+                  },
+                  {
+                    "type": "robot",
+                    "logKey": "NT:Subsystems/drivetrain/simulatedDrivetrainPose",
+                    "logType": "Pose2d",
+                    "visible": true,
+                    "options": {
+                      "model": "2026 KitBot"
+                    }
+                  }
+                ],
+                "game": "FRC:2026 Field"
+              },
+              "controllerUUID": "2yrt47vjpijgpyjdy65fg5fquasgawd3",
+              "renderer": {
+                "cameraIndex": -1,
+                "orbitFov": 50,
+                "cameraPosition": [
+                  -1.6590996684873351,
+                  7.3858393639542355,
+                  3.6014060938593833
+                ],
+                "cameraTarget": [
+                  -6.021737240808001,
+                  -3.3579603100921824,
+                  2.993548926499422
+                ]
+              },
+              "controlsHeight": 200
+            },
+            {
+              "type": 8,
+              "title": "Joysticks",
+              "controller": [
+                "None",
+                "None",
+                "None",
+                "None",
+                "None",
+                "None"
+              ],
+              "controllerUUID": "61jakb4vnctcdui6ub891v5qgvzzdvpa",
+              "renderer": null,
+              "controlsHeight": 85
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "satellites": [],
+  "version": "26.0.0"
+}

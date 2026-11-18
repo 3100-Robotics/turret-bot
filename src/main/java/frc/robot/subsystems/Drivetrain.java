@@ -2,7 +2,6 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.FeetPerSecond;
 import static edu.wpi.first.units.Units.Inches;
-import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Pounds;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
@@ -32,6 +31,7 @@ import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.MatchContext;
+import frc.robot.Robot;
 import frc.robot.generated.TunerConstantsBlastoise1022;
 import frc.robot.generated.TunerConstantsBlastoise1022.TunerSwerveDrivetrain;
 import frc.robot.utils.simulation.MapleSimSwerveDrivetrain;
@@ -256,6 +256,13 @@ public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem, Logg
   @Override
   public void setupLogging(Table parentTable, LogMode logMode, Loggerhead loggerhead) {
     parentTable
+        .addStructLogger(
+            "simulatedDrivetrainPose",
+            logMode,
+            Robot.isReal()
+                ? () -> Pose2d.kZero
+                : mapleSimSwerveDrivetrain.mapleSimDrive::getSimulatedDriveTrainPose,
+            Pose2d.struct)
         .addBooleanLogger(
             "hasAppliedOperatorPerspective", logMode, () -> m_hasAppliedOperatorPerspective)
         .addStringLogger("currentBasedSpeedLimit", logMode, getCurrentBasedSpeedLimit()::toString)
