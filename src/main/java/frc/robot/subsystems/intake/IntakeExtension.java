@@ -1,54 +1,68 @@
 package frc.robot.subsystems.intake;
 
+import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Meters;
 
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.sbdc.loggerhead.core.LightSubsystem;
+import com.sbdc.loggerhead.core.LoggerheadUtils;
 import com.sbdc.loggerhead.logging.LogMode;
 import com.sbdc.loggerhead.logging.Loggable;
 import com.sbdc.loggerhead.logging.Loggerhead;
 import com.sbdc.loggerhead.logging.Table;
-import com.sbdc.loggerhead.util.LightSubsystem;
-import edu.wpi.first.math.Pair;
 import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.targets.IntakeTargets.IntakeExtensionTarget;
-import frc.robot.utils.Utils;
 import yams.mechanisms.positional.Elevator;
 import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.remote.TalonFXWrapper;
 
 public class IntakeExtension extends LightSubsystem implements Loggable {
   private final TalonFX extensionMotorLeft = new TalonFX(IntakeConstants.extensionMotorLeftCanID);
-  private final TalonFX extensionMotorRight = new TalonFX(IntakeConstants.extensionMotorLeftCanID);
+  private final TalonFX extensionMotorRight = new TalonFX(IntakeConstants.extensionMotorRightCanID);
 
-  private final SmartMotorController motor =
+  private final SmartMotorController rightMotor =
+      new TalonFXWrapper(
+          extensionMotorRight,
+          IntakeConstants.extensionMotorPhysical,
+          IntakeConstants.extensionMotorConfigRight.withSubsystem(this));
+
+  private final SmartMotorController leftMotor =
       new TalonFXWrapper(
           extensionMotorLeft,
           IntakeConstants.extensionMotorPhysical,
-          IntakeConstants.extensionMotorConfig
-              .withFollowers(Pair.of(extensionMotorRight, true))
+          IntakeConstants.extensionMotorConfigLeft
+              .withLooselyCoupledFollowers(rightMotor)
               .withSubsystem(this));
 
   private final Elevator linearMechanism =
-      new Elevator(IntakeConstants.extensionMechanismConfig, motor);
+      new Elevator(IntakeConstants.extensionMechanismConfig, leftMotor);
+
+  public final Trigger isAtSetpointTrigger =
+      new Trigger(
+          () ->
+              LoggerheadUtils.isLinearMotorAtSetpoint(leftMotor, 0.05)
+                  && LoggerheadUtils.isLinearMotorAtSetpoint(rightMotor, 0.05));
 
   public void setIntakeExtensionTarget(IntakeExtensionTarget target) {
-    motor.setPosition(target.extensionDistance);
+    leftMotor.setPosition(target.extensionDistance);
   }
 
   public void setPositionRaw(Distance distance) {
-    Utils.warnIfDriverStationOutOfTest();
+    LoggerheadUtils.warnIfDriverStationOutOfTest();
 
-    motor.setPosition(distance);
+    leftMotor.setPosition(distance);
   }
 
   public void stopIntakeExtension() {
-    motor.setDutyCycle(0);
+    leftMotor.setDutyCycle(0);
   }
 
   @Override
   public void periodic() {
     linearMechanism.updateTelemetry();
+    rightMotor.updateTelemetry();
   }
 
   @Override
@@ -58,7 +72,24 @@ public class IntakeExtension extends LightSubsystem implements Loggable {
 
   @Override
   public void setupLogging(Table parentTable, LogMode logMode, Loggerhead loggerhead) {
+    parentTable.addBooleanLogger("isAtSetpoint", logMode, isAtSetpointTrigger::getAsBoolean);
     parentTable.addDoubleLogger(
-        "measuredExtensionDistance", logMode, () -> motor.getMeasurementPosition().in(Meters));
+        "leftMotorSetpoint",
+        logMode,
+        () -> LoggerheadUtils.getLinearMotorSetpointOrZero(leftMotor).in(Meters));
+    parentTable.addDoubleLogger(
+        "rightMotorSetpoint",
+        logMode,
+        () -> LoggerheadUtils.getLinearMotorSetpointOrZero(rightMotor).in(Meters));
+    parentTable.addDoubleLogger(
+        "leftMeasuredExtensionDistance",
+        logMode,
+        () -> leftMotor.getMeasurementPosition().in(Meters));
+    parentTable.addDoubleLogger(
+        "rightMeasuredExtensionDistance",
+        logMode,
+        () -> rightMotor.getMeasurementPosition().in(Meters));
+    parentTable.addDoubleLogger(
+        "intakeExtensionCurrent", logMode, () -> leftMotor.getStatorCurrent().in(Amps));
   }
 }

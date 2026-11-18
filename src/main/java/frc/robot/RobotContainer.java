@@ -6,14 +6,16 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.Degrees;
 
+import com.sbdc.loggerhead.core.LightSubsystem;
+import com.sbdc.loggerhead.core.LoggerheadUtils;
 import com.sbdc.loggerhead.logging.LogMode;
 import com.sbdc.loggerhead.logging.Loggerhead;
+import com.sbdc.loggerhead.logging.compoundlogger.LogCTREDrivetrain;
+import com.sbdc.loggerhead.logging.compoundlogger.LogNetworkXboxController;
+import com.sbdc.loggerhead.logging.compoundlogger.LogPowerDistribution;
 import com.sbdc.loggerhead.logging.compoundlogger.LogSubsystemCommands;
-import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.numbers.N1;
-import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.net.WebServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
@@ -21,9 +23,12 @@ import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.BlastoiseCommands;
+import frc.robot.commands.DyeRotorCommands;
+import frc.robot.commands.IntakeCommands;
+import frc.robot.commands.ShooterCommands;
 import frc.robot.commands.drivecommands.DrivePointAtAngle;
 import frc.robot.commands.drivecommands.DriveTeleop;
 import frc.robot.commands.testcommands.TestCommands;
@@ -40,28 +45,11 @@ import frc.robot.subsystems.intake.IntakeRollers;
 import frc.robot.subsystems.shooter.Flywheel;
 import frc.robot.subsystems.shooter.Hood;
 import frc.robot.subsystems.shooter.Turret;
-import frc.robot.vision.HPoseEstimator;
 import frc.robot.vision.MainVision;
 import java.util.EnumSet;
 import java.util.HashMap;
 
 public class RobotContainer {
-  public static enum BlastoiseActions {
-    shootCommand,
-    autoAlignCommand,
-    intakeHighCommand,
-    intakeMidLowToggleCommand,
-    intakeRunCommand,
-
-    resetHeadingAllCommand,
-    resetHeadingSimCommand,
-    resetHeadingCTRECommand,
-    resetHeadingGyroCommand,
-    resetHeadingGyroWrapperCommand,
-    resetHeadingHPoseCommand,
-    ;
-  }
-
   public static enum PoseHeadingResetParams {
     gyroReset,
     gyroWrapperReset,
@@ -70,23 +58,25 @@ public class RobotContainer {
     hPoseReset;
   }
 
-  private final HashMap<String, Command> blastoiseCommandMap = new HashMap<>();
+  private final PowerDistribution pdh = new PowerDistribution(59, ModuleType.kRev);
 
   private final Drivetrain drivetrain = TunerConstantsBlastoise1022.createDrivetrain();
   private final ShotMap dashShotMap = new DashboardStaticShotMap();
   private final SOTMStateTracker sotmstate = new SOTMStateTracker(drivetrain);
   private final DynamicShotMap dynamicShotMap = new DynamicShotMap(sotmstate);
 
-  private final HPoseEstimator hPoseEstimator = new HPoseEstimator(drivetrain);
+  // private final HPoseEstimator hPoseEstimator = new HPoseEstimator(drivetrain);
 
   public final MainVision mainVision =
       new MainVision(
-          (Pose2d visionRobotPoseMeters,
-              double timestampSeconds,
-              Matrix<N3, N1> visionMeasurementStdDevs) -> {
-            hPoseEstimator.addVisionMeasurement(
-                visionRobotPoseMeters, timestampSeconds, visionMeasurementStdDevs);
-          },
+          // (Pose2d visionRobotPoseMeters,
+          //     double timestampSeconds,
+          //     Matrix<N3, N1> visionMeasurementStdDevs) -> {
+          //   // hPoseEstimator.addVisionMeasurement(
+          //   //     visionRobotPoseMeters, timestampSeconds, visionMeasurementStdDevs);
+          //   drivetrain.addVisionMeasurement(visionRobotPoseMeters, 0);
+          // },
+          drivetrain::addVisionMeasurement,
           Robot.isReal()
               ? () -> Pose2d.kZero
               : () ->
@@ -106,16 +96,19 @@ public class RobotContainer {
   private final IntakeExtension intakeExtension = new IntakeExtension();
   private final IntakeRollers intakeRollers = new IntakeRollers();
 
-  private final PowerDistribution pdh = new PowerDistribution(63, ModuleType.kRev);
-
   private final CommandXboxController driverController = new CommandXboxController(0);
   private final CommandXboxController coDriverController = new CommandXboxController(1);
 
+  private final Trigger isShooting = new Trigger(() -> flywheel.isRunning && hood.isRunning);
+
   public RobotContainer() {
     WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
-    createActionMap();
 
-    // DO replace these function calls with the new ones you currently want to use then redeploy
+    if (Robot.isSimulation()) {
+      DriverStation.silenceJoystickConnectionWarning(true);
+    }
+
+    // Do replace these function calls with the new ones you currently want to use then redeploy
     // code
     configureTeleopCoDriverBindings();
     configureTeleopDriverBindings();
@@ -133,66 +126,14 @@ public class RobotContainer {
         .initializeLogging(); // Must be the final call in the configuration chain
   }
 
-  private void createActionMap() {
-    Command shootCommand =
-        BlastoiseCommands.shootCommand(
-            flywheel, hood, turret, hook, kicker, intakeExtension, intakeRollers, dashShotMap);
-
-    Command autoAlignCommand =
-        new ProxyCommand(
-            new DrivePointAtAngle(
-                drivetrain,
-                driverController::getLeftY,
-                driverController::getLeftX,
-                driverController::getRightTriggerAxis,
-                sotmstate::getHeading));
-
-    // Command intakeHighCommand = IntakeCommands.pivotHigh(intakePivot);
-    // Command intakeMidLowToggleCommand = IntakeCommands.pivotMidLowToggle(intakePivot);
-    // Command intakeRunCommand = IntakeCommands.rollerForward(intakeRoller);
-
-    Command resetHeadingAllCommand =
-        Commands.runOnce(() -> resetPoseAndHeadings(EnumSet.allOf(PoseHeadingResetParams.class)));
-
-    Command resetHeadingSimCommand =
-        Commands.runOnce(
-            () -> resetPoseAndHeadings(EnumSet.of(PoseHeadingResetParams.simPoseReset)));
-
-    Command resetHeadingCTRECommand =
-        Commands.runOnce(() -> resetPoseAndHeadings(EnumSet.of(PoseHeadingResetParams.CTREReset)));
-
-    Command resetHeadingGyroCommand =
-        Commands.runOnce(() -> resetPoseAndHeadings(EnumSet.of(PoseHeadingResetParams.gyroReset)));
-
-    Command resetHeadingGyroWrapperCommand =
-        Commands.runOnce(
-            () -> resetPoseAndHeadings(EnumSet.of(PoseHeadingResetParams.gyroWrapperReset)));
-
-    Command resetHeadingHPoseCommand =
-        Commands.runOnce(() -> resetPoseAndHeadings(EnumSet.of(PoseHeadingResetParams.hPoseReset)));
-
-    blastoiseCommandMap.put("shootCommand", shootCommand);
-    blastoiseCommandMap.put("autoAlignCommand", autoAlignCommand);
-    // blastoiseCommandMap.put("intakeHighCommand", intakeHighCommand);
-    // blastoiseCommandMap.put("intakeMidLowToggleCommand", intakeMidLowToggleCommand);
-    // blastoiseCommandMap.put("intakeRunCommand", intakeRunCommand);
-
-    blastoiseCommandMap.put("resetHeadingAllCommand", resetHeadingAllCommand);
-    blastoiseCommandMap.put("resetHeadingSimCommand", resetHeadingSimCommand);
-    blastoiseCommandMap.put("resetHeadingCTRECommand", resetHeadingCTRECommand);
-    blastoiseCommandMap.put("resetHeadingGyroCommand", resetHeadingGyroCommand);
-    blastoiseCommandMap.put("resetHeadingGyroWrapperCommand", resetHeadingGyroWrapperCommand);
-    blastoiseCommandMap.put("resetHeadingHPoseCommand", resetHeadingHPoseCommand);
-  }
-
   private void resetPoseAndHeadings(EnumSet<PoseHeadingResetParams> resetParams) {
     if (resetParams.contains(PoseHeadingResetParams.CTREReset)) {
       drivetrain.resetPose(new Pose2d(1, 1, Rotation2d.kZero));
     }
 
-    if (resetParams.contains(PoseHeadingResetParams.hPoseReset)) {
-      hPoseEstimator.reset(new Pose2d(1, 1, Rotation2d.kZero), true, true);
-    }
+    // if (resetParams.contains(PoseHeadingResetParams.hPoseReset)) {
+    //   hPoseEstimator.reset(new Pose2d(1, 1, Rotation2d.kZero), true, true);
+    // }
 
     if (resetParams.contains(PoseHeadingResetParams.gyroWrapperReset)) {
       drivetrain.getPigeon2().setYaw(Degrees.of(0));
@@ -209,7 +150,71 @@ public class RobotContainer {
     }
   }
 
-  private void configureTeleopDriverBindings() {}
+  private void configureTeleopDriverBindings() {
+    // Command shootCommand =
+    //     BlastoiseCommands.shootCommand(
+    //         flywheel,
+    //         hood,
+    //         turret,
+    //         hook,
+    //         kicker,
+    //         intakeExtension,
+    //         intakeRollers,
+    //         dashShotMap,
+    //         driverController.leftTrigger());
+
+    Command autoAlignCommand =
+        new DrivePointAtAngle(
+            drivetrain,
+            driverController::getLeftY,
+            driverController::getLeftX,
+            driverController::getRightTriggerAxis,
+            sotmstate::getHeading,
+            isShooting::getAsBoolean);
+
+    // Command intakeHighCommand = IntakeCommands.pivotHigh(intakePivot);
+    // Command intakeMidLowToggleCommand = IntakeCommands.pivotMidLowToggle(intakePivot);
+    // Command intakeRunCommand = IntakeCommands.rollerForward(intakeRoller);
+
+    driverController
+        .rightBumper()
+        .whileTrue(
+            IntakeCommands.holdDeploy(intakeExtension)
+                .alongWith(
+                    Commands.waitSeconds(0.2)
+                        .andThen(IntakeCommands.runIntakeRollers(intakeRollers))));
+    driverController.povDown().whileTrue(IntakeCommands.helpKickerBar(intakeRollers));
+    driverController.povUp().onTrue(Commands.runOnce(() -> drivetrain.seedFieldCentric()));
+    driverController.leftBumper().whileTrue(IntakeCommands.holdIn(intakeExtension));
+
+    driverController.povRight().whileTrue(DyeRotorCommands.reverseDyeRotot(hook, kicker));
+
+    driverController
+        .a()
+        .whileTrue(
+            BlastoiseCommands.shootCommand(
+                flywheel,
+                hood,
+                turret,
+                hook,
+                kicker,
+                intakeExtension,
+                intakeRollers,
+                dashShotMap,
+                driverController.leftTrigger())
+            // new TestMultiHookSpeeds(hook)
+            // BlastoiseCommands.shootCommand(
+            //     flywheel,
+            //     hood,
+            //     turret,
+            //     hook,
+            //     kicker,
+            //     intakeExtension,
+            //     intakeRollers,
+            //     dashShotMap,
+            //     driverController.leftTrigger())
+            );
+  }
 
   private void configureTeleopCoDriverBindings() {}
 
@@ -220,19 +225,36 @@ public class RobotContainer {
             driverController::getLeftY,
             driverController::getLeftX,
             () -> -driverController.getRightX(),
-            driverController::getRightTriggerAxis));
+            driverController::getRightTriggerAxis,
+            isShooting::getAsBoolean));
+
+    hood.setDefaultCommand(ShooterCommands.hoodLow(hood));
   }
 
-  public void configureTestDefaultCommands() {
-    flywheel.setDefaultCommand(TestCommands.testFlywheel(flywheel));
-    // hood.setDefaultCommand(TestCommands.testHood(hood));
-    // turret.setDefaultCommand(TestCommands.testTurret(turret));
+  public void configureTestDefaultCommands(
+      HashMap<LightSubsystem, Command> testCommandsMap, boolean createCommands) {
+    if (createCommands) {
+      // testCommandsMap.put(flywheel, TestCommands.testFlywheel(flywheel));
+      testCommandsMap.put(flywheel, TestCommands.testMultiFlywheelSpeeds(flywheel));
+      testCommandsMap.put(hood, TestCommands.testHood(hood));
+      testCommandsMap.put(turret, TestCommands.testTurret(turret));
 
-    hook.setDefaultCommand(TestCommands.testHook(hook));
-    kicker.setDefaultCommand(TestCommands.testKicker(kicker));
+      testCommandsMap.put(hook, TestCommands.testHook(hook));
+      testCommandsMap.put(kicker, TestCommands.testKicker(kicker));
 
-    // intakeExtension.setDefaultCommand(TestCommands.testIntakeExtensionNamed(intakeExtension));
-    // intakeRollers.setDefaultCommand(TestCommands.testIntakeRollers(intakeRollers));
+      testCommandsMap.put(intakeExtension, TestCommands.testIntakeExtensionNamed(intakeExtension));
+      testCommandsMap.put(intakeRollers, TestCommands.testIntakeRollers(intakeRollers));
+    }
+
+    // Utils.setLightSusbsytemDefaultCommandFromMap(flywheel, testCommandsMap);
+    // Utils.setLightSusbsytemDefaultCommandFromMap(hood, testCommandsMap);
+    // Utils.setLightSusbsytemDefaultCommandFromMap(turret, testCommandsMap);
+
+    // Utils.setLightSusbsytemDefaultCommandFromMap(hook, testCommandsMap);
+    // Utils.setLightSusbsytemDefaultCommandFromMap(kicker, testCommandsMap);
+
+    LoggerheadUtils.setLightSusbsytemDefaultCommandFromMap(intakeExtension, testCommandsMap);
+    LoggerheadUtils.setLightSusbsytemDefaultCommandFromMap(intakeRollers, testCommandsMap);
   }
 
   private void configureLogging() {
@@ -240,9 +262,23 @@ public class RobotContainer {
 
     LogMode commandsLogMode = LogMode.NetworkOnly;
     LogMode loggableSubsystemLogMode = LogMode.NetworkOnly;
+
+    var controllersTable = rootTable.getSubTable("Controllers");
+    controllersTable.addCompoundLogger(new LogNetworkXboxController("evenctl", driverController));
+
+    rootTable
+        .getSubTable("PDH")
+        .addDoubleLogger("totalCurrent", loggableSubsystemLogMode, pdh::getTotalCurrent)
+        .addCompoundLogger(new LogPowerDistribution(LogMode.Both, pdh));
+
     var subsystemsTable = rootTable.getSubTable("Subsystems");
 
     // spotless:off
+    subsystemsTable
+        .getSubTable("drivetrain")
+        .addCompoundLogger(new LogSubsystemCommands("Commands", commandsLogMode, drivetrain))
+        .addCompoundLogger(new LogCTREDrivetrain("CTREDrivetrain", loggableSubsystemLogMode, drivetrain))
+        .addLoggable(drivetrain, loggableSubsystemLogMode); 
     subsystemsTable
         .getSubTable("hood")
         .addCompoundLogger(new LogSubsystemCommands("Commands", commandsLogMode, hood))
@@ -271,6 +307,9 @@ public class RobotContainer {
         .getSubTable("intakeRoller")
         .addCompoundLogger(new LogSubsystemCommands("Commands", commandsLogMode, intakeRollers))
         .addLoggable(intakeRollers, loggableSubsystemLogMode);
+    subsystemsTable
+        .getSubTable("vision")
+        .addLoggable(mainVision, loggableSubsystemLogMode);
     // spotless:on
   }
 

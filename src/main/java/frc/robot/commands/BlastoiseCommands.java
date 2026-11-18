@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.constants.DrivetrainConstants;
 import frc.robot.sotm.ShotMap;
 import frc.robot.subsystems.Drivetrain;
@@ -39,17 +40,23 @@ public class BlastoiseCommands {
       Kicker kicker,
       IntakeExtension intakeExtension,
       IntakeRollers intakeRoller,
-      ShotMap shotMap) {
+      ShotMap shotMap,
+      Trigger intakeHold) {
     return Commands.parallel(
+        // Intake
+        // IntakeCommands.agitate(intakeExtension, intakeHold),
         // Dye rotor
-        Commands.waitSeconds(1)
+        Commands.waitSeconds(0.8)
             .andThen(
                 DyeRotorCommands.runDyeRotor(hook, kicker) // Run dye rotor ...
-                    .until(turret.isNearSetpoint.negate()), // ... until the turret hasto flip
+                    .until(turret.isNearSetpoint.negate()), // ... until the turret has to flip
                 Commands.waitUntil(turret.isNearSetpoint) // Hold until its back
                     .repeatedly() // back to top
                 ),
         // Shooter
         ShooterCommands.shooterDynamic(hood, flywheel, shotMap));
+    // .onlyWhile(turret.isNearSetpoint))
+    // .andThen(Commands.waitUntil(turret.isNearSetpoint))
+    // .repeatedly();
   }
 }

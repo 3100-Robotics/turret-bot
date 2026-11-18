@@ -10,7 +10,7 @@ import frc.robot.targets.DyeRotorTargets.KickerTarget;
 public class DyeRotorCommands {
   public static Command runDyeRotor(Hook hook, Kicker kicker) {
 
-    return Commands.parallel(Commands.waitSeconds(0.09).andThen(runKicker(kicker)), runHook(hook));
+    return Commands.parallel(runKicker(kicker), runHook(hook));
   }
 
   public static Command runHook(Hook hook) {
@@ -21,5 +21,12 @@ public class DyeRotorCommands {
   public static Command runKicker(Kicker kicker) {
     return Commands.runEnd(
         () -> kicker.setState(KickerTarget.On), () -> kicker.setState(KickerTarget.Off), kicker);
+  }
+
+  public static Command reverseDyeRotot(Hook hook, Kicker kicker) {
+    return Commands.runEnd(() -> hook.setTarget(HookTargets.Reverse), hook::stopHook, hook)
+        .alongWith(
+            Commands.runEnd(
+                () -> kicker.setState(KickerTarget.Reverse), kicker::stopKicker, kicker));
   }
 }

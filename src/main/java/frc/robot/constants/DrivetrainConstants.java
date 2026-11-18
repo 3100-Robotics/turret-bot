@@ -6,6 +6,9 @@ import frc.robot.Robot;
 public class DrivetrainConstants {
   public static final SwerveRequest.Idle IDLE = new SwerveRequest.Idle();
 
+  public static final SwerveRequest.FieldCentric DRIVE_FIELD =
+      new SwerveRequest.FieldCentric().withDeadband(0.09).withRotationalDeadband(0.09);
+
   public static final SwerveRequest.FieldCentricFacingAngle DRIVE_FIELD_ROT_LOCK;
 
   static {
@@ -23,6 +26,6 @@ public class DrivetrainConstants {
     DRIVE_FIELD_ROT_LOCK = tmpRequest;
   }
 
-  public static final SwerveRequest.FieldCentric DRIVE_FIELD =
-      new SwerveRequest.FieldCentric().withDeadband(0.09).withRotationalDeadband(0.09);
+  public static final double DRIVETRAIN_SHOOTING_SPEED_TRANS = 0.2;
+  public static final double DRIVETRAIN_SHOOTING_SPEED_ROT = 0.2;
 }

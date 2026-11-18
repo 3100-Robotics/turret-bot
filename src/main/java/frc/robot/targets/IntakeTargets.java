@@ -9,7 +9,8 @@ import java.util.Optional;
 
 public interface IntakeTargets {
   public enum IntakeRollerTarget {
-    On(4000, 2000),
+    On(4000, 0),
+    Reverse(-3000, 0),
     Off;
 
     public final Optional<AngularVelocity> topSpeed;
@@ -32,9 +33,12 @@ public interface IntakeTargets {
   }
 
   public enum IntakeExtensionTarget {
-    Full(1),
+    Max(0.8462787929070537),
+    Full(0.839),
     Half(0.5),
-    Stowed(0);
+    ShootingAgitateIn(0.3),
+    Stowed(0.03),
+    Min(0);
 
     public final Distance extensionDistance;
 

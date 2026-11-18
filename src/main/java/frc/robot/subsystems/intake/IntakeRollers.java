@@ -3,16 +3,16 @@ package frc.robot.subsystems.intake;
 import static edu.wpi.first.units.Units.RPM;
 
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.sbdc.loggerhead.core.LightSubsystem;
+import com.sbdc.loggerhead.core.LoggerheadUtils;
 import com.sbdc.loggerhead.logging.LogMode;
 import com.sbdc.loggerhead.logging.Loggable;
 import com.sbdc.loggerhead.logging.Loggerhead;
 import com.sbdc.loggerhead.logging.Table;
-import com.sbdc.loggerhead.util.LightSubsystem;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.units.measure.AngularVelocity;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.targets.IntakeTargets.IntakeRollerTarget;
-import frc.robot.utils.Utils;
 import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.remote.TalonFXWrapper;
 
@@ -27,7 +27,7 @@ public class IntakeRollers extends LightSubsystem implements Loggable {
           IntakeConstants.topRollerMotorPhysical,
           IntakeConstants.topRollerMotorConfig
               .withSubsystem(this)
-              .withFollowers(Pair.of(topRawMotor2, false)));
+              .withFollowers(Pair.of(topRawMotor2, true)));
 
   private final SmartMotorController bottomMotor =
       new TalonFXWrapper(
@@ -39,7 +39,7 @@ public class IntakeRollers extends LightSubsystem implements Loggable {
     switch (state) {
       case On:
         topMotor.setVelocity(state.topSpeed.get());
-        bottomMotor.setVelocity(state.bottomSpeed.get());
+        // bottomMotor.setVelocity(state.bottomSpeed.get());
         break;
       case Off:
         stopIntakeRollers();
@@ -50,7 +50,7 @@ public class IntakeRollers extends LightSubsystem implements Loggable {
   }
 
   public void setSpeeds(AngularVelocity topSpeed, AngularVelocity bottomSpeed) {
-    Utils.warnIfDriverStationOutOfTest();
+    LoggerheadUtils.warnIfDriverStationOutOfTest();
 
     if (topSpeed.in(RPM) == 0) {
       topMotor.setDutyCycle(0);

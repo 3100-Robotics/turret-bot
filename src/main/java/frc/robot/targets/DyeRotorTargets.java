@@ -7,7 +7,8 @@ import java.util.Optional;
 
 public interface DyeRotorTargets {
   public enum HookTargets {
-    On(6000),
+    On(100),
+    Reverse(-100),
     Off;
 
     public Optional<AngularVelocity> speed;
@@ -27,6 +28,7 @@ public interface DyeRotorTargets {
 
   public enum KickerTarget {
     On(4000),
+    Reverse(-4000),
     Off;
 
     public final Optional<AngularVelocity> speed;

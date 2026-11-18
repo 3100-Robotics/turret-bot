@@ -38,8 +38,8 @@ public class Camera implements Loggable {
   // public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(1, 1, 1);
   // public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(1.1, 1.1, 1.1);
 
-  public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(1.5, 1.5, 1.5);
-  public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(1.5, 1.5, 1.5);
+  public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(1.5, 1.5, 4.5);
+  public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(1.5, 1.5, 2.5);
 
   private Field2d simField;
 
@@ -53,6 +53,7 @@ public class Camera implements Loggable {
   private String newStdDevMode = "";
   private String distMode = "";
   private String currentStrat = "";
+  private double currentPoseAmbiguity = 0;
 
   public boolean multiTagFound = false;
   public double latency = 0;
@@ -106,7 +107,7 @@ public class Camera implements Loggable {
 
   public void update() {
     var heading = headingSupplier.get();
-    photonEstimator.addHeadingData(heading.getSecond(), heading.getFirst());
+    // photonEstimator.addHeadingData(heading.getSecond(), heading.getFirst());
 
     Optional<EstimatedRobotPose> visionEst = Optional.empty();
     for (var result : camera.getAllUnreadResults()) {
@@ -118,7 +119,7 @@ public class Camera implements Loggable {
 
       // visionEst = photonEstimator.estimatePnpDistanceTrigSolvePose(result);
       visionEst = photonEstimator.estimateCoprocMultiTagPose(result);
-      currentStrat = "PnpDistanceTrigSolvePose";
+      currentStrat = "CoprocMultiTag";
       if (visionEst.isEmpty()) {
         currentStrat = "LowestAmbiguityPose";
         visionEst = photonEstimator.estimateLowestAmbiguityPose(result);
@@ -133,6 +134,14 @@ public class Camera implements Loggable {
               () -> multiTagFound = false);
 
       updateEstimationStdDevs(visionEst, result.getTargets());
+
+      double total = 0;
+      for (PhotonTrackedTarget t : result.getTargets()) {
+        total += t.poseAmbiguity;
+      }
+
+      currentPoseAmbiguity =
+          result.getTargets().size() > 0 ? total / result.getTargets().size() : 0;
 
       latency = result.metadata.getLatencyMillis();
 
@@ -151,7 +160,6 @@ public class Camera implements Loggable {
           est -> {
             // Change our trust in the measurement based on the tags we can see
             var estStdDevs = getEstimationStdDevs();
-
             // if (est.estimatedPose.)
             // return;
 
@@ -183,7 +191,7 @@ public class Camera implements Loggable {
       // Pose present. Start running Heuristic
       var estStdDevs = kSingleTagStdDevs;
       int numTags = 0;
-      avgDist = 0;
+      double avgDist = 0;
 
       // Precalculation - see how many tags we found, and calculate an average-distance metric
       for (var tgt : targets) {
@@ -221,11 +229,19 @@ public class Camera implements Loggable {
           estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
         } else {
           newStdDevMode = "Many, distance augmented (one tag, long)";
-          estStdDevs = estStdDevs.times(1 + (avgDist * avgDist / 30)).times(1.1);
+          estStdDevs = estStdDevs.times(1 + (avgDist * avgDist / 30)).times(1.4);
         }
         curStdDevs = estStdDevs;
       }
     }
+  }
+
+  private String stdDevsToString() {
+    double x = curStdDevs.get(0, 0);
+    double y = curStdDevs.get(1, 0);
+    double rot = curStdDevs.get(2, 0);
+
+    return "X: " + x + " Y: " + y + " T: " + rot;
   }
 
   public void setupLogging(Table parentTable, LogMode logMode, Loggerhead loggerhead) {
@@ -234,7 +250,10 @@ public class Camera implements Loggable {
             camName + "rawLatestPose", logMode, () -> intRawPose3d.toPose2d(), Pose2d.struct)
         .addStructLogger(camName + "camPose", logMode, () -> robotToCam, Transform3d.struct)
         .addDoubleLogger(camName + "latency", logMode, () -> latency)
-        .addStringLogger(camName + "curStdDevs", logMode, () -> curStdDevs.toString())
+        .addDoubleLogger(camName + "currentAmbig", logMode, () -> currentPoseAmbiguity)
+        .addDoubleLogger(camName + "stdX", logMode, () -> curStdDevs.get(0, 0))
+        .addDoubleLogger(camName + "stdY", logMode, () -> curStdDevs.get(1, 0))
+        .addDoubleLogger(camName + "stdT", logMode, () -> curStdDevs.get(2, 0))
         .addStringLogger(camName + "stdDevMode", logMode, () -> stdevMode)
         .addStringLogger(camName + "newStdDevMode", logMode, () -> newStdDevMode)
         .addStringLogger(camName + "currentStrat", logMode, () -> currentStrat)

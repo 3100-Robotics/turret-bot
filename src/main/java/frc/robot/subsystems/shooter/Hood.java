@@ -3,11 +3,11 @@ package frc.robot.subsystems.shooter;
 import static edu.wpi.first.units.Units.Degrees;
 
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.sbdc.loggerhead.core.LightSubsystem;
 import com.sbdc.loggerhead.logging.LogMode;
 import com.sbdc.loggerhead.logging.Loggable;
 import com.sbdc.loggerhead.logging.Loggerhead;
 import com.sbdc.loggerhead.logging.Table;
-import com.sbdc.loggerhead.util.LightSubsystem;
 import edu.wpi.first.units.measure.Angle;
 import frc.robot.constants.ShooterConstants;
 import yams.motorcontrollers.SmartMotorController;
@@ -17,6 +17,8 @@ public class Hood extends LightSubsystem implements Loggable {
   // Define vendor motors
   private final TalonFX rawMotor = new TalonFX(ShooterConstants.hoodMotorCanID);
 
+  public boolean isRunning = false;
+
   // Define SmartMotorControllers
   private final SmartMotorController motor =
       new TalonFXWrapper(
@@ -25,6 +27,7 @@ public class Hood extends LightSubsystem implements Loggable {
           ShooterConstants.hoodMotorConfig.withSubsystem(this));
 
   public void setHoodAngle(Angle angle) {
+    isRunning = true;
     motor.setPosition(angle);
   }
 
@@ -33,6 +36,7 @@ public class Hood extends LightSubsystem implements Loggable {
   }
 
   public void stopHood() {
+    isRunning = false;
     motor.setDutyCycle(0);
   }
 

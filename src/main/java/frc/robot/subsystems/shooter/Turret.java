@@ -3,11 +3,11 @@ package frc.robot.subsystems.shooter;
 import static edu.wpi.first.units.Units.Degrees;
 
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.sbdc.loggerhead.core.LightSubsystem;
 import com.sbdc.loggerhead.logging.LogMode;
 import com.sbdc.loggerhead.logging.Loggable;
 import com.sbdc.loggerhead.logging.Loggerhead;
 import com.sbdc.loggerhead.logging.Table;
-import com.sbdc.loggerhead.util.LightSubsystem;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -57,8 +57,7 @@ public class Turret extends LightSubsystem implements Loggable {
 
   public Pair<Angle, Angle> getSetpointAndPosition() {
     return Pair.of(
-        motor.getMechanismPositionSetpoint().orElse(Degrees.of(4000)),
-        motor.getMechanismPosition());
+        motor.getMechanismPositionSetpoint().orElse(Degrees.of(0)), motor.getMechanismPosition());
   }
 
   private boolean isPositionNearSetpoint() {

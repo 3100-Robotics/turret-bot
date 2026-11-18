@@ -13,6 +13,7 @@ public class DrivePointAtPose extends Command {
   private final Supplier<Double> ySpeed;
   // private Supplier<Double> thetaSpeed;
   private final Supplier<Double> throttle;
+  private final Supplier<Boolean> isShooting;
 
   private final Supplier<Pose2d> targetSupplier;
 
@@ -21,12 +22,14 @@ public class DrivePointAtPose extends Command {
       Supplier<Double> xSpeed,
       Supplier<Double> ySpeed,
       Supplier<Double> throttle,
-      Supplier<Pose2d> targetSupplier) {
+      Supplier<Pose2d> targetSupplier,
+      Supplier<Boolean> isShooting) {
     this.drivetrain = drivetrain;
     this.xSpeed = xSpeed;
     this.ySpeed = ySpeed;
     this.throttle = throttle;
     this.targetSupplier = targetSupplier;
+    this.isShooting = isShooting;
     addRequirements(drivetrain);
   }
 
@@ -43,8 +46,14 @@ public class DrivePointAtPose extends Command {
 
     drivetrain.setControl(
         DrivetrainConstants.DRIVE_FIELD_ROT_LOCK
-            .withVelocityX(-xSpeed.get() * throttle.get())
-            .withVelocityY(-ySpeed.get() * throttle.get())
+            .withVelocityX(
+                -xSpeed.get()
+                    * throttle.get()
+                    * (isShooting.get() ? DrivetrainConstants.DRIVETRAIN_SHOOTING_SPEED_TRANS : 1))
+            .withVelocityY(
+                -ySpeed.get()
+                    * throttle.get()
+                    * (isShooting.get() ? DrivetrainConstants.DRIVETRAIN_SHOOTING_SPEED_TRANS : 1))
             .withTargetDirection(targetRotation));
   }
 
