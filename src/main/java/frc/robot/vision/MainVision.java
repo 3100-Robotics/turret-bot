@@ -18,7 +18,6 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import frc.robot.Robot;
 import frc.robot.constants.VisionAndPoseEstConstants;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.utils.Pigeon2VisionWrapper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
@@ -31,7 +30,6 @@ public class MainVision extends LightSubsystem implements Loggable {
   private VisionSystemSim visionSim;
   private Supplier<Pose2d> simDTGetter;
   public final Drivetrain drivetrain;
-  public final Pigeon2VisionWrapper p2vwrapper;
 
   private List<Camera> cameras = new ArrayList<>();
 
@@ -44,7 +42,6 @@ public class MainVision extends LightSubsystem implements Loggable {
       EstimateConsumer estConsumer, Supplier<Pose2d> simDTGetter, Drivetrain drivetrain) {
     this.simDTGetter = simDTGetter;
     this.drivetrain = drivetrain;
-    this.p2vwrapper = new Pigeon2VisionWrapper(drivetrain.getPigeon2());
 
     cameras.add(VisionAndPoseEstConstants.CAM_BACK_LEFT);
     cameras.add(VisionAndPoseEstConstants.CAM_FRONT_RIGHT);
@@ -53,7 +50,7 @@ public class MainVision extends LightSubsystem implements Loggable {
       camera.setPoseOutput(estConsumer);
       camera.setHeadingSupplier(
           () -> {
-            return Pair.of(obtainDrivetrainRotation(p2vwrapper), Timer.getFPGATimestamp());
+            return Pair.of(obtainDrivetrainRotation(drivetrain), Timer.getTimestamp());
           });
     }
 
@@ -67,13 +64,8 @@ public class MainVision extends LightSubsystem implements Loggable {
     }
   }
 
-  public Rotation3d obtainDrivetrainRotation(Pigeon2VisionWrapper p2vwrapper) {
-    if (Robot.isReal()) {
-      return p2vwrapper.getRotation();
-    } else {
-      // return new Rotation3d(0,0, drivetrain.getPigeon2().getRotation2d());
-      return new Rotation3d(drivetrain.getPigeon2().getRotation2d());
-    }
+  public Rotation3d obtainDrivetrainRotation(Drivetrain drivetrain) {
+    return drivetrain.getRotation3d();
   }
 
   @Override

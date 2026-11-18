@@ -5,6 +5,8 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
 
 import com.sbdc.loggerhead.core.LightSubsystem;
 import com.sbdc.loggerhead.core.LoggerheadUtils;
@@ -45,6 +47,7 @@ import frc.robot.subsystems.intake.IntakeRollers;
 import frc.robot.subsystems.shooter.Flywheel;
 import frc.robot.subsystems.shooter.Hood;
 import frc.robot.subsystems.shooter.Turret;
+import frc.robot.utils.DrivetrainControlAxisMapping;
 import frc.robot.vision.MainVision;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -52,10 +55,8 @@ import java.util.HashMap;
 public class RobotContainer {
   public static enum PoseHeadingResetParams {
     gyroReset,
-    gyroWrapperReset,
     simPoseReset,
-    CTREReset,
-    hPoseReset;
+    CTREReset;
   }
 
   private final PowerDistribution pdh = new PowerDistribution(59, ModuleType.kRev);
@@ -64,8 +65,6 @@ public class RobotContainer {
   private final ShotMap dashShotMap = new DashboardStaticShotMap();
   private final SOTMStateTracker sotmstate = new SOTMStateTracker(drivetrain);
   private final DynamicShotMap dynamicShotMap = new DynamicShotMap(sotmstate);
-
-  // private final HPoseEstimator hPoseEstimator = new HPoseEstimator(drivetrain);
 
   public final MainVision mainVision =
       new MainVision(
@@ -99,6 +98,10 @@ public class RobotContainer {
   private final CommandXboxController driverController = new CommandXboxController(0);
   private final CommandXboxController coDriverController = new CommandXboxController(1);
 
+  private final DrivetrainControlAxisMapping driverAxisMapping = new DrivetrainControlAxisMapping(() -> driverController.getLeftY() * Drivetrain.THEORETICAL_MAX_SPEED.in(MetersPerSecond), 
+                                                                                                  () -> driverController.getLeftX() * Drivetrain.THEORETICAL_MAX_SPEED.in(MetersPerSecond), 
+                                                                                                  () -> -driverController.getRightX() * Drivetrain.THEORETICAL_MAX_ROT_SPEED.in(RadiansPerSecond));
+
   private final Trigger isShooting = new Trigger(() -> flywheel.isRunning && hood.isRunning);
 
   public RobotContainer() {
@@ -108,15 +111,15 @@ public class RobotContainer {
       DriverStation.silenceJoystickConnectionWarning(true);
     }
 
-    // Do replace these function calls with the new ones you currently want to use then redeploy
-    // code
+
+
+
     configureTeleopCoDriverBindings();
     configureTeleopDriverBindings();
 
     configureTeleopDefaultCommands();
 
-    // Loggerhead.getInstance().setConfigureCallback(this::configureLogging);
-    // Loggerhead.getInstance().initializeLogging();
+
     Loggerhead.getInstance()
         .applyToConfigurator(
             configurator ->
@@ -131,17 +134,9 @@ public class RobotContainer {
       drivetrain.resetPose(new Pose2d(1, 1, Rotation2d.kZero));
     }
 
-    // if (resetParams.contains(PoseHeadingResetParams.hPoseReset)) {
-    //   hPoseEstimator.reset(new Pose2d(1, 1, Rotation2d.kZero), true, true);
-    // }
-
-    if (resetParams.contains(PoseHeadingResetParams.gyroWrapperReset)) {
+    if (resetParams.contains(PoseHeadingResetParams.gyroReset)) {
       drivetrain.getPigeon2().setYaw(Degrees.of(0));
       drivetrain.getPigeon2().reset();
-    }
-
-    if (resetParams.contains(PoseHeadingResetParams.gyroReset)) {
-      mainVision.p2vwrapper.zero();
     }
 
     if (!Robot.isReal() && resetParams.contains(PoseHeadingResetParams.simPoseReset)) {
@@ -151,30 +146,14 @@ public class RobotContainer {
   }
 
   private void configureTeleopDriverBindings() {
-    // Command shootCommand =
-    //     BlastoiseCommands.shootCommand(
-    //         flywheel,
-    //         hood,
-    //         turret,
-    //         hook,
-    //         kicker,
-    //         intakeExtension,
-    //         intakeRollers,
-    //         dashShotMap,
-    //         driverController.leftTrigger());
-
     Command autoAlignCommand =
         new DrivePointAtAngle(
             drivetrain,
-            driverController::getLeftY,
-            driverController::getLeftX,
+            driverAxisMapping.xSpeed,
+            driverAxisMapping.ySpeed,
             driverController::getRightTriggerAxis,
             sotmstate::getHeading,
             isShooting::getAsBoolean);
-
-    // Command intakeHighCommand = IntakeCommands.pivotHigh(intakePivot);
-    // Command intakeMidLowToggleCommand = IntakeCommands.pivotMidLowToggle(intakePivot);
-    // Command intakeRunCommand = IntakeCommands.rollerForward(intakeRoller);
 
     driverController
         .rightBumper()
@@ -187,7 +166,7 @@ public class RobotContainer {
     driverController.povUp().onTrue(Commands.runOnce(() -> drivetrain.seedFieldCentric()));
     driverController.leftBumper().whileTrue(IntakeCommands.holdIn(intakeExtension));
 
-    driverController.povRight().whileTrue(DyeRotorCommands.reverseDyeRotot(hook, kicker));
+    driverController.povRight().whileTrue(DyeRotorCommands.reverseDyeRotor(hook, kicker));
 
     driverController
         .a()
@@ -222,9 +201,9 @@ public class RobotContainer {
     drivetrain.setDefaultCommand(
         new DriveTeleop(
             drivetrain,
-            driverController::getLeftY,
-            driverController::getLeftX,
-            () -> -driverController.getRightX(),
+            driverAxisMapping.xSpeed,
+            driverAxisMapping.ySpeed,
+            driverAxisMapping.tSpeed,
             driverController::getRightTriggerAxis,
             isShooting::getAsBoolean));
 
