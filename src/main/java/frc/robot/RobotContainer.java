@@ -5,6 +5,8 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
 
 import com.sbdc.loggerhead.core.LightSubsystem;
 import com.sbdc.loggerhead.core.LoggerheadUtils;
@@ -46,6 +48,7 @@ import frc.robot.subsystems.intake.IntakeRollers;
 import frc.robot.subsystems.shooter.Flywheel;
 import frc.robot.subsystems.shooter.Hood;
 import frc.robot.subsystems.shooter.Turret;
+import frc.robot.utils.DrivetrainControlAxisMapping;
 import frc.robot.vision.MainVision;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -103,6 +106,11 @@ public class RobotContainer {
   private final Trigger isShooting = new Trigger(() -> flywheel.isRunning && hood.isRunning);
 
   private final Autos autos;
+
+  private final DrivetrainControlAxisMapping driverAxisMapping = new DrivetrainControlAxisMapping(() -> driverController.getLeftY() * Drivetrain.THEORETICAL_MAX_SPEED.in(MetersPerSecond), 
+                                                                                                  () -> driverController.getLeftX() * Drivetrain.THEORETICAL_MAX_SPEED.in(MetersPerSecond), 
+                                                                                                  () -> -driverController.getRightX() * Drivetrain.THEORETICAL_MAX_ROT_SPEED.in(RadiansPerSecond));
+
 
   public RobotContainer() {
     WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
@@ -173,8 +181,8 @@ public class RobotContainer {
     Command autoAlignCommand =
         new DrivePointAtAngle(
             drivetrain,
-            driverController::getLeftY,
-            driverController::getLeftX,
+            driverAxisMapping.xSpeed,
+            driverAxisMapping.ySpeed,
             driverController::getRightTriggerAxis,
             sotmstate::getHeading,
             isShooting::getAsBoolean);
@@ -194,7 +202,7 @@ public class RobotContainer {
     driverController.povUp().onTrue(Commands.runOnce(() -> drivetrain.seedFieldCentric()));
     driverController.leftBumper().whileTrue(IntakeCommands.holdIn(intakeExtension));
 
-    driverController.povRight().whileTrue(DyeRotorCommands.reverseDyeRotot(hook, kicker));
+    driverController.povRight().whileTrue(DyeRotorCommands.reverseDyeRotor(hook, kicker));
 
     driverController
         .a()
@@ -229,9 +237,9 @@ public class RobotContainer {
     drivetrain.setDefaultCommand(
         new DriveTeleop(
             drivetrain,
-            driverController::getLeftY,
-            driverController::getLeftX,
-            () -> -driverController.getRightX(),
+            driverAxisMapping.xSpeed,
+            driverAxisMapping.ySpeed,
+            driverAxisMapping.tSpeed,
             driverController::getRightTriggerAxis,
             isShooting::getAsBoolean));
 

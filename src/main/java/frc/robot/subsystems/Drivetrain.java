@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import static edu.wpi.first.units.Units.FeetPerSecond;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Pounds;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
 
 import choreo.trajectory.SwerveSample;
@@ -26,6 +27,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -60,6 +62,7 @@ public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem, Logg
   private boolean m_hasAppliedOperatorPerspective = false;
 
   public static final LinearVelocity THEORETICAL_MAX_SPEED = FeetPerSecond.of(17.7);
+  public static final AngularVelocity THEORETICAL_MAX_ROT_SPEED = RotationsPerSecond.of(0.75);
 
   public double currentBasedSpeedLimit = 1;
 
