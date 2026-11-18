@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.Autos;
 import frc.robot.commands.BlastoiseCommands;
 import frc.robot.commands.DyeRotorCommands;
 import frc.robot.commands.IntakeCommands;
@@ -61,9 +62,9 @@ public class RobotContainer {
   private final PowerDistribution pdh = new PowerDistribution(59, ModuleType.kRev);
 
   private final Drivetrain drivetrain = TunerConstantsBlastoise1022.createDrivetrain();
-  private final ShotMap dashShotMap = new DashboardStaticShotMap();
-  private final SOTMStateTracker sotmstate = new SOTMStateTracker(drivetrain);
-  private final DynamicShotMap dynamicShotMap = new DynamicShotMap(sotmstate);
+  public final ShotMap dashShotMap = new DashboardStaticShotMap();
+  public final SOTMStateTracker sotmstate = new SOTMStateTracker(drivetrain);
+  public final DynamicShotMap dynamicShotMap = new DynamicShotMap(sotmstate);
 
   // private final HPoseEstimator hPoseEstimator = new HPoseEstimator(drivetrain);
 
@@ -101,8 +102,14 @@ public class RobotContainer {
 
   private final Trigger isShooting = new Trigger(() -> flywheel.isRunning && hood.isRunning);
 
+  private final Autos autos;
+
   public RobotContainer() {
     WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
+
+    autos =
+        new Autos(
+            this, drivetrain, hook, kicker, intakeExtension, intakeRollers, flywheel, hood, turret);
 
     if (Robot.isSimulation()) {
       DriverStation.silenceJoystickConnectionWarning(true);
@@ -126,7 +133,7 @@ public class RobotContainer {
         .initializeLogging(); // Must be the final call in the configuration chain
   }
 
-  private void resetPoseAndHeadings(EnumSet<PoseHeadingResetParams> resetParams) {
+  public void resetPoseAndHeadings(EnumSet<PoseHeadingResetParams> resetParams) {
     if (resetParams.contains(PoseHeadingResetParams.CTREReset)) {
       drivetrain.resetPose(new Pose2d(1, 1, Rotation2d.kZero));
     }
@@ -319,6 +326,6 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return Commands.print("No autonomous command configured");
+    return autos.getSelectedCommand();
   }
 }
