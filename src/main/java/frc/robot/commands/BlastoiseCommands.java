@@ -1,7 +1,6 @@
 package frc.robot.commands;
 
-import static edu.wpi.first.units.Units.Degrees;
-
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -16,6 +15,7 @@ import frc.robot.subsystems.shooter.Flywheel;
 import frc.robot.subsystems.shooter.Hood;
 import frc.robot.subsystems.shooter.Turret;
 import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 
 public class BlastoiseCommands {
   public static Command driveTeleopCommand(
@@ -43,10 +43,13 @@ public class BlastoiseCommands {
       IntakeExtension intakeExtension,
       IntakeRollers intakeRoller,
       ShotMap shotMap,
-      Trigger intakeHold) {
+      Trigger intakeHold,
+      Supplier<Rotation2d> turretAngleSupplier) {
     return Commands.parallel(
         Commands.runEnd(
-            () -> turret.setTurretAngleFieldOriented(Degrees.of(90)), turret::stopTurret, turret),
+            () -> turret.setTurretAngleFieldOriented(turretAngleSupplier.get().getMeasure()),
+            turret::stopTurret,
+            turret),
         // Intake
         // IntakeCommands.agitate(intakeExtension, intakeHold),
         // Dye rotor

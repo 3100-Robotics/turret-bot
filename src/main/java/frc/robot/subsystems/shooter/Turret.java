@@ -44,12 +44,18 @@ public class Turret extends LightSubsystem implements Loggable {
   }
 
   public void setTurretAngleMod360(Angle angle) {
+    System.out.println("Lag me 2: " + Degrees.of(angle.in(Degrees) % 360));
     motor.setPosition(Degrees.of(angle.in(Degrees) % 360));
   }
 
-  public void setTurretAngleFieldOriented(Angle angle) {
-    setTurretAngleMod360(robotAngleSupplier.get().minus(robotAngleSupplier.get().minus(angle)));
+  public void setTurretAngleFieldOriented(Angle angleSetpoint) {
+    // System.out.println("Lag me" + angleSetpoint.in(Degrees));
+    setTurretAngleMod360(angleSetpoint.minus(robotAngleSupplier.get()));
   }
+
+  // public void setTurretAngleFieldOriented(Supplier<Angle> angleSupplier) {
+  //   setTurretAngleFieldOriented(angleSupplier.get());
+  // }
 
   public void stopTurret() {
     motor.setDutyCycle(0);

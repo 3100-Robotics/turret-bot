@@ -225,7 +225,8 @@ public class RobotContainer {
                 intakeExtension,
                 intakeRollers,
                 dashShotMap,
-                driverController.leftTrigger())
+                driverController.leftTrigger(),
+                sotmstate::getHeading)
             // new TestMultiHookSpeeds(hook)
             // BlastoiseCommands.shootCommand(
             //     flywheel,

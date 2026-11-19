@@ -91,7 +91,8 @@ public class Autos {
                 intakeExtension,
                 intakeRollers,
                 rc.dynamicShotMap,
-                new Trigger(() -> false))
+                new Trigger(() -> false),
+                rc.sotmstate::getHeading)
             .withTimeout(10));
   }
 
