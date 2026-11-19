@@ -90,7 +90,8 @@ public class RobotContainer {
   // Shooter
   private final Hood hood = new Hood();
   private final Flywheel flywheel = new Flywheel();
-  private final Turret turret = new Turret(drivetrain.getPigeon2().getYaw()::getValue);
+  private final Turret turret =
+      new Turret(() -> drivetrain.getState().Pose.getRotation().getMeasure());
 
   // Dye Rotor
   private final Hook hook = new Hook();
@@ -107,10 +108,13 @@ public class RobotContainer {
 
   private final Autos autos;
 
-  private final DrivetrainControlAxisMapping driverAxisMapping = new DrivetrainControlAxisMapping(() -> driverController.getLeftY() * Drivetrain.THEORETICAL_MAX_SPEED.in(MetersPerSecond), 
-                                                                                                  () -> driverController.getLeftX() * Drivetrain.THEORETICAL_MAX_SPEED.in(MetersPerSecond), 
-                                                                                                  () -> -driverController.getRightX() * Drivetrain.THEORETICAL_MAX_ROT_SPEED.in(RadiansPerSecond));
-
+  private final DrivetrainControlAxisMapping driverAxisMapping =
+      new DrivetrainControlAxisMapping(
+          () -> driverController.getLeftY() * Drivetrain.THEORETICAL_MAX_SPEED.in(MetersPerSecond),
+          () -> driverController.getLeftX() * Drivetrain.THEORETICAL_MAX_SPEED.in(MetersPerSecond),
+          () ->
+              -driverController.getRightX()
+                  * Drivetrain.THEORETICAL_MAX_ROT_SPEED.in(RadiansPerSecond));
 
   public RobotContainer() {
     WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
@@ -201,8 +205,13 @@ public class RobotContainer {
     driverController.povDown().whileTrue(IntakeCommands.helpKickerBar(intakeRollers));
     driverController.povUp().onTrue(Commands.runOnce(() -> drivetrain.seedFieldCentric()));
     driverController.leftBumper().whileTrue(IntakeCommands.holdIn(intakeExtension));
+    driverController
+        .b()
+        .whileTrue(IntakeCommands.agitate(intakeExtension, driverController.leftBumper()));
 
     driverController.povRight().whileTrue(DyeRotorCommands.reverseDyeRotor(hook, kicker));
+
+    driverController.povLeft().onTrue(Commands.runOnce(intakeExtension::zeroIntakeExtension));
 
     driverController
         .a()

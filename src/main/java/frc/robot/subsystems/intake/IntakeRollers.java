@@ -38,6 +38,7 @@ public class IntakeRollers extends LightSubsystem implements Loggable {
   public void setState(IntakeRollerTarget state) {
     switch (state) {
       case On:
+      case Reverse:
         topMotor.setVelocity(state.topSpeed.get());
         // bottomMotor.setVelocity(state.bottomSpeed.get());
         break;

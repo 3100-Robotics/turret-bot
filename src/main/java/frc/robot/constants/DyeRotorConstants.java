@@ -36,7 +36,7 @@ public interface DyeRotorConstants {
           .withGearing(new MechanismGearing(GearBox.fromReductionStages(80 / 16, 80 / 10)))
           // PID / FF
           .withClosedLoopController(new PIDController(0.1, 0, 0), ClosedLoopControllerSlot.SLOT_0)
-          .withFeedforward(new SimpleMotorFeedforward(0, 5.4, 0), ClosedLoopControllerSlot.SLOT_0)
+          .withFeedforward(new SimpleMotorFeedforward(0, 6.4, 0), ClosedLoopControllerSlot.SLOT_0)
           // Sim PID / FF
           .withSimClosedLoopController(new PIDController(5, 0, 0), ClosedLoopControllerSlot.SLOT_0)
           .withSimFeedforward(new SimpleMotorFeedforward(0, 0, 0), ClosedLoopControllerSlot.SLOT_0)

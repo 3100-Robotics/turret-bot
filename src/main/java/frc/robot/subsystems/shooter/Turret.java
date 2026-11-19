@@ -36,7 +36,7 @@ public class Turret extends LightSubsystem implements Loggable {
   public final Trigger isNearSetpoint = new Trigger(this::isPositionNearSetpoint);
 
   public Turret(Supplier<Angle> robotAngleSupplier) {
-    this.robotAngleSupplier = robotAngleSupplier;
+    this.robotAngleSupplier = () -> robotAngleSupplier.get().plus(Degrees.of(180));
   }
 
   public void setTurretAngleRaw(Angle angle) {
@@ -77,6 +77,7 @@ public class Turret extends LightSubsystem implements Loggable {
 
   @Override
   public void setupLogging(Table parentTable, LogMode logMode, Loggerhead loggerhead) {
+    parentTable.addDoubleLogger("robotAngle", logMode, () -> robotAngleSupplier.get().in(Degrees));
     parentTable.addDoubleLogger(
         "turretMechAngle", logMode, () -> motor.getMechanismPosition().in(Degrees));
   }

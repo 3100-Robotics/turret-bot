@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import static edu.wpi.first.units.Units.Degrees;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -43,6 +45,8 @@ public class BlastoiseCommands {
       ShotMap shotMap,
       Trigger intakeHold) {
     return Commands.parallel(
+        Commands.runEnd(
+            () -> turret.setTurretAngleFieldOriented(Degrees.of(90)), turret::stopTurret, turret),
         // Intake
         // IntakeCommands.agitate(intakeExtension, intakeHold),
         // Dye rotor
@@ -54,9 +58,9 @@ public class BlastoiseCommands {
                     .repeatedly() // back to top
                 ),
         // Shooter
-        ShooterCommands.shooterDynamic(hood, flywheel, shotMap));
-    // .onlyWhile(turret.isNearSetpoint))
-    // .andThen(Commands.waitUntil(turret.isNearSetpoint))
-    // .repeatedly();
+        ShooterCommands.shooterDynamic(hood, flywheel, shotMap)
+            .onlyWhile(turret.isNearSetpoint)
+            .andThen(Commands.waitUntil(turret.isNearSetpoint))
+            .repeatedly());
   }
 }

@@ -1,5 +1,6 @@
 package frc.robot.subsystems.dyerotor;
 
+import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.RPM;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -35,6 +36,7 @@ public class Kicker extends LightSubsystem implements Loggable {
   public void setState(KickerTarget state) {
     switch (state) {
       case On:
+      case Reverse:
         motor.setVelocity(state.speed.get());
         break;
       case Off:
@@ -71,7 +73,8 @@ public class Kicker extends LightSubsystem implements Loggable {
 
   @Override
   public void setupLogging(Table parentTable, LogMode logMode, Loggerhead loggerhead) {
-    parentTable.addDoubleLogger(
-        "kickerSpeedRPM", logMode, () -> motor.getMechanismVelocity().in(RPM));
+    parentTable
+        .addDoubleLogger("kickerSpeedRPM", logMode, () -> motor.getMechanismVelocity().in(RPM))
+        .addDoubleLogger("kickerCurrent", logMode, () -> motor.getStatorCurrent().in(Amps));
   }
 }
