@@ -50,6 +50,8 @@ public class IntakeExtension extends LightSubsystem implements Loggable {
   private final Trigger hardStopHitCurrent =
       new Trigger(() -> intakeCurrentFilter.lastValue() > 10);
 
+  private IntakeExtensionTarget currentState = IntakeExtensionTarget.Stowed;
+
   public IntakeExtension() {
     // hardStopHitCurrent.onTrue(
     //     Commands.runOnce(
@@ -59,7 +61,12 @@ public class IntakeExtension extends LightSubsystem implements Loggable {
     //         }));
   }
 
+  public IntakeExtensionTarget getState() {
+    return currentState;
+  }
+
   public void setIntakeExtensionTarget(IntakeExtensionTarget target) {
+    currentState = target;
     leftMotor.setPosition(target.extensionDistance);
   }
 

@@ -16,14 +16,14 @@ public class ShotTable {
   public static final List<Pair<Distance, Double>> distanceTofTable = new ArrayList<>();
 
   static {
-    distanceAngleTable.add(Pair.of(Meters.of(1.243), 17.5)); // Close
-    distanceAngleTable.add(Pair.of(Meters.of(2.047), 22.0)); // Farther
-    distanceAngleTable.add(Pair.of(Meters.of(5.362), 34.0)); // Farthest
+    distanceAngleTable.add(Pair.of(Meters.of(1.243), 10.0)); // Close
+    // distanceAngleTable.add(Pair.of(Meters.of(2.047), 22.0)); // Farther
+    // distanceAngleTable.add(Pair.of(Meters.of(5.362), 34.0)); // Farthest
     distanceAngleTable.add(Pair.of(Meters.of(4.0), 31.5)); // Kinda far
 
     distanceSpeedTable.add(Pair.of(Meters.of(1.243), 2600.0)); // Close
-    distanceSpeedTable.add(Pair.of(Meters.of(2.047), 2800.0)); // Farther
-    distanceSpeedTable.add(Pair.of(Meters.of(5.362), 4000.0)); // Farthest
+    // distanceSpeedTable.add(Pair.of(Meters.of(2.047), 2200.0)); // Farther
+    // distanceSpeedTable.add(Pair.of(Meters.of(5.362), 4000.0)); // Farthest
     distanceSpeedTable.add(Pair.of(Meters.of(4.0), 3300.0)); // Kinda far
 
     distanceTofTable.add(

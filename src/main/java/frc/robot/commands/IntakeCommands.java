@@ -9,6 +9,13 @@ import frc.robot.targets.IntakeTargets.IntakeExtensionTarget;
 import frc.robot.targets.IntakeTargets.IntakeRollerTarget;
 
 public class IntakeCommands {
+  public static Command pivotMidLowToggle(IntakeExtension intakeExtension) {
+    return Commands.either(
+        IntakeCommands.holdDeploy(intakeExtension),
+        IntakeCommands.holdIn(intakeExtension),
+        () -> intakeExtension.getState() == IntakeExtensionTarget.StowedSafe);
+  }
+
   public static Command setIntakeState(
       IntakeExtension intakeExtension, IntakeExtensionTarget state) {
     return Commands.runEnd(
@@ -18,7 +25,7 @@ public class IntakeCommands {
   }
 
   public static Command holdIn(IntakeExtension intakeExtension) {
-    return setIntakeState(intakeExtension, IntakeExtensionTarget.Stowed);
+    return setIntakeState(intakeExtension, IntakeExtensionTarget.StowedSafe);
   }
 
   public static Command agitateOneCycle(IntakeExtension intakeExtension) {
@@ -56,9 +63,11 @@ public class IntakeCommands {
     return setIntakeState(extension, IntakeExtensionTarget.Full);
   }
 
-  public static Command runIntakeRollers(IntakeRollers rollers) {
+  public static Command runIntakeRollers(IntakeRollers intakeRollers) {
     return Commands.runEnd(
-        () -> rollers.setState(IntakeRollerTarget.On), rollers::stopIntakeRollers, rollers);
+        () -> intakeRollers.setState(IntakeRollerTarget.On),
+        intakeRollers::stopIntakeRollers,
+        intakeRollers);
   }
 
   public static Command helpKickerBar(IntakeRollers rollers) {

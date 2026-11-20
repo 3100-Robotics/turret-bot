@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -117,6 +118,12 @@ public class RobotContainer {
                   * Drivetrain.THEORETICAL_MAX_ROT_SPEED.in(RadiansPerSecond));
 
   public RobotContainer() {
+    SmartDashboard.putNumber("turret", 0);
+    SmartDashboard.putData(
+        "gotToMechZero",
+        Commands.runEnd(
+            () -> turret.setTurretAngleMod360(Degrees.of(0)), turret::stopTurret, turret));
+
     WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
 
     autos =
@@ -195,16 +202,21 @@ public class RobotContainer {
     // Command intakeMidLowToggleCommand = IntakeCommands.pivotMidLowToggle(intakePivot);
     // Command intakeRunCommand = IntakeCommands.rollerForward(intakeRoller);
 
-    driverController
-        .rightBumper()
-        .whileTrue(
-            IntakeCommands.holdDeploy(intakeExtension)
-                .alongWith(
-                    Commands.waitSeconds(0.2)
-                        .andThen(IntakeCommands.runIntakeRollers(intakeRollers))));
+    // driverController
+    //     .rightBumper()
+    //     .whileTrue(
+    //         IntakeCommands.holdDeploy(intakeExtension)
+    //             .alongWith(
+    //                 Commands.waitSeconds(0.2)
+    //                     .andThen(IntakeCommands.runIntakeRollers(intakeRollers))));
+
+    driverController.leftBumper().whileTrue(IntakeCommands.pivotMidLowToggle(intakeExtension));
+
     driverController.povDown().whileTrue(IntakeCommands.helpKickerBar(intakeRollers));
     driverController.povUp().onTrue(Commands.runOnce(() -> drivetrain.seedFieldCentric()));
-    driverController.leftBumper().whileTrue(IntakeCommands.holdIn(intakeExtension));
+
+    driverController.rightBumper().whileTrue(IntakeCommands.runIntakeRollers(intakeRollers));
+
     driverController
         .b()
         .whileTrue(IntakeCommands.agitate(intakeExtension, driverController.leftBumper()));
@@ -212,6 +224,16 @@ public class RobotContainer {
     driverController.povRight().whileTrue(DyeRotorCommands.reverseDyeRotor(hook, kicker));
 
     driverController.povLeft().onTrue(Commands.runOnce(intakeExtension::zeroIntakeExtension));
+
+    // driverController
+    //     .x()
+    //     .whileTrue(
+    //         Commands.runEnd(
+    //             () ->
+    //                 turret.setTurretAngleFieldOriented(
+    //                     Degrees.of(SmartDashboard.getNumber("turret", 0))),
+    //             turret::stopTurret,
+    //             turret));
 
     driverController
         .a()
@@ -224,7 +246,7 @@ public class RobotContainer {
                 kicker,
                 intakeExtension,
                 intakeRollers,
-                dashShotMap,
+                dynamicShotMap,
                 driverController.leftTrigger(),
                 sotmstate::getHeading)
             // new TestMultiHookSpeeds(hook)

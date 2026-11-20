@@ -30,8 +30,8 @@ public interface ShooterConstants {
 
   //   Angle maxTurretAngle = Degrees.of(360 + 21.76);
   //   Angle minTurretAngle = Degrees.of(0);
-  Angle maxTurretAngle = Degrees.of(270);
-  Angle minTurretAngle = Degrees.of(-45);
+  Angle maxTurretAngle = Degrees.of(365);
+  Angle minTurretAngle = Degrees.of(0);
   Angle safeMaxTurretAngle = maxTurretAngle.minus(Degrees.of(2));
 
   DCMotor hoodMotorPhysical = DCMotor.getKrakenX60(1);
@@ -65,20 +65,20 @@ public interface ShooterConstants {
 
   SmartMotorControllerConfig flywheelMotorConfig =
       new SmartMotorControllerConfig()
-          .withStatorCurrentLimit(Amps.of(60))
+          .withStatorCurrentLimit(Amps.of(80))
           .withIdleMode(MotorMode.COAST)
           .withControlMode(ControlMode.CLOSED_LOOP)
           .withGearing(1)
           .withMomentOfInertia(Inches.of(1.9825395), Pound.of(0.9))
           .withMotorInverted(true)
           // PID / FF
-          .withClosedLoopController(new PIDController(1.0, 0, 0))
+          .withClosedLoopController(new PIDController(0.1, 0, 0))
           .withFeedforward(new SimpleMotorFeedforward(0, 0.12))
           // Sim PID / FF
           .withSimClosedLoopController(new PIDController(0.003, 0, 0))
           .withSimFeedforward(new SimpleMotorFeedforward(0, 0.137))
           // Telemetry
-          .withTelemetry("flywheelMotor", TelemetryVerbosity.LOW);
+          .withTelemetry("flywheelMotor", TelemetryVerbosity.HIGH);
 
   DCMotor turretMotorPhysical = DCMotor.getKrakenX60(1);
 
@@ -86,13 +86,13 @@ public interface ShooterConstants {
       new SmartMotorControllerConfig()
           .withControlMode(ControlMode.CLOSED_LOOP)
           // Feedback Constants (PID Constants)
-          .withClosedLoopController(30, 0, 0)
+          .withClosedLoopController(100, 0, 0)
           .withSimClosedLoopController(0, 0, 0)
           // .withTrapezoidalProfile(DegreesPerSecond.of(90), DegreesPerSecondPerSecond.of(45))
           // .withContinuousWrapping(minTurretAngle, Degrees.of(360))
           .withStartingPosition(Degrees.of(0))
           // Feedforward Constants
-          .withFeedforward(new ArmFeedforward(0, 0, 0))
+          .withFeedforward(new ArmFeedforward(0, 0, 20))
           .withSimFeedforward(new ArmFeedforward(0, 0, 0))
           // Telemetry name and verbosity level
           .withTelemetry("turretMotor", TelemetryVerbosity.LOW)

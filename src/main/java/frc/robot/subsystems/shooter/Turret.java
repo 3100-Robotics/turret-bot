@@ -44,13 +44,11 @@ public class Turret extends LightSubsystem implements Loggable {
   }
 
   public void setTurretAngleMod360(Angle angle) {
-    System.out.println("Lag me 2: " + Degrees.of(angle.in(Degrees) % 360));
-    motor.setPosition(Degrees.of(angle.in(Degrees) % 360));
+    motor.setPosition(Degrees.of(Math.floorMod((long) angle.in(Degrees), (long) 360)));
   }
 
   public void setTurretAngleFieldOriented(Angle angleSetpoint) {
-    // System.out.println("Lag me" + angleSetpoint.in(Degrees));
-    setTurretAngleMod360(angleSetpoint.minus(robotAngleSupplier.get()));
+    setTurretAngleMod360(angleSetpoint.minus(robotAngleSupplier.get()).plus(Degrees.of(90)));
   }
 
   // public void setTurretAngleFieldOriented(Supplier<Angle> angleSupplier) {
@@ -63,12 +61,13 @@ public class Turret extends LightSubsystem implements Loggable {
 
   public Pair<Angle, Angle> getSetpointAndPosition() {
     return Pair.of(
-        motor.getMechanismPositionSetpoint().orElse(Degrees.of(0)), motor.getMechanismPosition());
+        motor.getMechanismPositionSetpoint().orElse(Degrees.of(0)),
+        Degrees.of(Math.floorMod((long) motor.getMechanismPosition().in(Degrees), (long) 360)));
   }
 
   private boolean isPositionNearSetpoint() {
     var setAndPos = getSetpointAndPosition();
-    return setAndPos.getSecond().isNear(setAndPos.getFirst(), Degrees.of(4));
+    return setAndPos.getSecond().isNear(setAndPos.getFirst(), Degrees.of(10));
   }
 
   @Override
@@ -83,6 +82,7 @@ public class Turret extends LightSubsystem implements Loggable {
 
   @Override
   public void setupLogging(Table parentTable, LogMode logMode, Loggerhead loggerhead) {
+    parentTable.addBooleanLogger("isAtSetpoint", logMode, isNearSetpoint::getAsBoolean);
     parentTable.addDoubleLogger("robotAngle", logMode, () -> robotAngleSupplier.get().in(Degrees));
     parentTable.addDoubleLogger(
         "turretMechAngle", logMode, () -> motor.getMechanismPosition().in(Degrees));

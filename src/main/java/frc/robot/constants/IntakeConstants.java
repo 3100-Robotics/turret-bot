@@ -71,7 +71,7 @@ public interface IntakeConstants {
           .withSimFeedforward(new SimpleMotorFeedforward(0.0, 0.0, 0.0))
           .withTrapezoidalProfile(MetersPerSecond.of(25), MetersPerSecondPerSecond.of(25))
           .withMomentOfInertia(Meters.of(0.04), Kilograms.of(0.09))
-          .withStatorCurrentLimit(Amps.of(80));
+          .withStatorCurrentLimit(Amps.of(20));
 
   SmartMotorControllerConfig extensionMotorConfigLeft =
       baseExtensionMotorConfig
